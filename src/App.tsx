@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { recipes } from "./recipes";
-import "./App.css";
+import Checkbox from "./components/Checkbox";
+import "./styles/App.css";
+import "./styles/checkbox.css";
 
 type Panier = [string, number];
 
@@ -32,7 +34,6 @@ const App = () => {
 
       setPanier(hashMap);
     }
-    console.log(panier);
   };
 
   return (
@@ -65,21 +66,12 @@ const Recipes = ({ handler }: RecipesProps) => {
       {recipes.map((recipe, i) => (
         <tr key={i}>
           <td>
-            <input
-              type={"checkbox"}
-              onChange={(e) => handler(e.target.checked, recipe.ingredients)}
-            />
+            <div className="checkbox-ctn">
+              <Checkbox handler={handler} ingredients={recipe.ingredients} />
+            </div>
           </td>
           <td>{recipe.nom}</td>
-          <td>{recipe.date}</td>
           <td>{recipe.description}</td>
-          <td>
-            <ul className="ingredients">
-              {recipe.ingredients.map((ingredient, j) => (
-                <li key={j}>{ingredient}</li>
-              ))}
-            </ul>
-          </td>
         </tr>
       ))}
     </tbody>
@@ -92,14 +84,12 @@ const TableHead = () => {
       <tr>
         <th>Panier</th>
         <th>Nom</th>
-        <th>Date</th>
+        {/* <th>Date</th> */}
         <th>Description</th>
-        <th>Ingredients</th>
+        {/* <th>Ingredients</th> */}
       </tr>
     </thead>
   );
 };
 
 export default App;
-
-// titre + citation? + description + liste ingrédient

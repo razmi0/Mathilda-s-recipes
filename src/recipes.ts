@@ -1,6 +1,6 @@
 interface RecipeType {
   nom: string;
-  date: string;
+  date: Date;
   citation: string;
   description: string;
   ingredients: string[];
@@ -9,7 +9,7 @@ interface RecipeType {
 export const recipes: RecipeType[] = [
   {
     nom: "Risotto",
-    date: new Date(2023, 9, 10).toDateString(),
+    date: new Date(2023, 9, 10),
     citation: "Citation",
     description: "Description",
     ingredients: [
@@ -23,7 +23,7 @@ export const recipes: RecipeType[] = [
   },
   {
     nom: "Riz pillaf et brocollis sauce à la cacahuète",
-    date: new Date(2023, 9, 10).toDateString(),
+    date: new Date(2023, 9, 10),
     citation: "Citation",
     description: "Description",
     ingredients: [
