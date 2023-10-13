@@ -49,7 +49,7 @@ const App = () => {
       </div>
       <div className="table-ctn">
         <table>
-          <TableHead />
+          <RecipesHead />
           <Recipes handler={handlePanier} />
         </table>
       </div>
@@ -78,7 +78,7 @@ const Recipes = ({ handler }: RecipesProps) => {
   );
 };
 
-const TableHead = () => {
+const RecipesHead = () => {
   return (
     <thead>
       <tr>
