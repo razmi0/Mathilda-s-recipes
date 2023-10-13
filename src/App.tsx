@@ -47,12 +47,20 @@ const App = () => {
           <br />
         </div>
       </div>
-      <div className="table-ctn">
-        <table>
-          <RecipesHead />
-          <Recipes handler={handlePanier} />
-        </table>
-      </div>
+      <section className="sec-tables-ctn">
+        <div className="table-ctn">
+          <table>
+            <RecipesHead />
+            <Recipes handler={handlePanier} />
+          </table>
+        </div>
+        <div className="ingredients-ctn">
+          {panier.length > 0 && <h3>Liste de courses</h3>}
+          <div className="ingredients-data-ctn">
+            <Ingredients data={panier} />
+          </div>
+        </div>
+      </section>
     </>
   );
 };
@@ -92,4 +100,17 @@ const RecipesHead = () => {
   );
 };
 
+const Ingredients = ({ data }: { data: Panier[] }) => {
+  return (
+    <>
+      <ul className="ingredients">
+        {data.map((el, i) => (
+          <li key={i}>
+            {el[0]} : {el[1]} rations
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+};
 export default App;
