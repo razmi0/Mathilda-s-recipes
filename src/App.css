@@ -1,0 +1,36 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.main-ctn {
+  width: 100%;
+}
+.table-ctn {
+  width: 100%;
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.ingredients {
+  list-style: square;
+  text-align: left;
+}
+table {
+  width: 100%;
+}
+td {
+  border-bottom: 2px solid #ccc;
+}
+th {
+  border-bottom: 2px solid #f9f5f5;
+  padding-bottom: 10px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
