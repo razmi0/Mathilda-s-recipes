@@ -48,11 +48,14 @@ const App = () => {
         </div>
       </div>
       <section className="sec-tables-ctn">
-        <div className="table-ctn">
-          <table>
-            <RecipesHead />
-            <Recipes handler={handlePanier} />
-          </table>
+        <div className="recipes-ctn">
+          <h3>Recettes</h3>
+          <div className="table-ctn">
+            <table>
+              <RecipesHead />
+              <Recipes handler={handlePanier} />
+            </table>
+          </div>
         </div>
         <div className="ingredients-ctn">
           {panier.length > 0 && <h3>Liste de courses</h3>}
@@ -105,8 +108,11 @@ const Ingredients = ({ data }: { data: Panier[] }) => {
     <>
       <ul className="ingredients">
         {data.map((el, i) => (
-          <li key={i}>
-            {el[0]} : {el[1]} rations
+          <li key={i} className="list-ingredient">
+            <div>{el[0].charAt(0).toUpperCase() + el[0].slice(1)} </div>
+            <div>
+              {el[1]} ration{`${el[1] > 1 ? "s" : ""}`}
+            </div>
           </li>
         ))}
       </ul>

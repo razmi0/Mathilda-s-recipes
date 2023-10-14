@@ -8,31 +8,53 @@ interface RecipeType {
 }
 export const recipes: RecipeType[] = [
   {
-    nom: "Risotto",
+    nom: "Simple orzoto",
     date: new Date(2023, 9, 10),
     citation: "Citation",
-    description: "Description",
+    description:
+      "lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet",
     ingredients: [
-      "Riz",
       "Oignon",
       "Bouillon",
-      "Vin blanc",
-      "Parmesan",
-      "Beurre",
+      "ail",
+      "Huile d'olive",
+      "tomate cerise",
+      "Epinard",
+      "creme fraiche",
     ],
   },
   {
-    nom: "Riz pillaf et brocollis sauce à la cacahuète",
+    nom: "Riz sauté asiatique",
     date: new Date(2023, 9, 10),
     citation: "Citation",
     description: "Description",
     ingredients: [
+      "oeufs",
+      "graisse de cannard optionnel",
       "Riz",
-      "Oignon",
-      "Bouillon",
-      "Cacahuète",
+      "Sauce soja",
+      "Sauce sauja sucré",
+      "Huile de sésame",
+      "Echalotte",
+      "Cebette",
+    ],
+  },
+  {
+    nom: "Brocolis rotis et sauce cacahuète creamy",
+    date: new Date(2023, 10, 10),
+    citation: "Citation",
+    description: "Description",
+    ingredients: [
       "Brocolis",
-      "Beurre",
+      "oignons rouges",
+      "Parmesan",
+      "Chapelure",
+      "Huile d'olive",
+      "Sauce soje salé",
+      "Miel",
+      "Persillade",
+      "Beurre de cacahuète",
+      "Ricotta",
     ],
   },
 ];
@@ -40,3 +62,5 @@ export const recipes: RecipeType[] = [
 for (const recipe of recipes) {
   recipe.nbrOfIngredients = recipe.ingredients.length;
 }
+
+//TODO : ingredients optionnels
