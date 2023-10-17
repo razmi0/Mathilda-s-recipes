@@ -7,8 +7,8 @@ import "./styles/App.css";
 type Panier = [string, number]; // [ingredient, quantité]
 type Instructions = {
   name: string;
-  instructions: string[];
-}; // [nom, instructions] => Instructions get generated with GPT-3
+  steps: string[];
+}; // {nom, instructions} => Instructions get generated with GPT-3
 type Message = {
   role: string;
   content: string;
@@ -64,7 +64,7 @@ const App = () => {
   };
 
   const handleInstructions = async (name: string) => {
-    const ingredients = recipes.find((el) => el.nom === name)?.ingredients;
+    const ingredients = recipes.find((el) => el.name === name)?.ingredients;
 
     const userMsg: Message = {
       role: "user",
@@ -100,10 +100,10 @@ const App = () => {
     const data = await res.json();
     setInstructions({
       name: name,
-      instructions: data.choices[0].message.content.split("&&"),
+      steps: data.choices[0].message.content.split("&&"),
     });
     setLoading(false);
-    console.log(instructions?.instructions.length);
+    console.log(instructions?.steps.length);
   };
 
   return (
@@ -125,39 +125,16 @@ const App = () => {
             </div>
             <div className="global-chat-ctn">
               <h3>Instructions</h3>
-              <div className="recipe-name-ctn">
-                {recipesNames.length > 0 &&
-                  recipesNames.map((name, i) => (
-                    <div
-                      className="recipe-name-btn-ctn"
-                      key={i}
-                      style={{ marginBottom: "1rem" }}
-                    >
-                      <span>{name}</span>
-                      {loading && <Loader />}
-                      <button
-                        id={name}
-                        onClick={(e) => handleInstructions(e.currentTarget.id)}
-                      >
-                        Generate
-                      </button>
-                    </div>
-                  ))}
-                {instructions?.name && (
-                  <div className="instructions-ctn">
-                    <ul
-                      style={{ listStyle: "none" }}
-                      className="list-instruction"
-                    >
-                      {instructions.instructions.map((instruction, i) => (
-                        <li className="list-instruction-step" key={i}>
-                          {instruction}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
+              {recipesNames.length > 0 &&
+                recipesNames.map((name, i) => (
+                  <Instructions
+                    key={i}
+                    instructions={instructions}
+                    recipeSelected={name}
+                    handler={handleInstructions}
+                    isLoading={loading}
+                  />
+                ))}
             </div>
           </div>
         </div>
@@ -189,11 +166,11 @@ const Recipes = ({ handler }: RecipesProps) => {
               <Checkbox
                 handler={handler}
                 ingredients={recipe.ingredients}
-                name={recipe.nom}
+                name={recipe.name}
               />
             </div>
           </td>
-          <td>{recipe.nom}</td>
+          <td>{recipe.name}</td>
           <td>{recipe.description}</td>
         </tr>
       ))}
@@ -207,9 +184,7 @@ const RecipesHead = () => {
       <tr>
         <th>Panier</th>
         <th>Nom</th>
-        {/* <th>Date</th> */}
         <th>Description</th>
-        {/* <th>Ingredients</th> */}
       </tr>
     </thead>
   );
@@ -231,4 +206,48 @@ const Ingredients = ({ data }: { data: Panier[] }) => {
     </>
   );
 };
+
+interface InstructionsProps {
+  instructions: Instructions | undefined;
+  recipeSelected?: string;
+  handler: (nameId: string) => void;
+  isLoading?: boolean;
+}
+const Instructions = ({
+  instructions,
+  recipeSelected,
+  handler,
+  isLoading,
+}: InstructionsProps) => {
+  const steps = [];
+  if (instructions?.name !== undefined) {
+    steps.push(instructions.steps);
+  }
+  return (
+    <div className="recipe-name-ctn">
+      <div className="recipe-name-btn-ctn" style={{ marginBottom: "1rem" }}>
+        <span>{recipeSelected}</span>
+        {isLoading && <Loader />}
+        <button
+          id={recipeSelected}
+          onClick={(e) => handler(e.currentTarget.id)}
+        >
+          Generate
+        </button>
+      </div>
+      {steps && (
+        <div className="instructions-ctn">
+          <ul style={{ listStyle: "none" }} className="list-instruction">
+            {steps.map((step, i) => (
+              <li className="list-step-step" key={i}>
+                {step}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+};
+
 export default App;
