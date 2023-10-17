@@ -19,11 +19,10 @@ const initialiseSelectedMeal = (recipes: RecipeType[]): SelectedMeal[] => {
   }
   return selectedMeals;
 };
-const initialSelectedMeal = initialiseSelectedMeal(recipes);
 
 const App = () => {
   const [paniers, setPaniers] = useState<Panier[]>([]);
-  const [selectedMeal, setSelectedMeal] = useState<SelectedMeal[]>(initialSelectedMeal);
+  const [selectedMeal, setSelectedMeal] = useState<SelectedMeal[]>(initialiseSelectedMeal(recipes));
 
   const handlePanier = (checked: boolean, name: string) => {
     const hashMapSelectedMeal: SelectedMeal[] = [...selectedMeal],
