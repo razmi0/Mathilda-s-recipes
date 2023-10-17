@@ -1,5 +1,5 @@
 interface RecipeType {
-  nom: string;
+  name: string;
   date: Date;
   citation: string;
   description: string;
@@ -8,7 +8,7 @@ interface RecipeType {
 }
 export const recipes: RecipeType[] = [
   {
-    nom: "Simple orzoto",
+    name: "Simple orzoto",
     date: new Date(2023, 9, 10),
     citation: "Citation",
     description:
@@ -24,7 +24,7 @@ export const recipes: RecipeType[] = [
     ],
   },
   {
-    nom: "Riz sauté asiatique",
+    name: "Riz sauté asiatique",
     date: new Date(2023, 9, 10),
     citation: "Citation",
     description: "Description",
@@ -40,7 +40,7 @@ export const recipes: RecipeType[] = [
     ],
   },
   {
-    nom: "Brocolis rotis et sauce cacahuète creamy",
+    name: "Brocolis rotis et sauce cacahuète creamy",
     date: new Date(2023, 10, 10),
     citation: "Citation",
     description: "Description",
@@ -55,6 +55,24 @@ export const recipes: RecipeType[] = [
       "Persillade",
       "Beurre de cacahuète",
       "Ricotta",
+    ],
+  },
+  {
+    name: "Canneloni ricotta épinard sauce béchamel",
+    date: new Date(2023, 10, 17),
+    citation: "Citation",
+    description: "Description",
+    ingredients: [
+      "Echalotte",
+      "Ail",
+      "Ricotta",
+      "Epinard",
+      "Canneloni",
+      "Farine",
+      "Beurre",
+      "Lait",
+      "Noix de muscade",
+      "Fromage rapé",
     ],
   },
 ];
