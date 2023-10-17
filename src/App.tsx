@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { recipes } from "./recipes";
+import { RecipeType, recipes } from "./recipes";
 import Checkbox from "./components/Checkbox";
 import Loader from "./components/Loader";
 import "./styles/App.css";
@@ -14,6 +14,29 @@ type Message = {
   content: string;
 };
 
+type SelectedMeal = {
+  name: string;
+  steps: string[];
+  isLoading: boolean;
+  isSelected: boolean;
+  ingredients: string[];
+};
+
+// const initialiseSelectedMeal = (recipes: RecipeType[]): SelectedMeal[] => {
+//   const selectedMeals: SelectedMeal[] = [];
+//   for (let i = 0; i < recipes.length; i++) {
+//     selectedMeals.push({
+//       name: recipes[i].name,
+//       steps: [],
+//       isLoading: false,
+//       isSelected: false,
+//       ingredients: recipes[i].ingredients,
+//     });
+//   }
+//   return selectedMeals;
+// };
+// const initialSelectedMeal = initialiseSelectedMeal(recipes);
+
 const systemMsg = {
   role: "system",
   content:
@@ -24,6 +47,8 @@ const App = () => {
   const [panier, setPanier] = useState<Panier[]>([]); // liste des ingrédients
   const [recipesNames, setRecipesNames] = useState<string[]>([]); // liste des recettes
   const [instructions, setInstructions] = useState<Instructions>(); // liste des instructions
+  // const [selectedMeal, setSelectedMeal] =
+  //   useState<SelectedMeal[]>(initialSelectedMeal);
   const [loading, setLoading] = useState<boolean>(false); // loading state
 
   const handlePanier = (
