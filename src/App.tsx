@@ -2,30 +2,9 @@ import { useState } from "react";
 import { RecipeType, recipes } from "./recipes";
 import Checkbox from "./components/Checkbox";
 import Loader from "./components/Loader";
+import { Message, Panier, RecipesProps, SelectedMeal } from "./types";
+import { processToGPT } from "./services/openAI";
 import "./styles/App.css";
-
-interface RecipesProps {
-  handler: (checked: boolean, name: string) => void;
-}
-type Panier = {
-  ingredient: string;
-  quantity: number;
-};
-type Instructions = {
-  name: string;
-  steps: string[];
-};
-type Message = {
-  role: string;
-  content: string;
-};
-type SelectedMeal = {
-  name: string;
-  steps: string[];
-  isLoading: boolean;
-  isSelected: boolean;
-  ingredients: string[];
-};
 
 const initialiseSelectedMeal = (recipes: RecipeType[]): SelectedMeal[] => {
   const selectedMeals: SelectedMeal[] = [];
@@ -41,23 +20,6 @@ const initialiseSelectedMeal = (recipes: RecipeType[]): SelectedMeal[] => {
   return selectedMeals;
 };
 const initialSelectedMeal = initialiseSelectedMeal(recipes);
-
-const buildFetchOptions = (reqBody: object) => {
-  return {
-    method: "POST",
-    headers: {
-      Authorization: "Bearer " + import.meta.env.VITE_OPEN_API_KEY,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(reqBody),
-  };
-};
-
-const systemMsg = {
-  role: "system",
-  content:
-    "Complete the recipe talking like a chef and using the following ingredients as a base. Be concise and precise. Start each step with the coresponding step number and a double point(:). End the last sentence of each step with the characters : '&&'",
-};
 
 const App = () => {
   const [paniers, setPaniers] = useState<Panier[]>([]);
@@ -96,28 +58,18 @@ const App = () => {
       content: `Recette: ${name}\n Ingredients: ${ingredients?.join(", ")}\n Instructions: `,
     };
 
-    await processToGPT([systemMsg, userMsg], index); // [systemMsg, userMsg], index
-  };
-
-  const processToGPT = async (messages: Message[], index: number) => {
     setSelectedMeal((prev) => {
       const hashMapSelectedMeal = [...prev];
       hashMapSelectedMeal[index].isLoading = true;
       return hashMapSelectedMeal;
     });
 
-    const fetchOptions = buildFetchOptions({
-      model: "gpt-3.5-turbo",
-      messages: messages,
-    });
-
-    const res = await fetch("https://api.openai.com/v1/chat/completions", fetchOptions);
-    const data = await res.json();
+    const steps: string[] = await processToGPT([userMsg]);
 
     setSelectedMeal((prev) => {
       const hashMapSelectedMeal = [...prev];
       hashMapSelectedMeal[index].isLoading = false;
-      hashMapSelectedMeal[index].steps = data.choices[0].message.content.split("&&");
+      hashMapSelectedMeal[index].steps = steps;
       return hashMapSelectedMeal;
     });
   };
