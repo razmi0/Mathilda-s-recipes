@@ -42,6 +42,17 @@ const initialiseSelectedMeal = (recipes: RecipeType[]): SelectedMeal[] => {
 };
 const initialSelectedMeal = initialiseSelectedMeal(recipes);
 
+const buildFetchOptions = (reqBody: object) => {
+  return {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer " + import.meta.env.VITE_OPEN_API_KEY,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(reqBody),
+  };
+};
+
 const systemMsg = {
   role: "system",
   content:
@@ -77,41 +88,38 @@ const App = () => {
   };
 
   const handleInstructions = async (name: string) => {
-    const ingredients = recipes.find((el) => el.name === name)?.ingredients;
+    const index = selectedMeal.findIndex((meal) => meal.name === name);
+    const ingredients = selectedMeal[index].ingredients;
 
     const userMsg: Message = {
       role: "user",
       content: `Recette: ${name}\n Ingredients: ${ingredients?.join(", ")}\n Instructions: `,
     };
 
-    await processToGPT([systemMsg, userMsg], name);
+    await processToGPT([systemMsg, userMsg], index); // [systemMsg, userMsg], index
   };
 
-  const processToGPT = async (messages: Message[], name: string) => {
-    console.log("processing");
-    const reqBody = {
+  const processToGPT = async (messages: Message[], index: number) => {
+    setSelectedMeal((prev) => {
+      const hashMapSelectedMeal = [...prev];
+      hashMapSelectedMeal[index].isLoading = true;
+      return hashMapSelectedMeal;
+    });
+
+    const fetchOptions = buildFetchOptions({
       model: "gpt-3.5-turbo",
       messages: messages,
-    };
+    });
 
-    const fetchOptions = {
-      method: "POST",
-      headers: {
-        Authorization: "Bearer " + import.meta.env.VITE_OPEN_API_KEY,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(reqBody),
-    };
-
-    setLoading(true);
     const res = await fetch("https://api.openai.com/v1/chat/completions", fetchOptions);
     const data = await res.json();
-    setInstructions({
-      name: name,
-      steps: data.choices[0].message.content.split("&&"),
+
+    setSelectedMeal((prev) => {
+      const hashMapSelectedMeal = [...prev];
+      hashMapSelectedMeal[index].isLoading = false;
+      hashMapSelectedMeal[index].steps = data.choices[0].message.content.split("&&");
+      return hashMapSelectedMeal;
     });
-    setLoading(false);
-    console.log(instructions?.steps.length);
   };
 
   return (
