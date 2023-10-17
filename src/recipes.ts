@@ -1,4 +1,4 @@
-interface RecipeType {
+export interface RecipeType {
   name: string;
   date: Date;
   citation: string;
