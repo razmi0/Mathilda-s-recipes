@@ -30,7 +30,7 @@ export const recipes: RecipeType[] = [
     description: "Description",
     ingredients: [
       "oeufs",
-      "graisse de cannard optionnel",
+      "graisse de canard",
       "Riz",
       "Sauce soja",
       "Sauce sauja sucré",
