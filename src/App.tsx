@@ -4,16 +4,21 @@ import Checkbox from "./components/Checkbox";
 import Loader from "./components/Loader";
 import "./styles/App.css";
 
-type Panier = [string, number]; // [ingredient, quantité]
+interface RecipesProps {
+  handler: (checked: boolean, name: string) => void;
+}
+type Panier = {
+  ingredient: string;
+  quantity: number;
+};
 type Instructions = {
   name: string;
   steps: string[];
-}; // {nom, instructions} => Instructions get generated with GPT-3
+};
 type Message = {
   role: string;
   content: string;
 };
-
 type SelectedMeal = {
   name: string;
   steps: string[];
@@ -22,20 +27,20 @@ type SelectedMeal = {
   ingredients: string[];
 };
 
-// const initialiseSelectedMeal = (recipes: RecipeType[]): SelectedMeal[] => {
-//   const selectedMeals: SelectedMeal[] = [];
-//   for (let i = 0; i < recipes.length; i++) {
-//     selectedMeals.push({
-//       name: recipes[i].name,
-//       steps: [],
-//       isLoading: false,
-//       isSelected: false,
-//       ingredients: recipes[i].ingredients,
-//     });
-//   }
-//   return selectedMeals;
-// };
-// const initialSelectedMeal = initialiseSelectedMeal(recipes);
+const initialiseSelectedMeal = (recipes: RecipeType[]): SelectedMeal[] => {
+  const selectedMeals: SelectedMeal[] = [];
+  for (let i = 0; i < recipes.length; i++) {
+    selectedMeals.push({
+      name: recipes[i].name,
+      steps: [],
+      isLoading: false,
+      isSelected: false,
+      ingredients: recipes[i].ingredients,
+    });
+  }
+  return selectedMeals;
+};
+const initialSelectedMeal = initialiseSelectedMeal(recipes);
 
 const systemMsg = {
   role: "system",
@@ -44,48 +49,31 @@ const systemMsg = {
 };
 
 const App = () => {
-  const [panier, setPanier] = useState<Panier[]>([]); // liste des ingrédients
-  const [recipesNames, setRecipesNames] = useState<string[]>([]); // liste des recettes
-  const [instructions, setInstructions] = useState<Instructions>(); // liste des instructions
-  // const [selectedMeal, setSelectedMeal] =
-  //   useState<SelectedMeal[]>(initialSelectedMeal);
-  const [loading, setLoading] = useState<boolean>(false); // loading state
+  const [paniers, setPaniers] = useState<Panier[]>([]);
+  const [selectedMeal, setSelectedMeal] = useState<SelectedMeal[]>(initialSelectedMeal);
 
-  const handlePanier = (
-    checked: boolean,
-    ingredients: string[],
-    name: string
-  ) => {
-    const hashMapPanier: Panier[] = [...panier];
-    const hashMapNames: string[] = [...recipesNames];
-    if (checked) {
-      ingredients.map((ingredient) => {
-        const index = hashMapPanier.findIndex((el) => el[0] === ingredient);
-        if (index === -1) {
-          hashMapPanier.push([ingredient, 1]);
-        } else {
-          hashMapPanier[index][1] += 1;
-        }
-      });
+  const handlePanier = (checked: boolean, name: string) => {
+    const hashMapSelectedMeal: SelectedMeal[] = [...selectedMeal],
+      hashMapPanier: Panier[] = [...paniers],
+      q = checked ? 1 : -1,
+      selectedIndex = hashMapSelectedMeal.findIndex((meal) => meal.name === name),
+      ingredients = hashMapSelectedMeal[selectedIndex].ingredients;
+    hashMapSelectedMeal[selectedIndex].isSelected = checked;
 
-      hashMapNames.push(name);
-    } else {
-      ingredients.map((ingredient) => {
-        const index = hashMapPanier.findIndex((el) => el[0] === ingredient);
-        if (index !== -1) {
-          hashMapPanier[index][1] -= 1;
-          if (hashMapPanier[index][1] === 0) {
-            hashMapPanier.splice(index, 1);
-          }
+    for (let i = 0; i < ingredients.length; i++) {
+      const index = hashMapPanier.findIndex((panier) => panier.ingredient === ingredients[i]);
+      if (index == -1) {
+        hashMapPanier.push({ ingredient: ingredients[i], quantity: 1 });
+      } else {
+        hashMapPanier[index].quantity += q;
+        if (hashMapPanier[index].quantity == 0) {
+          hashMapPanier.splice(index, 1);
         }
-      });
-      hashMapNames.splice(
-        hashMapNames.findIndex((el) => el === name),
-        1
-      );
+      }
     }
-    setPanier(hashMapPanier);
-    setRecipesNames(hashMapNames);
+
+    setSelectedMeal(hashMapSelectedMeal);
+    setPaniers(hashMapPanier);
   };
 
   const handleInstructions = async (name: string) => {
@@ -93,9 +81,7 @@ const App = () => {
 
     const userMsg: Message = {
       role: "user",
-      content: `Recette: ${name}\n Ingredients: ${ingredients?.join(
-        ", "
-      )}\n Instructions: `,
+      content: `Recette: ${name}\n Ingredients: ${ingredients?.join(", ")}\n Instructions: `,
     };
 
     await processToGPT([systemMsg, userMsg], name);
@@ -118,10 +104,7 @@ const App = () => {
     };
 
     setLoading(true);
-    const res = await fetch(
-      "https://api.openai.com/v1/chat/completions",
-      fetchOptions
-    );
+    const res = await fetch("https://api.openai.com/v1/chat/completions", fetchOptions);
     const data = await res.json();
     setInstructions({
       name: name,
@@ -150,27 +133,23 @@ const App = () => {
             </div>
             <div className="global-chat-ctn">
               <h3>Instructions</h3>
-              {recipesNames.length > 0 &&
-                recipesNames.map((name, i) => (
-                  <Instructions
-                    key={i}
-                    instructions={instructions}
-                    recipeSelected={name}
-                    handler={handleInstructions}
-                    isLoading={loading}
-                  />
-                ))}
+              {paniers.length > 0 &&
+                selectedMeal.map((meal, i) => {
+                  if (meal.isSelected) {
+                    return <Instructions key={i} meal={meal} handler={handleInstructions} />;
+                  }
+                })}
             </div>
           </div>
         </div>
         <div className="ingredients-ctn">
-          {panier.length > 0 && (
+          {paniers.length > 0 && (
             <h3>
-              Liste de courses <small>( {panier.length} )</small>
+              Liste de courses <small>( {paniers.length} )</small>
             </h3>
           )}
           <div className="ingredients-data-ctn">
-            <Ingredients data={panier} />
+            <Ingredients paniers={paniers} />
           </div>
         </div>
       </section>
@@ -178,9 +157,6 @@ const App = () => {
   );
 };
 
-interface RecipesProps {
-  handler: (checked: boolean, ingredients: string[], name: string) => void;
-}
 const Recipes = ({ handler }: RecipesProps) => {
   return (
     <tbody>
@@ -188,11 +164,7 @@ const Recipes = ({ handler }: RecipesProps) => {
         <tr key={i}>
           <td>
             <div className="checkbox-ctn">
-              <Checkbox
-                handler={handler}
-                ingredients={recipe.ingredients}
-                name={recipe.name}
-              />
+              <Checkbox handler={handler} name={recipe.name} />
             </div>
           </td>
           <td>{recipe.name}</td>
@@ -215,15 +187,15 @@ const RecipesHead = () => {
   );
 };
 
-const Ingredients = ({ data }: { data: Panier[] }) => {
+const Ingredients = ({ paniers }: { paniers: Panier[] }) => {
   return (
     <>
       <ul className="ingredients">
-        {data.map((el, i) => (
+        {paniers.map((ing, i) => (
           <li key={i} className="list-ingredient">
-            <div>{el[0].charAt(0).toUpperCase() + el[0].slice(1)} </div>
+            <div>{ing.ingredient.charAt(0).toUpperCase() + ing.ingredient.slice(1)}</div>
             <div>
-              {el[1]} ration{`${el[1] > 1 ? "s" : ""}`}
+              {ing.quantity} ration{`${ing.quantity > 1 ? "s" : ""}`}
             </div>
           </li>
         ))}
@@ -232,35 +204,22 @@ const Ingredients = ({ data }: { data: Panier[] }) => {
   );
 };
 
-interface InstructionsProps {
-  instructions: Instructions | undefined;
-  recipeSelected?: string;
-  handler: (nameId: string) => void;
-  isLoading?: boolean;
-}
 const Instructions = ({
-  instructions,
-  recipeSelected,
   handler,
-  isLoading,
-}: InstructionsProps) => {
-  const steps = [];
-  if (instructions?.name !== undefined) {
-    steps.push(instructions.steps);
-  }
+  meal,
+}: {
+  handler: (name: string) => void;
+  meal: SelectedMeal;
+}) => {
+  const { name, steps, isLoading } = meal;
   return (
     <div className="recipe-name-ctn">
       <div className="recipe-name-btn-ctn" style={{ marginBottom: "1rem" }}>
-        <span>{recipeSelected}</span>
+        <span>{name}</span>
         {isLoading && <Loader />}
-        <button
-          id={recipeSelected}
-          onClick={(e) => handler(e.currentTarget.id)}
-        >
-          Generate
-        </button>
+        <button onClick={() => handler(name)}>Generate</button>
       </div>
-      {steps && (
+      {steps.length > 0 && (
         <div className="instructions-ctn">
           <ul style={{ listStyle: "none" }} className="list-instruction">
             {steps.map((step, i) => (
