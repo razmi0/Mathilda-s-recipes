@@ -1,0 +1,37 @@
+import { Message } from "../types";
+
+// const buildFetchOptions = (reqBody: object) => {
+//   return {
+//     method: "POST",
+//     headers: {
+//       Authorization: "Bearer " + import.meta.env.VITE_OPEN_API_KEY,
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify(reqBody),
+//   };
+// };
+
+// const systemMsg = {
+//   role: "system",
+//   content:
+//     "Complete the recipe talking like a chef and using the following ingredients as a base. Be concise and precise. Start each step with the coresponding step number and a double point(:). End the last sentence of each step with the characters : '&&'",
+// };
+
+export const processToGPT = async (messages: Message[]) => {
+  const url = "./.netlify/functions/index";
+
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify([...messages]),
+    });
+    const data = await res.json();
+
+    console.log(data);
+
+    return data.choices[0].message.content.split("&&");
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+};
