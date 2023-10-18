@@ -3,7 +3,7 @@ import { RecipeType, recipes } from "./recipes";
 import Checkbox from "./components/Checkbox";
 import Loader from "./components/Loader";
 import { Message, Panier, SelectedMeal } from "./types";
-import { processToGPT } from "./services/openAI";
+import { processToGPT } from "./services/gpt";
 import "./styles/App.css";
 
 const initialiseSelectedMeal = (recipes: RecipeType[]): SelectedMeal[] => {
