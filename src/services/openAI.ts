@@ -19,7 +19,7 @@ const systemMsg = {
 
 export const processToGPT = async (messages: Message[]) => {
   const fetchOptions = buildFetchOptions({
-    model: "gpt-3.5-turbo",
+    model: import.meta.env.VITE_GPT_MODEL,
     messages: [systemMsg, ...messages],
   });
 
