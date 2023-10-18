@@ -1,6 +1,3 @@
-export interface RecipesProps {
-  handler: (checked: boolean, name: string) => void;
-}
 export type Panier = {
   ingredient: string;
   quantity: number;

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { RecipeType, recipes } from "./recipes";
 import Checkbox from "./components/Checkbox";
 import Loader from "./components/Loader";
-import { Message, Panier, RecipesProps, SelectedMeal } from "./types";
+import { Message, Panier, SelectedMeal } from "./types";
 import { processToGPT } from "./services/openAI";
 import "./styles/App.css";
 
@@ -116,7 +116,7 @@ const App = () => {
   );
 };
 
-const Recipes = ({ handler }: RecipesProps) => {
+const Recipes = ({ handler }: { handler(checked: boolean, name: string): void }) => {
   return (
     <tbody>
       {recipes.map((recipe, i) => (
