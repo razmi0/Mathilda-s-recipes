@@ -22,6 +22,7 @@ const initialiseSelectedMeal = (recipes: RecipeType[]): SelectedMeal[] => {
 const App = () => {
   const [paniers, setPaniers] = useState<Panier[]>([]);
   const [selectedMeal, setSelectedMeal] = useState<SelectedMeal[]>(initialiseSelectedMeal(recipes));
+  const [APIkey, setAPIkey] = useState<string>("");
 
   const handlePanier = (checked: boolean, name: string) => {
     const hashMapSelectedMeal: SelectedMeal[] = [...selectedMeal],
@@ -62,7 +63,7 @@ const App = () => {
       return hashMapSelectedMeal;
     });
 
-    const steps: string[] = await processToGPT([userMsg]);
+    const steps: string[] = await processToGPT([userMsg], APIkey);
 
     setSelectedMeal((prev) => {
       const hashMapSelectedMeal = [...prev];
@@ -74,7 +75,7 @@ const App = () => {
 
   return (
     <>
-      <div className="main-ctn">
+      <div className="container">
         <h1>Les recettes de Mathilda</h1>
       </div>
       <section className="sec-tables-ctn">
