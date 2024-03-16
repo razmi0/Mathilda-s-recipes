@@ -654,8 +654,8 @@ video {
   justify-content: space-between;
 }
 
-.rounded-lg{
-  border-radius: 0.5rem;
+.gap-3{
+  gap: 0.75rem;
 }
 
 .rounded-tl-lg{
@@ -666,32 +666,8 @@ video {
   border-top-right-radius: 0.5rem;
 }
 
-.border-2{
-  border-width: 2px;
-}
-
-.border-b-2{
-  border-bottom-width: 2px;
-}
-
-.border-black\/40{
-  border-color: rgb(0 0 0 / 0.4);
-}
-
-.border-blueish-100{
-  border-color: #54669DFF;
-}
-
-.bg-blueish-300{
-  background-color: #3A4254FF;
-}
-
 .bg-blueish-400{
   background-color: #282C34FF;
-}
-
-.bg-blueish-200{
-  background-color: #495778FF;
 }
 
 .p-0{
@@ -713,6 +689,16 @@ video {
   padding-bottom: 1.5rem;
 }
 
+.py-2{
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.py-1{
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
 .text-left{
   text-align: left;
 }
@@ -727,10 +713,6 @@ video {
 
 .capitalize{
   text-transform: capitalize;
-}
-
-.opacity-90{
-  opacity: 0.9;
 }
 
 :root {
@@ -842,6 +824,7 @@ th{
   border-radius: 0.5rem;
   border-width: 1px;
   border-color: rgb(0 0 0 / 0.4);
+  background-color: rgb(58 66 84 / 0.95);
   --tw-shadow: 0px 1px 0px 0px hsla(0, 0%, 100%, 0.02) inset, 0px 0px 0px 1px hsla(0, 0%, 100%, 0.02) inset,
     0px 0px 0px 1px rgba(0, 0, 0, 0.25);
   --tw-shadow-colored: inset 0px 1px 0px 0px var(--tw-shadow-color), inset 0px 0px 0px 1px var(--tw-shadow-color),

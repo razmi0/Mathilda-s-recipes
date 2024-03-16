@@ -101,7 +101,7 @@ th {
   font-family: "Montserrat", sans-serif;
 }
 .card {
-  @apply rounded-lg border-[1px] border-black/40 shadow-inner-shadow-dark-sm;
+  @apply rounded-lg border-[1px] bg-blueish-300/95  border-black/40 shadow-inner-shadow-dark-sm;
 }
 /*  */
 

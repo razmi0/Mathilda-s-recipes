@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ElementType, ReactNode, useState } from "react";
 import Checkbox from "./components/Checkbox";
 import Loader from "./components/Loader";
 import { RecipeType, recipes } from "./recipes";
@@ -78,10 +78,10 @@ const App = () => {
       <h1 className="mt-8 mb-16">Les recettes de Mathilda</h1>
       <section className="flex flex-col justify-between items-start">
         {/* RECETTES */}
-        <div className="flex flex-col border-2 rounded-lg border-blueish-100 bg-blueish-300 opacity-90 card">
-          <h3 className="text-2xl py-6 px-4 border-black/40 border-b-2 bg-blueish-400 rounded-tl-lg rounded-tr-lg">
+        <div className="flex flex-col card">
+          <CardHeading as="h3">
             Recettes <small>( {recipes.length} )</small>
-          </h3>
+          </CardHeading>
           <div className="flex justify-start items-center text-left px-2">
             <table className="first:mt-3 last:mb-3">
               <Recipes handler={handlePanier} />
@@ -89,16 +89,16 @@ const App = () => {
           </div>
         </div>
         {/* PANIER */}
-        <div className="w-full flex flex-col my-8">
-          {paniers.length > 0 && (
-            <h3 className="text-2xl">
+        {paniers.length > 0 && (
+          <div className="w-full flex flex-col my-8 card">
+            <CardHeading as={"h3"}>
               Liste de courses <small>( {paniers.length} )</small>
-            </h3>
-          )}
-          <div className="mt-8 flex justify-center items-center">
-            <Ingredients paniers={paniers} />
+            </CardHeading>
+            <div className="flex justify-center items-center">
+              <Ingredients paniers={paniers} />
+            </div>
           </div>
-        </div>
+        )}
         {/* INSTRUCTION */}
         <div className="w-full mt-8 flex flex-col justify-start items-center">
           <h3 className="w-full text-2xl mb-8">Instructions</h3>
@@ -112,6 +112,17 @@ const App = () => {
       </section>
       <footer className="w-full h-8"></footer>
     </div>
+  );
+};
+
+type CardHeadingProps = {
+  as: ("h1" | "h2" | "h3" | "h4" | "h5" | "h6") & ElementType;
+  classNames?: string;
+  children: ReactNode;
+};
+const CardHeading = ({ as: As, classNames, children }: CardHeadingProps) => {
+  return (
+    <As className={`text-2xl py-6 px-4 bg-blueish-400 rounded-tl-lg rounded-tr-lg ${classNames || ""}`}>{children}</As>
   );
 };
 
@@ -133,26 +144,14 @@ const Recipes = ({ handler }: RecipesProps) => {
   );
 };
 
-const RecipesHead = () => {
-  return (
-    <thead>
-      <tr>
-        <th>Panier</th>
-        <th>Nom</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-  );
-};
-
 const Ingredients = ({ paniers }: { paniers: Panier[] }) => {
   const pluriel = (word: string, quantity: number) => (quantity > 1 ? word + "s" : word);
   const capitalize = (word: string) => word.charAt(0).toUpperCase() + word.slice(1);
   return (
     <>
-      <ul className="w-full text-center">
+      <ul className="w-full text-center px-4 py-2">
         {paniers.map((ing, i) => (
-          <li key={i} className="flex justify-between items-center">
+          <li key={i} className="flex justify-between items-center py-1">
             <div>{capitalize(ing.ingredient)}</div>
             <div>
               {ing.quantity} {pluriel(" ration", ing.quantity)}

@@ -19,6 +19,7 @@ export default {
           100: "#54669DFF",
         },
       },
+
       fontSize: {
         "2xl": "1.5rem",
       },
