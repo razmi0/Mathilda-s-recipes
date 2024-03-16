@@ -1,5 +1,7 @@
+import { DropdownMenuArrow } from "@radix-ui/react-dropdown-menu";
 import { ChangeEvent, ElementType, MouseEvent, ReactNode, useState } from "react";
 import Button from "./components/Button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./components/Dropdown";
 import Icon from "./components/Icons";
 import Loader from "./components/Loader";
 import Noise from "./components/Noise";
@@ -88,13 +90,18 @@ const App = () => {
               <span>
                 Recettes <small>( {recipes.length} )</small>
               </span>
-              <button className="menu">
-                <Icon
-                  name="menu"
-                  width={28}
-                  className="stroke-def-200 hover:stroke-def-100 hover:bg-blueish-450 rounded-lg transition-colors p-1"
-                />
-              </button>
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <Icon
+                    name="menu"
+                    width={30}
+                    className="stroke-def-200 hover:stroke-def-100 hover:bg-blueish-450 rounded-lg transition-colors p-1"
+                  />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent side="left" sideOffset={-20} className="bg-blueish-400 border-black/40">
+                  <DropdownMenuItem className="hover:bg-blueish-300">Add new recipe</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </CardHeading>
             <div className="flex justify-start items-center text-left px-2">
               <table className="first:mt-3 last:mb-3">
