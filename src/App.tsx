@@ -1,6 +1,7 @@
 import { ChangeEvent, ElementType, MouseEvent, ReactNode, useState } from "react";
 import Button from "./components/Button";
 import Loader from "./components/Loader";
+import Noise from "./components/Noise";
 import { RecipeType, recipes } from "./recipes";
 import { processToGPT } from "./services/openAI";
 import { Message, Panier, RecipesProps, SelectedMeal } from "./types";
@@ -74,51 +75,54 @@ const App = () => {
   };
 
   return (
-    <div className="container">
-      <h1 className="mt-8 mb-16">Les recettes de Mathilda</h1>
-      <section className="flex flex-col justify-between items-start">
-        {/* RECETTES */}
-        <div className="flex flex-col card">
-          <CardHeading as="h3">
-            Recettes <small>( {recipes.length} )</small>
-          </CardHeading>
-          <div className="flex justify-start items-center text-left px-2">
-            <table className="first:mt-3 last:mb-3">
-              <Recipes handler={handlePanier} />
-            </table>
+    <>
+      <div className="container">
+        <h1 className="mt-8 mb-16">Les recettes de Mathilda</h1>
+        <section className="flex flex-col justify-between items-start">
+          {/* RECETTES */}
+          <div className="flex flex-col card">
+            <CardHeading as="h3">
+              Recettes <small>( {recipes.length} )</small>
+            </CardHeading>
+            <div className="flex justify-start items-center text-left px-2">
+              <table className="first:mt-3 last:mb-3">
+                <Recipes handler={handlePanier} />
+              </table>
+            </div>
           </div>
-        </div>
-        <section className="flex justify-evenly w-full">
-          {/* PANIER */}
-          {paniers.length > 0 && (
-            <div className="flex flex-col my-8 card min-w-80">
-              <CardHeading as={"h3"}>
-                Liste de courses <small>( {paniers.length} )</small>
-              </CardHeading>
-              <div className="flex justify-center items-center">
-                <Ingredients paniers={paniers} />
+          <section className="flex justify-evenly w-full">
+            {/* PANIER */}
+            {paniers.length > 0 && (
+              <div className="flex flex-col my-8 card min-w-80">
+                <CardHeading as={"h3"}>
+                  Liste de courses <small>( {paniers.length} )</small>
+                </CardHeading>
+                <div className="flex justify-center items-center">
+                  <Ingredients paniers={paniers} />
+                </div>
               </div>
-            </div>
-          )}
-          {/* INSTRUCTION */}
-          {paniers.length > 0 && (
-            <div className="w-fit mt-8 flex flex-col justify-start items-center card h-fit min-w-80">
-              <CardHeading as={"h3"} classNames="w-full">
-                Instructions
-              </CardHeading>
-              {selectedMeal.map((meal, i) => {
-                if (meal.isSelected) {
-                  return (
-                    <Instructions key={i} meal={meal} handler={() => setTimeout(() => console.log("yes"), 1000)} />
-                  );
-                }
-              })}
-            </div>
-          )}
+            )}
+            {/* INSTRUCTION */}
+            {paniers.length > 0 && (
+              <div className="w-fit mt-8 flex flex-col justify-start items-center card h-fit min-w-80">
+                <CardHeading as={"h3"} classNames="w-full">
+                  Instructions
+                </CardHeading>
+                {selectedMeal.map((meal, i) => {
+                  if (meal.isSelected) {
+                    return (
+                      <Instructions key={i} meal={meal} handler={() => setTimeout(() => console.log("yes"), 1000)} />
+                    );
+                  }
+                })}
+              </div>
+            )}
+          </section>
         </section>
-      </section>
-      <footer className="w-full h-8"></footer>
-    </div>
+        <footer className="w-full h-8"></footer>
+      </div>
+      <Noise />
+    </>
   );
 };
 
