@@ -30,14 +30,9 @@ a:hover {
 
 body {
   background: radial-gradient(circle at center, #282c34 0%, #1c1e24 100%);
+  min-height : 100vh;
 }
-/* body {
-    margin: 0;
-    display: flex;
-    place-items: center;
-    min-width: 320px;
-    min-height: 100vh;
-  } */
+
 
 h1 {
   font-size: 3.2em;
@@ -71,13 +66,10 @@ button {
   transition: border-color 0.25s;
   color: #e8e8e8;
 }
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
+/* button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
-}
+} */
 
 #root {
   max-width: 1280px;
@@ -111,6 +103,30 @@ th {
   --tw-shadow-colored: inset 0px 1px 0px 0px var(--tw-shadow-color), inset 0px 0px 0px 1px var(--tw-shadow-color),
     0px 0px 0px 1px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.button-wave {
+  position: absolute;
+  background: 0 0;
+  pointer-events: none;
+  box-sizing: border-box;
+  @apply text-blueish-50;
+  box-shadow: 0 0 0 0 currentColor;
+  opacity: 0.2;
+}
+
+.button-wave.wave-motion-appear {
+  --cb-ease-out: cubic-bezier(0.08, 0.82, 0.17, 1);
+  transition: box-shadow 0.4s cubic-bezier(0.08, 0.82, 0.17, 1), opacity 2s cubic-bezier(0.08, 0.82, 0.17, 1);
+}
+
+.button-wave.wave-motion-appear-active {
+  box-shadow: 0 0 0 6px currentColor;
+  opacity: 0;
+}
+
+.button-wave.wave-motion-appear.wave-quick {
+  --cb-ease-in-out: cubic-bezier(0.78, 0.14, 0.15, 0.86)
+  transition: box-shadow 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86), opacity 0.35s cubic-bezier(0.78, 0.14, 0.15, 0.86);
 }
 
 /* CHECKBOX */
