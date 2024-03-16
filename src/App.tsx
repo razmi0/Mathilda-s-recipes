@@ -78,13 +78,12 @@ const App = () => {
       <h1 className="mt-8 mb-16">Les recettes de Mathilda</h1>
       <section className="flex flex-col justify-between items-start">
         {/* RECETTES */}
-        <div className="flex flex-col border-2 rounded-lg border-gray-500 py-2">
-          <h3 className="text-2xl py-3 px-2">
+        <div className="flex flex-col border-2 rounded-lg border-blueish-100 bg-blueish-300 opacity-90 card">
+          <h3 className="text-2xl py-6 px-4 border-black/40 border-b-2 bg-blueish-400 rounded-tl-lg rounded-tr-lg">
             Recettes <small>( {recipes.length} )</small>
           </h3>
-          <div className="mt-8 flex justify-start items-center text-left">
-            <table>
-              <RecipesHead />
+          <div className="flex justify-start items-center text-left px-2">
+            <table className="first:mt-3 last:mb-3">
               <Recipes handler={handlePanier} />
             </table>
           </div>
