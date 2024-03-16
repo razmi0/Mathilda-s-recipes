@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { RecipeType, recipes } from "./recipes";
 import Checkbox from "./components/Checkbox";
 import Loader from "./components/Loader";
-import { Message, Panier, RecipesProps, SelectedMeal } from "./types";
+import { RecipeType, recipes } from "./recipes";
 import { processToGPT } from "./services/openAI";
-import "./styles/App.css";
+import { Message, Panier, RecipesProps, SelectedMeal } from "./types";
 
 const initialiseSelectedMeal = (recipes: RecipeType[]): SelectedMeal[] => {
   const selectedMeals: SelectedMeal[] = [];
@@ -163,13 +162,7 @@ const Ingredients = ({ paniers }: { paniers: Panier[] }) => {
   );
 };
 
-const Instructions = ({
-  handler,
-  meal,
-}: {
-  handler: (name: string) => void;
-  meal: SelectedMeal;
-}) => {
+const Instructions = ({ handler, meal }: { handler: (name: string) => void; meal: SelectedMeal }) => {
   const { name, steps, isLoading } = meal;
   return (
     <div className="recipe-name-ctn">
