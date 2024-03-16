@@ -63,6 +63,18 @@ button {
   font-family: inherit;
   background-color: #1a1a1a;
   cursor: pointer;
+  color: #e8e8e8;
+}
+
+button.menu {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.1em 0.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: transparent;
+  cursor: pointer;
   transition: border-color 0.25s;
   color: #e8e8e8;
 }
@@ -203,7 +215,7 @@ th {
 
 .loader {
   --color: #a5a5b0;
-  --size: 30px;
+  --size: 20px;
   width: var(--size);
   height: var(--size);
   display: grid;

@@ -1,5 +1,6 @@
 import { ChangeEvent, ElementType, MouseEvent, ReactNode, useState } from "react";
 import Button from "./components/Button";
+import Icon from "./components/Icons";
 import Loader from "./components/Loader";
 import Noise from "./components/Noise";
 import { RecipeType, recipes } from "./recipes";
@@ -74,6 +75,8 @@ const App = () => {
     });
   };
 
+  // color="#AEAEAEFF"
+
   return (
     <>
       <div className="container">
@@ -81,8 +84,17 @@ const App = () => {
         <section className="flex flex-col justify-between items-start">
           {/* RECETTES */}
           <div className="flex flex-col card">
-            <CardHeading as="h3">
-              Recettes <small>( {recipes.length} )</small>
+            <CardHeading as="h3" classNames="flex items-center justify-between">
+              <span>
+                Recettes <small>( {recipes.length} )</small>
+              </span>
+              <button className="menu">
+                <Icon
+                  name="menu"
+                  width={28}
+                  className="stroke-def-200 hover:stroke-def-100 hover:bg-blueish-450 rounded-lg transition-colors p-1"
+                />
+              </button>
             </CardHeading>
             <div className="flex justify-start items-center text-left px-2">
               <table className="first:mt-3 last:mb-3">
@@ -110,9 +122,7 @@ const App = () => {
                 </CardHeading>
                 {selectedMeal.map((meal, i) => {
                   if (meal.isSelected) {
-                    return (
-                      <Instructions key={i} meal={meal} handler={() => setTimeout(() => console.log("yes"), 1000)} />
-                    );
+                    return <Instructions key={i} meal={meal} handler={handleInstructions} />;
                   }
                 })}
               </div>

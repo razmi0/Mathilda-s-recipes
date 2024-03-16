@@ -13,21 +13,15 @@ export const recipes: RecipeType[] = [
     citation: "Citation",
     description:
       "lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet",
-    ingredients: [
-      "Oignon",
-      "Bouillon",
-      "ail",
-      "Huile d'olive",
-      "tomate cerise",
-      "Epinard",
-      "creme fraiche",
-    ],
+    ingredients: ["Oignon", "Bouillon", "ail", "Huile d'olive", "tomate cerise", "Epinard", "creme fraiche"],
   },
   {
     name: "Riz sauté asiatique",
     date: new Date(2023, 9, 10),
     citation: "Citation",
-    description: "Description",
+    description:
+      "lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet",
+
     ingredients: [
       "oeufs",
       "graisse de canard",
@@ -43,7 +37,9 @@ export const recipes: RecipeType[] = [
     name: "Brocolis rotis et sauce cacahuète creamy",
     date: new Date(2023, 10, 10),
     citation: "Citation",
-    description: "Description",
+    description:
+      "lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet",
+
     ingredients: [
       "Brocolis",
       "oignons rouges",
@@ -61,7 +57,9 @@ export const recipes: RecipeType[] = [
     name: "Canneloni ricotta épinard sauce béchamel",
     date: new Date(2023, 10, 17),
     citation: "Citation",
-    description: "Description",
+    description:
+      "lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet",
+
     ingredients: [
       "Echalotte",
       "Ail",
