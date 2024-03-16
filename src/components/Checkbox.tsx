@@ -5,7 +5,7 @@ interface CheckboxProps {
 
 const Checkbox = ({ handler, name }: CheckboxProps) => {
   return (
-    <label className="container">
+    <label className="checkbox-container">
       <input type="checkbox" onChange={(e) => handler(e.target.checked, name)} />
       <div className="checkmark"></div>
     </label>

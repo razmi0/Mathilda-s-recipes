@@ -578,8 +578,111 @@ video {
   }
 }
 
+.mx-4 {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.my-8 {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.mb-16 {
+  margin-bottom: 4rem;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.mb-8 {
+  margin-bottom: 2rem;
+}
+
+.mt-8 {
+  margin-top: 2rem;
+}
+
+.flex {
+  display: flex;
+}
+
 .table {
   display: table;
+}
+
+.h-8 {
+  height: 2rem;
+}
+
+.w-3\/4 {
+  width: 75%;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.list-none {
+  list-style-type: none;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-start {
+  align-items: flex-start;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-start {
+  justify-content: flex-start;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+
+.border-2 {
+  border-width: 2px;
+}
+
+.border-gray-500 {
+  --tw-border-opacity: 1;
+  border-color: rgb(107 114 128 / var(--tw-border-opacity));
+}
+
+.p-0 {
+  padding: 0px;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-2xl {
+  font-size: 1.5rem;
+}
+
+.capitalize {
+  text-transform: capitalize;
 }
 
 :root {
@@ -604,6 +707,10 @@ a {
 
 a:hover {
   color: #535bf2;
+}
+
+body {
+  background: radial-gradient(circle at center, #282c34 0%, #1c1e24 100%);
 }
 
 /* body {
@@ -645,96 +752,7 @@ button:focus-visible {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
-  text-align: center;
-}
-
-.sec-tables-ctn {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-.table-ctn {
-  width: 100%;
-  margin-top: 2rem;
-  display: flex;
-  justify-content: start;
-  align-items: center;
   text-align: left;
-}
-
-.ingredients-ctn {
-  display: flex;
-  width: 75%;
-  flex-direction: column;
-}
-
-.recipes-ctn {
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-}
-
-.global-chat-ctn {
-  width: 100%;
-  margin-top: 2rem;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-direction: column;
-}
-
-.recipe-name-ctn {
-  width: 100%;
-  text-align: left;
-  margin-bottom: 1rem;
-  margin-top: 1rem;
-}
-
-.recipe-name-btn-ctn {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.ingredients-data-ctn {
-  width: 100%;
-  margin-top: 2rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.ingredients {
-  width: 100%;
-  text-align: center;
-}
-
-ul.ingredients li {
-  margin-bottom: 0.2rem;
-}
-
-.list-ingredient {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.list-instruction {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  padding: 0;
-}
-
-.list-instruction-step {
-  display: block;
-  padding: 0.5rem;
-  margin-bottom: 0.5rem;
 }
 
 table {
@@ -743,19 +761,13 @@ table {
 
 td {
   border-bottom: 2px solid #ccc;
-  padding: 5px 10px;
+  padding: 3px 7px;
 }
 
 th {
   border-bottom: 2px solid #f9f5f5;
   padding-bottom: 10px;
   text-align: center;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
 }
 
 /* CHECKBOX */
@@ -769,7 +781,7 @@ th {
 
 /* Hide the default checkbox */
 
-.container input {
+.checkbox-container input {
   position: absolute;
   opacity: 0;
   cursor: pointer;
@@ -777,7 +789,7 @@ th {
   width: 0;
 }
 
-.container {
+.checkbox-container {
   display: block;
   position: relative;
   cursor: pointer;
@@ -803,7 +815,7 @@ th {
 
 /* When the checkbox is checked, add a blue background */
 
-.container input:checked ~ .checkmark {
+.checkbox-container input:checked ~ .checkmark {
   background-color: var(--clr);
   border-radius: 0.18rem;
   animation: pulse 500ms ease-in-out;
@@ -819,13 +831,13 @@ th {
 
 /* Show the checkmark when checked */
 
-.container input:checked ~ .checkmark:after {
+.checkbox-container input:checked ~ .checkmark:after {
   display: block;
 }
 
 /* Style the checkmark/indicator */
 
-.container .checkmark:after {
+.checkbox-container .checkmark:after {
   left: 0.25em;
   top: 0.1em;
   width: 0.3em;
