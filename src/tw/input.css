@@ -67,9 +67,6 @@ button:focus-visible {
   text-align: center;
 }
 
-.main-ctn {
-  width: 100%;
-}
 .sec-tables-ctn {
   width: 100%;
   display: flex;
@@ -227,8 +224,8 @@ th {
 .container .checkmark:after {
   left: 0.25em;
   top: 0.1em;
-  width: 0.18em;
-  height: 0.4em;
+  width: 0.3em;
+  height: 0.5em;
   border: solid #e0e0e2;
   border-width: 0 0.15em 0.15em 0;
   transform: rotate(45deg);
