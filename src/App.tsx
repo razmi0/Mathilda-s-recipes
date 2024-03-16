@@ -78,8 +78,8 @@ const App = () => {
       <h1 className="mt-8 mb-16">Les recettes de Mathilda</h1>
       <section className="flex flex-col justify-between items-start">
         {/* RECETTES */}
-        <div className="flex flex-col border-2 rounded-lg border-gray-500">
-          <h3 className="text-2xl">
+        <div className="flex flex-col border-2 rounded-lg border-gray-500 py-2">
+          <h3 className="text-2xl py-3 px-2">
             Recettes <small>( {recipes.length} )</small>
           </h3>
           <div className="mt-8 flex justify-start items-center text-left">
