@@ -13,6 +13,7 @@ import Icon from "./components/Icons";
 import Loader from "./components/Loader";
 import Noise from "./components/Noise";
 import { Popover, PopoverContent, PopoverTrigger } from "./components/Popover";
+import useClipBoard from "./hooks/useClipboard";
 import { useRecipe, type RecipeType } from "./hooks/useRecipe";
 import { isViableKey, processToGPT } from "./services/openAI";
 import type { Message, Panier, RecipesProps, SelectedMeal } from "./types";
@@ -33,11 +34,15 @@ const initialiseSelectedMeal = (recipes: RecipeType[]): SelectedMeal[] => {
 };
 
 const App = () => {
+  const inputRef = useRef<HTMLInputElement>(null);
   const { recipes, totalIngredients, addRecipe, deleteRecipe, editRecipe, getRecipe } = useRecipe();
   const [paniers, setPaniers] = useState<Panier[]>([]);
   const [selectedMeal, setSelectedMeal] = useState<SelectedMeal[]>(initialiseSelectedMeal(recipes));
+
   const [APIkeyInput, setAPIkeyInput] = useState({ validity: false, typing: true, key: "" });
-  const inputRef = useRef<HTMLInputElement>(null);
+  const changeKey = (key: string) => setAPIkeyInput({ validity: isViableKey(key), typing: false, key });
+
+  const { readClipboard } = useClipBoard(changeKey);
 
   const handlePanier = (checked: boolean, id: number) => {
     const copySelectedMeal: SelectedMeal[] = [...selectedMeal];
@@ -107,8 +112,9 @@ const App = () => {
         <header className="flex items-center justify-between mt-8 mb-16">
           <h1 className="">Les recettes de Mathilda</h1>
           <Popover>
-            <PopoverTrigger>
+            <PopoverTrigger role="button" tabIndex={0}>
               <Icon
+                title="Open settings"
                 name="setting"
                 width={40}
                 className="stroke-def-200 hover:stroke-def-100 hover:bg-blueish-450 rounded-lg transition-colors p-1"
@@ -118,7 +124,7 @@ const App = () => {
               <a className="text-sm underline text-def-200" href="https://platform.openai.com/api-keys" target="_blank">
                 Get your API key from OpenAI
               </a>
-              <div className="flex items-center ">
+              <div className="flex items-center justify-between w-full gap-1">
                 <label htmlFor="open API key" className="sr-only">
                   open API key
                 </label>
@@ -137,22 +143,16 @@ const App = () => {
                   id="open API key"
                 />
                 <Icon
-                  role="button"
                   name="paste"
+                  role="button"
+                  tabIndex={0}
+                  title="Paste from clipboard"
                   width={30}
-                  className="absolute right-0 cursor-pointer stroke-def-100 hover:stroke-def-200 transition-colors p-1"
-                  aria-labelledby="copy API key"
-                  style={{ transform: "translateX(-20px)" }}
-                  onClick={() => {
-                    navigator.clipboard.readText().then((text) => {
-                      setAPIkeyInput({ validity: isViableKey(text), typing: true, key: text });
-                    });
-                  }}
+                  className="stroke-def-200 hover:stroke-def-100 hover:bg-blueish-450 rounded-lg transition-colors p-1"
+                  onClick={readClipboard}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
-                      navigator.clipboard.readText().then((text) => {
-                        setAPIkeyInput({ validity: isViableKey(text), typing: true, key: text });
-                      });
+                      readClipboard();
                     }
                   }}
                 />
@@ -179,9 +179,10 @@ const App = () => {
                 Recettes <small>( {recipes.length} )</small>
               </span>
               <DropdownMenu>
-                <DropdownMenuTrigger>
+                <DropdownMenuTrigger role="button" tabIndex={0}>
                   <Icon
                     name="menu"
+                    title="Open recipes menu"
                     width={30}
                     className="stroke-def-200 hover:stroke-def-100 hover:bg-blueish-450 rounded-lg transition-colors p-1"
                   />
