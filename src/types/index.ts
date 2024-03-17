@@ -1,7 +1,7 @@
 import { RecipeType } from "../hooks/useRecipe";
 
 export interface RecipesProps {
-  handler: (checked: boolean, id: number) => void;
+  selectRecipe: (checked: boolean, id: number) => void;
   recipes: RecipeType[];
 }
 export type Panier = {

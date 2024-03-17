@@ -44,7 +44,7 @@ const App = () => {
 
   const { readClipboard } = useClipBoard(changeKey);
 
-  const handlePanier = (checked: boolean, id: number) => {
+  const handleSelectedRecipe = (checked: boolean, id: number) => {
     const copySelectedMeal: SelectedMeal[] = [...selectedMeal];
     const copyPanier: Panier[] = [...paniers];
     const q = checked ? 1 : -1;
@@ -101,7 +101,7 @@ const App = () => {
 
   const inputColor = (validity: boolean, typing: boolean) => {
     if (!typing) {
-      return validity ? "border-green-500" : "border-red-500";
+      return validity ? "border-green-500" : "border-red-500 outline-none";
     }
     return "border-black/40";
   };
@@ -125,39 +125,45 @@ const App = () => {
                 Get your API key from OpenAI
               </a>
               <div className="flex items-center justify-between w-full gap-1">
-                <label htmlFor="open API key" className="sr-only">
+                <label htmlFor="open_API_key" className="sr-only">
                   open API key
                 </label>
                 <input
+                  spellCheck="false"
+                  autoComplete="off"
                   ref={inputRef}
                   type="text"
                   value={APIkeyInput.key}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      setAPIkeyInput({
+                        validity: isViableKey(APIkeyInput.key),
+                        typing: false,
+                        key: APIkeyInput.key,
+                      });
+                    }
+                  }}
                   onChange={(e) => {
                     setAPIkeyInput({ validity: false, typing: true, key: e.target.value });
                   }}
-                  placeholder="API key"
+                  placeholder="Enter your API key here"
                   className={`w-full px-2 py-1 my-2 rounded-md border-2 bg-blueish-200 ${inputColor(
                     APIkeyInput.validity,
                     APIkeyInput.typing
                   )}`}
-                  id="open API key"
+                  id="open_API_key"
                 />
-                <Icon
-                  name="paste"
-                  role="button"
-                  tabIndex={0}
-                  title="Paste from clipboard"
-                  width={30}
-                  className="stroke-def-200 hover:stroke-def-100 hover:bg-blueish-450 rounded-lg transition-colors p-1"
-                  onClick={readClipboard}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      readClipboard();
-                    }
-                  }}
-                />
+                <Button ariaLabel="Paste from clipboard" onClick={readClipboard} variant="invisible">
+                  <Icon
+                    name="paste"
+                    title="Paste from clipboard"
+                    width={30}
+                    className="stroke-def-200 hover:stroke-def-100 hover:bg-blueish-450 rounded-lg transition-colors p-1"
+                  />
+                </Button>
               </div>
               <Button
+                ariaLabel="Confirm API key"
                 onClick={() => {
                   setAPIkeyInput({
                     validity: isViableKey(APIkeyInput.key),
@@ -188,13 +194,18 @@ const App = () => {
                   />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent side="left" sideOffset={-10} className="bg-blueish-400 border-black/40">
-                  <DropdownMenuItem className="hover:bg-blueish-300">Add new recipe</DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="hover:bg-blueish-300 cursor-pointer"
+                    onClick={/* openAddRecipeModal */ () => {}}
+                  >
+                    Add new recipe
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </CardHeading>
             <div className="flex justify-start items-center text-left px-2">
               <table className="first:mt-3 last:mb-3">
-                <Recipes handler={handlePanier} recipes={recipes} />
+                <Recipes selectRecipe={handleSelectedRecipe} recipes={recipes} />
               </table>
             </div>
           </div>
@@ -243,14 +254,14 @@ const CardHeading = ({ as: As, classNames, children }: CardHeadingProps) => {
   );
 };
 
-const Recipes = ({ handler, recipes }: RecipesProps) => {
+const Recipes = ({ selectRecipe, recipes }: RecipesProps) => {
   const [checked, setChecked] = useState<boolean[]>(new Array(recipes.length).fill(false));
 
   const toggleCheckedRecipe = (i: number, id: number) => {
     const newChecked = [...checked];
     newChecked[i] = !newChecked[i];
     setChecked(newChecked);
-    handler(newChecked[i], id);
+    selectRecipe(newChecked[i], id);
   };
 
   if (recipes.length !== checked.length) {
@@ -331,7 +342,7 @@ const Instructions = ({ handler, meal }: { handler: (name: string) => void; meal
     <div className="w-full text-left mx-4">
       <div className="flex justify-between items-center py-2 px-2">
         <span>{name}</span>
-        <Button onClick={() => handler(name)} loading={isLoading} loader={<Loader />}>
+        <Button ariaLabel="Generate instructions" onClick={() => handler(name)} loading={isLoading} loader={<Loader />}>
           Generate
         </Button>
       </div>
