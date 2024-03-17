@@ -1,13 +1,8 @@
-export interface RecipeType {
-  name: string;
-  date: Date;
-  citation: string;
-  description: string;
-  ingredients: string[];
-  nbrOfIngredients?: number;
-}
+import type { RecipeType } from "./hooks/useRecipe";
+
 export const recipes: RecipeType[] = [
   {
+    id: 1,
     name: "Simple orzoto",
     date: new Date(2023, 9, 10),
     citation: "Citation",
@@ -16,6 +11,7 @@ export const recipes: RecipeType[] = [
     ingredients: ["Oignon", "Bouillon", "ail", "Huile d'olive", "tomate cerise", "Epinard", "creme fraiche"],
   },
   {
+    id: 2,
     name: "Riz sauté asiatique",
     date: new Date(2023, 9, 10),
     citation: "Citation",
@@ -34,6 +30,7 @@ export const recipes: RecipeType[] = [
     ],
   },
   {
+    id: 3,
     name: "Brocolis rotis et sauce cacahuète creamy",
     date: new Date(2023, 10, 10),
     citation: "Citation",
@@ -54,6 +51,7 @@ export const recipes: RecipeType[] = [
     ],
   },
   {
+    id: 4,
     name: "Canneloni ricotta épinard sauce béchamel",
     date: new Date(2023, 10, 17),
     citation: "Citation",
@@ -78,5 +76,3 @@ export const recipes: RecipeType[] = [
 for (const recipe of recipes) {
   recipe.nbrOfIngredients = recipe.ingredients.length;
 }
-
-//TODO : ingredients optionnels
