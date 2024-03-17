@@ -1,11 +1,19 @@
-import { useRef, useState, type ChangeEvent, type ElementType, type MouseEvent, type ReactNode } from "react";
+import {
+  useCallback,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type ElementType,
+  type MouseEvent,
+  type ReactNode,
+} from "react";
 import Button from "./components/Button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./components/Dropdown";
 import Icon from "./components/Icons";
 import Loader from "./components/Loader";
 import Noise from "./components/Noise";
 import { Popover, PopoverContent, PopoverTrigger } from "./components/Popover";
-import { RecipeType, recipes } from "./recipes";
+import { useRecipe, type RecipeType } from "./hooks/useRecipe";
 import { isViableKey, processToGPT } from "./services/openAI";
 import type { Message, Panier, RecipesProps, SelectedMeal } from "./types";
 
@@ -13,6 +21,7 @@ const initialiseSelectedMeal = (recipes: RecipeType[]): SelectedMeal[] => {
   const selectedMeals: SelectedMeal[] = [];
   for (let i = 0; i < recipes.length; i++) {
     selectedMeals.push({
+      id: recipes[i].id,
       name: recipes[i].name,
       steps: [],
       isLoading: false,
@@ -24,59 +33,64 @@ const initialiseSelectedMeal = (recipes: RecipeType[]): SelectedMeal[] => {
 };
 
 const App = () => {
+  const { recipes, totalIngredients, addRecipe, deleteRecipe, editRecipe, getRecipe } = useRecipe();
   const [paniers, setPaniers] = useState<Panier[]>([]);
   const [selectedMeal, setSelectedMeal] = useState<SelectedMeal[]>(initialiseSelectedMeal(recipes));
   const [APIkeyInput, setAPIkeyInput] = useState({ validity: false, typing: true, key: "" });
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handlePanier = (checked: boolean, name: string) => {
-    const hashMapSelectedMeal: SelectedMeal[] = [...selectedMeal],
-      hashMapPanier: Panier[] = [...paniers],
-      q = checked ? 1 : -1,
-      selectedIndex = hashMapSelectedMeal.findIndex((meal) => meal.name === name),
-      ingredients = hashMapSelectedMeal[selectedIndex].ingredients;
-    hashMapSelectedMeal[selectedIndex].isSelected = checked;
+  const handlePanier = (checked: boolean, id: number) => {
+    const copySelectedMeal: SelectedMeal[] = [...selectedMeal];
+    const copyPanier: Panier[] = [...paniers];
+    const q = checked ? 1 : -1;
+    const selectedIndex = copySelectedMeal.findIndex((meal) => meal.id === id);
+    const ingredients = copySelectedMeal[selectedIndex].ingredients;
+
+    copySelectedMeal[selectedIndex].isSelected = checked;
 
     for (let i = 0; i < ingredients.length; i++) {
-      const index = hashMapPanier.findIndex((panier) => panier.ingredient === ingredients[i]);
+      const index = copyPanier.findIndex((panier) => panier.ingredient === ingredients[i]);
       if (index == -1) {
-        hashMapPanier.push({ ingredient: ingredients[i], quantity: 1 });
+        copyPanier.push({ ingredient: ingredients[i], quantity: 1 });
       } else {
-        hashMapPanier[index].quantity += q;
-        if (hashMapPanier[index].quantity == 0) {
-          hashMapPanier.splice(index, 1);
+        copyPanier[index].quantity += q;
+        if (copyPanier[index].quantity == 0) {
+          copyPanier.splice(index, 1);
         }
       }
     }
 
-    setSelectedMeal(hashMapSelectedMeal);
-    setPaniers(hashMapPanier);
+    setSelectedMeal(copySelectedMeal);
+    setPaniers(copyPanier);
   };
 
-  const handleInstructions = async (name: string) => {
-    const index = selectedMeal.findIndex((meal) => meal.name === name);
-    const ingredients = selectedMeal[index].ingredients;
+  const handleInstructions = useCallback(
+    async (name: string) => {
+      const index = selectedMeal.findIndex((meal) => meal.name === name);
+      const ingredients = selectedMeal[index].ingredients;
 
-    const userMsg: Message = {
-      role: "user",
-      content: `Recette: ${name}\n Ingredients: ${ingredients?.join(", ")}\n Instructions: `,
-    };
+      const userMsg: Message = {
+        role: "user",
+        content: `Recette: ${name}\n Ingredients: ${ingredients?.join(", ")}\n Instructions: `,
+      };
 
-    setSelectedMeal((prev) => {
-      const hashMapSelectedMeal = [...prev];
-      hashMapSelectedMeal[index].isLoading = true;
-      return hashMapSelectedMeal;
-    });
+      setSelectedMeal((prev) => {
+        const hashMapSelectedMeal = [...prev];
+        hashMapSelectedMeal[index].isLoading = true;
+        return hashMapSelectedMeal;
+      });
 
-    const steps: string[] = await processToGPT([userMsg], APIkeyInput.key);
+      const steps: string[] = await processToGPT([userMsg], APIkeyInput.key);
 
-    setSelectedMeal((prev) => {
-      const hashMapSelectedMeal = [...prev];
-      hashMapSelectedMeal[index].isLoading = false;
-      hashMapSelectedMeal[index].steps = steps;
-      return hashMapSelectedMeal;
-    });
-  };
+      setSelectedMeal((prev) => {
+        const hashMapSelectedMeal = [...prev];
+        hashMapSelectedMeal[index].isLoading = false;
+        hashMapSelectedMeal[index].steps = steps;
+        return hashMapSelectedMeal;
+      });
+    },
+    [APIkeyInput.key, selectedMeal]
+  );
 
   // color="#AEAEAEFF"
 
@@ -104,10 +118,10 @@ const App = () => {
               <a className="text-sm underline text-def-200" href="https://platform.openai.com/api-keys" target="_blank">
                 Get your API key from OpenAI
               </a>
-              <label htmlFor="open API key" className="sr-only">
-                open API key
-              </label>
               <div className="flex items-center ">
+                <label htmlFor="open API key" className="sr-only">
+                  open API key
+                </label>
                 <input
                   ref={inputRef}
                   type="text"
@@ -120,12 +134,27 @@ const App = () => {
                     APIkeyInput.validity,
                     APIkeyInput.typing
                   )}`}
+                  id="open API key"
                 />
                 <Icon
+                  role="button"
                   name="paste"
                   width={30}
-                  className="absolute cursor-pointer stroke-def-100 hover:stroke-def-200 transition-colors p-1"
-                  style={{ transform: inputRef.current ? `translateX(${inputRef.current.offsetWidth - 30}px)` : "" }}
+                  className="absolute right-0 cursor-pointer stroke-def-100 hover:stroke-def-200 transition-colors p-1"
+                  aria-labelledby="copy API key"
+                  style={{ transform: "translateX(-20px)" }}
+                  onClick={() => {
+                    navigator.clipboard.readText().then((text) => {
+                      setAPIkeyInput({ validity: isViableKey(text), typing: true, key: text });
+                    });
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      navigator.clipboard.readText().then((text) => {
+                        setAPIkeyInput({ validity: isViableKey(text), typing: true, key: text });
+                      });
+                    }
+                  }}
                 />
               </div>
               <Button
@@ -164,7 +193,7 @@ const App = () => {
             </CardHeading>
             <div className="flex justify-start items-center text-left px-2">
               <table className="first:mt-3 last:mb-3">
-                <Recipes handler={handlePanier} />
+                <Recipes handler={handlePanier} recipes={recipes} />
               </table>
             </div>
           </div>
@@ -213,19 +242,14 @@ const CardHeading = ({ as: As, classNames, children }: CardHeadingProps) => {
   );
 };
 
-type CheckboxProps = {
-  handler: (checked: boolean, name: string) => void;
-  name: string;
-};
-
-const Recipes = ({ handler }: RecipesProps) => {
+const Recipes = ({ handler, recipes }: RecipesProps) => {
   const [checked, setChecked] = useState<boolean[]>(new Array(recipes.length).fill(false));
 
-  const toggleCheckedRecipe = (i: number, name: string) => {
+  const toggleCheckedRecipe = (i: number, id: number) => {
     const newChecked = [...checked];
     newChecked[i] = !newChecked[i];
     setChecked(newChecked);
-    handler(newChecked[i], name);
+    handler(newChecked[i], id);
   };
 
   if (recipes.length !== checked.length) {
@@ -241,8 +265,10 @@ const Recipes = ({ handler }: RecipesProps) => {
       {recipes.map((recipe, i) => {
         const localToggle = (e: MouseEvent | ChangeEvent) => {
           e.preventDefault();
-          toggleCheckedRecipe(i, recipe.name);
+          toggleCheckedRecipe(i, recipe.id);
         };
+
+        const htmlId = `checkbox-${i}_${recipe.id}`;
         return (
           <tr
             key={recipe.name}
@@ -253,14 +279,14 @@ const Recipes = ({ handler }: RecipesProps) => {
           >
             <td>
               <div className="checkbox-ctn">
-                <label className="checkbox-container" htmlFor={`checkbox-${i}`}>
+                <label className="checkbox-container" htmlFor={htmlId}>
                   <input
                     type="checkbox"
                     onChange={(e) => {
                       localToggle(e);
                     }}
                     checked={checked[i]}
-                    id={`checkbox-${i}`}
+                    id={htmlId}
                   />
                   <div className="checkmark"></div>
                 </label>

@@ -1,11 +1,14 @@
+import { MouseEvent, SVGProps } from "react";
+
 type IconNames = "menu" | "check" | "chevron-right" | "dot-filled" | "setting" | "paste";
 
-type IconNamedProps = {
+type IconNamedProps = SVGProps<SVGSVGElement> & {
   width?: number;
   height?: number;
   color?: string;
   className?: string;
   style?: React.CSSProperties;
+  onClick?: (e: MouseEvent) => void;
 };
 
 const defaultHeight = 24;
@@ -35,12 +38,13 @@ const Paste = ({ color = "inherit", height, width, className = "", ...rest }: Ic
   );
 };
 
-const CheckIcon = ({ color = "inherit", height, width, className = "" }: IconNamedProps) => {
+const CheckIcon = ({ color = "inherit", height, width, className = "", ...rest }: IconNamedProps) => {
   return (
     <svg
       width={width}
       height={height || width || defaultHeight}
       className={className}
+      {...rest}
       viewBox="0 0 15 15"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -55,12 +59,13 @@ const CheckIcon = ({ color = "inherit", height, width, className = "" }: IconNam
   );
 };
 
-const ChevronRightIcon = ({ color = "inherit", height, width, className = "" }: IconNamedProps) => {
+const ChevronRightIcon = ({ color = "inherit", height, width, className = "", ...rest }: IconNamedProps) => {
   return (
     <svg
       width={width}
       height={height || width || defaultHeight}
       className={className}
+      {...rest}
       viewBox="0 0 15 15"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -75,12 +80,13 @@ const ChevronRightIcon = ({ color = "inherit", height, width, className = "" }: 
   );
 };
 
-const DotFilledIcon = ({ color = "inherit", height, width, className = "" }: IconNamedProps) => {
+const DotFilledIcon = ({ color = "inherit", height, width, className = "", ...rest }: IconNamedProps) => {
   return (
     <svg
       width={width}
       height={height || width || defaultHeight}
       className={className}
+      {...rest}
       viewBox="0 0 15 15"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -93,7 +99,7 @@ const DotFilledIcon = ({ color = "inherit", height, width, className = "" }: Ico
   );
 };
 
-const SettingIcon = ({ color = "inherit", height, width, className = "" }: IconNamedProps) => {
+const SettingIcon = ({ color = "inherit", height, width, className = "", ...rest }: IconNamedProps) => {
   return (
     <svg
       width={width}
@@ -101,6 +107,7 @@ const SettingIcon = ({ color = "inherit", height, width, className = "" }: IconN
       viewBox="0 0 24 24"
       fill="none"
       className={className}
+      {...rest}
       xmlns="http://www.w3.org/2000/svg"
     >
       <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
@@ -117,12 +124,13 @@ const SettingIcon = ({ color = "inherit", height, width, className = "" }: IconN
   );
 };
 
-const MenuIcon = ({ color = "inherit", height, width, className = "" }: IconNamedProps) => {
+const MenuIcon = ({ color = "inherit", height, width, className = "", ...rest }: IconNamedProps) => {
   return (
     <svg
       width={width || defaultHeight}
       height={height || width || defaultHeight}
       className={className}
+      {...rest}
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
