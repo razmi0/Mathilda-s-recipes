@@ -722,6 +722,10 @@ video {
   width: 1rem;
 }
 
+.w-72{
+  width: 18rem;
+}
+
 .min-w-80{
   min-width: 20rem;
 }
@@ -878,6 +882,10 @@ video {
 
 .p-1{
   padding: 0.25rem;
+}
+
+.p-4{
+  padding: 1rem;
 }
 
 .px-2{
