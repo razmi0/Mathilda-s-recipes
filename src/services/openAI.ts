@@ -5,9 +5,9 @@ type ReqBodyType = {
   messages: Message[];
 };
 
-type OpenAiKey = `sk-${string & { length: 48 }}`; // sk-<48 characters>
+export type OpenAiKey = `sk-${string & { length: 48 }}`; // sk-<48 characters>
 
-const isViableKey = (key: string): key is OpenAiKey => {
+export const isViableKey = (key: string): key is OpenAiKey => {
   const reg = /^sk-/;
   return reg.test(key) && key.length === 51;
 };
@@ -32,11 +32,14 @@ const systemMsg = {
     "Complete the recipe talking like a chef and using the following ingredients as a base. Be concise and precise. Start each step with the coresponding step number and a double point(:). End the last sentence of each step with the characters : '&&'",
 };
 
-export const processToGPT = async (messages: Message[], key : string) => {
-  const fetchOptions = buildFetchOptions({
-    model: "gpt-3.5-turbo",
-    messages: [systemMsg, ...messages],
-  }, key);
+export const processToGPT = async (messages: Message[], key: string) => {
+  const fetchOptions = buildFetchOptions(
+    {
+      model: "gpt-3.5-turbo",
+      messages: [systemMsg, ...messages],
+    },
+    key
+  );
 
   const res = await fetch("https://api.openai.com/v1/chat/completions", fetchOptions);
   const data = await res.json();

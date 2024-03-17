@@ -1,13 +1,13 @@
-import { DropdownMenuArrow } from "@radix-ui/react-dropdown-menu";
-import { ChangeEvent, ElementType, MouseEvent, ReactNode, useState } from "react";
+import { useRef, useState, type ChangeEvent, type ElementType, type MouseEvent, type ReactNode } from "react";
 import Button from "./components/Button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./components/Dropdown";
 import Icon from "./components/Icons";
 import Loader from "./components/Loader";
 import Noise from "./components/Noise";
+import { Popover, PopoverContent, PopoverTrigger } from "./components/Popover";
 import { RecipeType, recipes } from "./recipes";
-import { processToGPT } from "./services/openAI";
-import { Message, Panier, RecipesProps, SelectedMeal } from "./types";
+import { isViableKey, processToGPT } from "./services/openAI";
+import type { Message, Panier, RecipesProps, SelectedMeal } from "./types";
 
 const initialiseSelectedMeal = (recipes: RecipeType[]): SelectedMeal[] => {
   const selectedMeals: SelectedMeal[] = [];
@@ -26,7 +26,8 @@ const initialiseSelectedMeal = (recipes: RecipeType[]): SelectedMeal[] => {
 const App = () => {
   const [paniers, setPaniers] = useState<Panier[]>([]);
   const [selectedMeal, setSelectedMeal] = useState<SelectedMeal[]>(initialiseSelectedMeal(recipes));
-  const [APIkey, setAPIkey] = useState<string>("");
+  const [APIkeyInput, setAPIkeyInput] = useState({ validity: false, typing: true, key: "" });
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handlePanier = (checked: boolean, name: string) => {
     const hashMapSelectedMeal: SelectedMeal[] = [...selectedMeal],
@@ -67,7 +68,7 @@ const App = () => {
       return hashMapSelectedMeal;
     });
 
-    const steps: string[] = await processToGPT([userMsg], APIkey);
+    const steps: string[] = await processToGPT([userMsg], APIkeyInput.key);
 
     setSelectedMeal((prev) => {
       const hashMapSelectedMeal = [...prev];
@@ -79,10 +80,68 @@ const App = () => {
 
   // color="#AEAEAEFF"
 
+  const inputColor = (validity: boolean, typing: boolean) => {
+    if (!typing) {
+      return validity ? "border-green-500" : "border-red-500";
+    }
+    return "border-black/40";
+  };
+
   return (
     <>
       <div className="container">
-        <h1 className="mt-8 mb-16">Les recettes de Mathilda</h1>
+        <header className="flex items-center justify-between mt-8 mb-16">
+          <h1 className="">Les recettes de Mathilda</h1>
+          <Popover>
+            <PopoverTrigger>
+              <Icon
+                name="setting"
+                width={40}
+                className="stroke-def-200 hover:stroke-def-100 hover:bg-blueish-450 rounded-lg transition-colors p-1"
+              />
+            </PopoverTrigger>
+            <PopoverContent side="left" sideOffset={-10} className="bg-blueish-400 border-black/40">
+              <a className="text-sm underline text-def-200" href="https://platform.openai.com/api-keys" target="_blank">
+                Get your API key from OpenAI
+              </a>
+              <label htmlFor="open API key" className="sr-only">
+                open API key
+              </label>
+              <div className="flex items-center ">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={APIkeyInput.key}
+                  onChange={(e) => {
+                    setAPIkeyInput({ validity: false, typing: true, key: e.target.value });
+                  }}
+                  placeholder="API key"
+                  className={`w-full px-2 py-1 my-2 rounded-md border-2 bg-blueish-200 ${inputColor(
+                    APIkeyInput.validity,
+                    APIkeyInput.typing
+                  )}`}
+                />
+                <Icon
+                  name="paste"
+                  width={30}
+                  className="absolute cursor-pointer stroke-def-100 hover:stroke-def-200 transition-colors p-1"
+                  style={{ transform: inputRef.current ? `translateX(${inputRef.current.offsetWidth - 30}px)` : "" }}
+                />
+              </div>
+              <Button
+                onClick={() => {
+                  setAPIkeyInput({
+                    validity: isViableKey(APIkeyInput.key),
+                    typing: false,
+                    key: APIkeyInput.key,
+                  });
+                }}
+              >
+                Confirm
+              </Button>
+            </PopoverContent>
+          </Popover>
+        </header>
         <section className="flex flex-col justify-between items-start">
           {/* RECETTES */}
           <div className="flex flex-col card">
@@ -98,7 +157,7 @@ const App = () => {
                     className="stroke-def-200 hover:stroke-def-100 hover:bg-blueish-450 rounded-lg transition-colors p-1"
                   />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent side="left" sideOffset={-20} className="bg-blueish-400 border-black/40">
+                <DropdownMenuContent side="left" sideOffset={-10} className="bg-blueish-400 border-black/40">
                   <DropdownMenuItem className="hover:bg-blueish-300">Add new recipe</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

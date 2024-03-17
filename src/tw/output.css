@@ -580,6 +580,18 @@ video {
   }
 }
 
+.sr-only{
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
 .pointer-events-none{
   pointer-events: none;
 }
@@ -646,6 +658,11 @@ video {
 .my-1{
   margin-top: 0.25rem;
   margin-bottom: 0.25rem;
+}
+
+.my-2{
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .mb-16{
@@ -736,6 +753,10 @@ video {
 
 .min-w-\[8rem\]{
   min-width: 8rem;
+}
+
+.transform{
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
 .cursor-not-allowed{
@@ -840,6 +861,10 @@ video {
   border-width: 1px;
 }
 
+.border-2{
+  border-width: 2px;
+}
+
 .border-black\/30{
   border-color: rgb(0 0 0 / 0.3);
 }
@@ -850,6 +875,16 @@ video {
 
 .border-black\/40{
   border-color: rgb(0 0 0 / 0.4);
+}
+
+.border-red-500{
+  --tw-border-opacity: 1;
+  border-color: rgb(239 68 68 / var(--tw-border-opacity));
+}
+
+.border-green-500{
+  --tw-border-opacity: 1;
+  border-color: rgb(34 197 94 / var(--tw-border-opacity));
 }
 
 .bg-blueish-400{
@@ -868,12 +903,20 @@ video {
   background-color: rgb(255 255 255 / 0.1);
 }
 
+.bg-blueish-200{
+  background-color: #495778FF;
+}
+
 .fill-current{
   fill: currentColor;
 }
 
 .stroke-def-200{
   stroke: #AEAEAEFF;
+}
+
+.stroke-def-100{
+  stroke: #EBEBEBFF;
 }
 
 .p-0{
@@ -886,6 +929,10 @@ video {
 
 .p-4{
   padding: 1rem;
+}
+
+.p-2{
+  padding: 0.5rem;
 }
 
 .px-2{
@@ -971,6 +1018,22 @@ video {
 
 .text-def-300{
   color: #5F5F5FFF;
+}
+
+.text-blueish-100{
+  color: #54669DFF;
+}
+
+.text-def-100{
+  color: #EBEBEBFF;
+}
+
+.text-def-200{
+  color: #AEAEAEFF;
+}
+
+.underline{
+  text-decoration-line: underline;
 }
 
 .opacity-5{
@@ -1340,6 +1403,14 @@ th{
 
 .hover\:stroke-def-100:hover{
   stroke: #EBEBEBFF;
+}
+
+.hover\:stroke-blueish-50:hover{
+  stroke: #7A85BBFF;
+}
+
+.hover\:stroke-def-200:hover{
+  stroke: #AEAEAEFF;
 }
 
 .data-\[disabled\]\:pointer-events-none[data-disabled]{
