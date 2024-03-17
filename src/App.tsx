@@ -280,6 +280,7 @@ const Recipes = ({ handler, recipes }: RecipesProps) => {
             <td>
               <div className="checkbox-ctn">
                 <label className="checkbox-container" htmlFor={htmlId}>
+                  <span className="sr-only">check {recipe.name}</span>
                   <input
                     type="checkbox"
                     onChange={(e) => {
