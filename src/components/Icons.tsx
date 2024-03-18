@@ -220,7 +220,8 @@ const MenuIcon = ({ title, color = "inherit", height, width, className = "", ...
   );
 };
 
-type IconProps = IconNamedProps & (IconNamedProps["name"] extends "copy" ? { check?: boolean } : {});
+type IconProps = { name: IconNames } & IconNamedProps &
+  (IconNamedProps["name"] extends "copy" ? { check?: boolean } : {});
 
 const Icon = ({ name, ...rest }: IconProps) => {
   switch (name) {
