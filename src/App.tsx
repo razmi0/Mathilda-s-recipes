@@ -1,5 +1,6 @@
 import {
   useCallback,
+  useEffect,
   useRef,
   useState,
   type ChangeEvent,
@@ -8,6 +9,15 @@ import {
   type ReactNode,
 } from "react";
 import Button from "./components/Button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./components/Dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./components/Dropdown";
 import Icon from "./components/Icons";
 import Loader from "./components/Loader";
@@ -38,6 +48,8 @@ const App = () => {
   const { recipes, totalIngredients, addRecipe, deleteRecipe, editRecipe, getRecipe } = useRecipe();
   const [paniers, setPaniers] = useState<Panier[]>([]);
   const [selectedMeal, setSelectedMeal] = useState<SelectedMeal[]>(initialiseSelectedMeal(recipes));
+  const [openAddRecipeModal, setOpenAddRecipeModal] = useState(false);
+  const [openDropdownRecipe, setOpenDropdownRecipe] = useState(false);
 
   const [APIkeyInput, setAPIkeyInput] = useState({ validity: false, typing: true, key: "" });
   const changeKey = (key: string) => setAPIkeyInput({ validity: isViableKey(key), typing: false, key });
@@ -105,6 +117,12 @@ const App = () => {
     }
     return "border-black/40";
   };
+
+  useEffect(() => {
+    console.log("dialog effect : ", openAddRecipeModal);
+    console.log("dropdown effect : ", openDropdownRecipe);
+    // if (openAddRecipeModal) setOpenDropdownRecipe(true);
+  }, [openAddRecipeModal, openDropdownRecipe]);
 
   return (
     <>
@@ -179,29 +197,55 @@ const App = () => {
         </header>
         <section className="flex flex-col justify-between items-start">
           {/* RECETTES */}
-          <div className="flex flex-col card">
+          <div className="flex flex-col card z-20">
             <CardHeading as="h3" classNames="flex items-center justify-between">
               <span>
                 Recettes <small>( {recipes.length} )</small>
               </span>
-              <DropdownMenu>
-                <DropdownMenuTrigger role="button" tabIndex={0}>
-                  <Icon
-                    name="menu"
-                    title="Open recipes menu"
-                    width={30}
-                    className="stroke-def-200 hover:stroke-def-100 hover:bg-blueish-450 rounded-lg transition-colors p-1"
-                  />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent side="left" sideOffset={-10} className="bg-blueish-400 border-black/40">
-                  <DropdownMenuItem
-                    className="hover:bg-blueish-300 cursor-pointer"
-                    onClick={/* openAddRecipeModal */ () => {}}
-                  >
-                    Add new recipe
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              {/* // */}
+              {/* // */}
+              {/* // */}
+              {/* // */}
+              <Dialog>
+                <DropdownMenu>
+                  <DropdownMenuTrigger role="button" tabIndex={0}>
+                    <Icon
+                      name="menu"
+                      title="Open recipes menu"
+                      width={30}
+                      className="stroke-def-200 hover:stroke-def-100 hover:bg-blueish-450 rounded-lg transition-colors p-1"
+                    />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent side="left" sideOffset={-10} className="bg-blueish-400 border-black/40">
+                    <DialogTrigger asChild>
+                      <DropdownMenuItem className="hover:bg-blueish-300 cursor-pointer">
+                        Add new recipe
+                      </DropdownMenuItem>
+                    </DialogTrigger>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                {/* <DialogOverlay> */}
+                <DialogContent className="card translate-center z-[9999]">
+                  <DialogHeader>
+                    <DialogTitle>Are you absolutely sure?</DialogTitle>
+                    <DialogDescription>
+                      This action cannot be undone. Are you sure you want to permanently delete this file from our
+                      servers?
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter>
+                    <Button onClick={() => {}} ariaLabel="Confirm" type="submit">
+                      Confirm
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+                {/* </DialogOverlay> */}
+              </Dialog>
+              {/* // */}
+              {/* // */}
+              {/* // */}
+              {/* // */}
+              {/* // */}
             </CardHeading>
             <div className="flex justify-start items-center text-left px-2">
               <table className="first:mt-3 last:mb-3">
@@ -212,7 +256,7 @@ const App = () => {
           <section className="flex justify-evenly w-full">
             {/* PANIER */}
             {paniers.length > 0 && (
-              <div className="flex flex-col my-8 card min-w-80">
+              <div className="flex flex-col my-8 card min-w-80 z-20">
                 <CardHeading as={"h3"}>
                   Liste de courses <small>( {paniers.length} )</small>
                 </CardHeading>
@@ -223,7 +267,7 @@ const App = () => {
             )}
             {/* INSTRUCTION */}
             {paniers.length > 0 && (
-              <div className="w-fit mt-8 flex flex-col justify-start items-center card h-fit min-w-80">
+              <div className="w-fit mt-8 flex flex-col justify-start items-center card z-20 h-fit min-w-80">
                 <CardHeading as={"h3"} classNames="w-full">
                   Instructions
                 </CardHeading>

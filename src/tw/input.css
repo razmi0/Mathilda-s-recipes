@@ -22,6 +22,10 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+*{
+  @apply outline-none focus-visible:outline-blueish-100 focus-visible:ring-blueish-100 rounded-sm;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -36,6 +40,28 @@ body {
   min-height : 100vh;
 }
 
+.translate-center  {
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+
+}
+
+.first-layer {
+  z-index : 9999;
+}
+
+.horizontal {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.vertical {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
 h1 {
   font-size: 3.2em;
@@ -67,6 +93,7 @@ button {
   background-color: #1a1a1a;
   cursor: pointer;
   color: #e8e8e8;
+  /* outline: -webkit-focus-ring-color auto 5px #535bf2; */
 }
 
 button.menu {
@@ -108,7 +135,7 @@ th {
   font-family: "Montserrat", sans-serif;
 }
 .card {
-  @apply rounded-lg border-[1px] bg-blueish-300/95  border-black/40 shadow-inner-shadow-dark-sm z-20;
+  @apply rounded-lg border-[1px] bg-blueish-300/95  border-black/40 shadow-inner-shadow-dark-sm;
 }
 /*  */
 
