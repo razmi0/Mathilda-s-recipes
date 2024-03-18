@@ -1,6 +1,6 @@
 import { MouseEvent, SVGProps } from "react";
 
-type IconNames = "menu" | "check" | "chevron-right" | "dot-filled" | "setting" | "paste" | "cross2";
+type IconNames = "menu" | "check" | "chevron-right" | "dot-filled" | "setting" | "copy" | "cross2";
 
 type IconNamedProps = SVGProps<SVGSVGElement> & {
   width?: number;
@@ -10,6 +10,7 @@ type IconNamedProps = SVGProps<SVGSVGElement> & {
   style?: React.CSSProperties;
   onClick?: (e: MouseEvent) => void;
   title?: string;
+  check?: boolean;
 };
 
 const defaultHeight = 24;
@@ -36,27 +37,53 @@ const Cross2Icon = ({ color = "inherit", height, width, className = "", title, .
   );
 };
 
-const Paste = ({ title, color = "inherit", height, width, className = "", ...rest }: IconNamedProps) => {
+const Copy = ({
+  color = "inherit",
+  height,
+  width,
+  className = "",
+  title,
+  check = false,
+  ...rest
+}: IconNamedProps & { check?: boolean }) => {
   return (
     <svg
-      width={width}
+      width={width || defaultHeight}
       height={height || width || defaultHeight}
       className={className}
       {...rest}
-      fill="none"
       viewBox="0 0 24 24"
+      fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
       {title && <title>{title}</title>}
       <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
       <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
       <g id="SVGRepo_iconCarrier">
-        <path
-          fillRule="evenodd"
-          clipRule="evenodd"
-          d="M12 0C11.2347 0 10.6293 0.125708 10.1567 0.359214C9.9845 0.44429 9.82065 0.544674 9.68861 0.62717L9.59036 0.688808C9.49144 0.751003 9.4082 0.803334 9.32081 0.853848C9.09464 0.984584 9.00895 0.998492 9.00053 0.999859C8.99983 0.999973 9.00019 0.999859 9.00053 0.999859C7.89596 0.999859 7 1.89543 7 3H6C4.34315 3 3 4.34315 3 6V20C3 21.6569 4.34315 23 6 23H18C19.6569 23 21 21.6569 21 20V6C21 4.34315 19.6569 3 18 3H17C17 1.89543 16.1046 1 15 1C15.0003 1 15.0007 1.00011 15 1C14.9916 0.998633 14.9054 0.984584 14.6792 0.853848C14.5918 0.80333 14.5086 0.751004 14.4096 0.688804L14.3114 0.62717C14.1793 0.544674 14.0155 0.44429 13.8433 0.359214C13.3707 0.125708 12.7653 0 12 0ZM16.7324 5C16.3866 5.5978 15.7403 6 15 6H9C8.25972 6 7.61337 5.5978 7.26756 5H6C5.44772 5 5 5.44772 5 6V20C5 20.5523 5.44772 21 6 21H18C18.5523 21 19 20.5523 19 20V6C19 5.44772 18.5523 5 18 5H16.7324ZM11.0426 2.15229C11.1626 2.09301 11.4425 2 12 2C12.5575 2 12.8374 2.09301 12.9574 2.15229C13.0328 2.18953 13.1236 2.24334 13.2516 2.32333L13.3261 2.37008C13.43 2.43542 13.5553 2.51428 13.6783 2.58539C13.9712 2.75469 14.4433 3 15 3V4H9V3C9.55666 3 10.0288 2.75469 10.3217 2.58539C10.4447 2.51428 10.57 2.43543 10.6739 2.37008L10.7484 2.32333C10.8764 2.24334 10.9672 2.18953 11.0426 2.15229Z"
-          fill={color}
-        ></path>
+        {check && (
+          <>
+            <path
+              d="M17.0998 2H12.8998C9.81668 2 8.37074 3.09409 8.06951 5.73901C8.00649 6.29235 8.46476 6.75 9.02167 6.75H11.0998C15.2998 6.75 17.2498 8.7 17.2498 12.9V14.9781C17.2498 15.535 17.7074 15.9933 18.2608 15.9303C20.9057 15.629 21.9998 14.1831 21.9998 11.1V6.9C21.9998 3.4 20.5998 2 17.0998 2Z"
+              fill={color}
+            ></path>
+            <path
+              d="M11.1 8H6.9C3.4 8 2 9.4 2 12.9V17.1C2 20.6 3.4 22 6.9 22H11.1C14.6 22 16 20.6 16 17.1V12.9C16 9.4 14.6 8 11.1 8ZM12.29 13.65L8.58 17.36C8.44 17.5 8.26 17.57 8.07 17.57C7.88 17.57 7.7 17.5 7.56 17.36L5.7 15.5C5.42 15.22 5.42 14.77 5.7 14.49C5.98 14.21 6.43 14.21 6.71 14.49L8.06 15.84L11.27 12.63C11.55 12.35 12 12.35 12.28 12.63C12.56 12.91 12.57 13.37 12.29 13.65Z"
+              fill={color}
+            ></path>
+          </>
+        )}
+        {!check && (
+          <>
+            <path
+              d="M16 12.9V17.1C16 20.6 14.6 22 11.1 22H6.9C3.4 22 2 20.6 2 17.1V12.9C2 9.4 3.4 8 6.9 8H11.1C14.6 8 16 9.4 16 12.9Z"
+              fill={color}
+            ></path>
+            <path
+              d="M17.0998 2H12.8998C9.81668 2 8.37074 3.09409 8.06951 5.73901C8.00649 6.29235 8.46476 6.75 9.02167 6.75H11.0998C15.2998 6.75 17.2498 8.7 17.2498 12.9V14.9781C17.2498 15.535 17.7074 15.9933 18.2608 15.9303C20.9057 15.629 21.9998 14.1831 21.9998 11.1V6.9C21.9998 3.4 20.5998 2 17.0998 2Z"
+              fill={color}
+            ></path>
+          </>
+        )}
       </g>
     </svg>
   );
@@ -193,7 +220,7 @@ const MenuIcon = ({ title, color = "inherit", height, width, className = "", ...
   );
 };
 
-type IconProps = IconNamedProps & { name: IconNames };
+type IconProps = IconNamedProps & (IconNamedProps["name"] extends "copy" ? { check?: boolean } : {});
 
 const Icon = ({ name, ...rest }: IconProps) => {
   switch (name) {
@@ -207,8 +234,8 @@ const Icon = ({ name, ...rest }: IconProps) => {
       return <DotFilledIcon {...rest} />;
     case "setting":
       return <SettingIcon {...rest} />;
-    case "paste":
-      return <Paste {...rest} />;
+    case "copy":
+      return <Copy {...rest} />;
     case "cross2":
       return <Cross2Icon {...rest} />;
     default:

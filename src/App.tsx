@@ -1,6 +1,5 @@
 import {
   useCallback,
-  useEffect,
   useRef,
   useState,
   type ChangeEvent,
@@ -23,7 +22,7 @@ import Icon from "./components/Icons";
 import Loader from "./components/Loader";
 import Noise from "./components/Noise";
 import { Popover, PopoverContent, PopoverTrigger } from "./components/Popover";
-import useClipBoard from "./hooks/useClipboard";
+import useClipboard from "./hooks/useClipboard";
 import { useRecipe, type RecipeType } from "./hooks/useRecipe";
 import { isViableKey, processToGPT } from "./services/openAI";
 import type { Message, Panier, RecipesProps, SelectedMeal } from "./types";
@@ -52,9 +51,9 @@ const App = () => {
   const [openDropdownRecipe, setOpenDropdownRecipe] = useState(false);
 
   const [APIkeyInput, setAPIkeyInput] = useState({ validity: false, typing: true, key: "" });
-  const changeKey = (key: string) => setAPIkeyInput({ validity: isViableKey(key), typing: false, key });
-
-  const { readClipboard } = useClipBoard(changeKey);
+  // const changeKey = (key: string) => setAPIkeyInput({ validity: isViableKey(key), typing: false, key });
+  // const copyToClipboard = () => navigator.clipboard.writeText(APIkeyInput.key);
+  const { copyToClipboard, isSuccess } = useClipboard({ delayBeforeUnSuccess: 2000 });
 
   const handleSelectedRecipe = (checked: boolean, id: number) => {
     const copySelectedMeal: SelectedMeal[] = [...selectedMeal];
@@ -118,12 +117,6 @@ const App = () => {
     return "border-black/40";
   };
 
-  useEffect(() => {
-    console.log("dialog effect : ", openAddRecipeModal);
-    console.log("dropdown effect : ", openDropdownRecipe);
-    // if (openAddRecipeModal) setOpenDropdownRecipe(true);
-  }, [openAddRecipeModal, openDropdownRecipe]);
-
   return (
     <>
       <div className="container">
@@ -171,12 +164,21 @@ const App = () => {
                   )}`}
                   id="open_API_key"
                 />
-                <Button ariaLabel="Paste from clipboard" onClick={readClipboard} variant="invisible">
+                <Button
+                  ariaLabel="Copy to clipboard"
+                  onClick={() => {
+                    copyToClipboard(APIkeyInput.key);
+                  }}
+                  variant="invisible"
+                  classNames={`border ${isSuccess === true ? "border-green-500" : "border-blueish-400"}`}
+                >
                   <Icon
-                    name="paste"
-                    title="Paste from clipboard"
-                    width={30}
-                    className="stroke-def-200 hover:stroke-def-100 hover:bg-blueish-450 rounded-lg transition-colors p-1"
+                    check={isSuccess === true}
+                    color={"#AEAEAEFF"}
+                    name="copy"
+                    title="Copy to clipboard"
+                    width={37}
+                    className={`stroke-def-200 hover:bg-blueish-450 rounded-lg transition-colors p-1 `}
                   />
                 </Button>
               </div>
@@ -224,7 +226,6 @@ const App = () => {
                     </DialogTrigger>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                {/* <DialogOverlay> */}
                 <DialogContent className="card translate-center z-[9999]">
                   <DialogHeader>
                     <DialogTitle>Are you absolutely sure?</DialogTitle>
@@ -239,7 +240,6 @@ const App = () => {
                     </Button>
                   </DialogFooter>
                 </DialogContent>
-                {/* </DialogOverlay> */}
               </Dialog>
               {/* // */}
               {/* // */}
