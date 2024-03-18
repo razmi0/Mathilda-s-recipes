@@ -2,7 +2,7 @@ import { postcss } from "tailwindcss";
 
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./src/components/*.tsx", "./src/*.tsx"],
+  content: ["./src/components/*.tsx", "./src/*.tsx", "./src/components/ui/*.tsx"],
   theme: {
     extend: {
       colors: {
