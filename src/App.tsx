@@ -108,8 +108,6 @@ const App = () => {
     [APIkeyInput.key, selectedMeal]
   );
 
-  // color="#AEAEAEFF"
-
   const inputColor = (validity: boolean, typing: boolean) => {
     if (!typing) {
       return validity ? "border-green-500" : "border-red-500 outline-none";

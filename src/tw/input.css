@@ -40,6 +40,10 @@ body {
   min-height : 100vh;
 }
 
+div[data-state="open"][aria-hidden="true"][data-aria-hidden="true"] {
+  @apply bg-def-500 opacity-70;
+}
+
 .translate-center  {
   transform: translate(-50%, -50%);
   top: 50%;
