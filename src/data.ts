@@ -92,6 +92,4 @@ for (const recipe of recipes) {
   }
 }
 
-console.log(allIngredients);
-
 export { allIngredients, recipes };

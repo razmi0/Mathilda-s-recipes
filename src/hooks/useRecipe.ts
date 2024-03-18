@@ -14,8 +14,13 @@ export type RecipeType = {
 
 // Define the state and action types
 
+export type AddRecipePayload = {
+  name: string;
+  description: string;
+  ingredients: string[];
+};
 type Actions =
-  | { type: "ADD_RECIPE"; payload: Exclude<RecipeType, ["id", "nbrOfIngredients", "date", "citation"]> }
+  | { type: "ADD_RECIPE"; payload: AddRecipePayload }
   | { type: "DELETE_RECIPE"; payload: number & RecipeType["id"] }
   | { type: "EDIT_RECIPE"; payload: RecipeType };
 
@@ -38,6 +43,8 @@ const recipeReducer = (state: { recipes: RecipeType[] }, action: Actions) => {
         id: buildId(),
         nbrOfIngredients: action.payload.ingredients.length,
       };
+
+      console.log(newRecipe);
       return {
         ...state,
         recipes: [...state.recipes, newRecipe],
@@ -62,7 +69,7 @@ const recipeReducer = (state: { recipes: RecipeType[] }, action: Actions) => {
 export const useRecipe = () => {
   const [state, dispatch] = useReducer(recipeReducer, { recipes });
 
-  const addRecipe = useCallback((recipe: RecipeType) => {
+  const addRecipe = useCallback((recipe: AddRecipePayload) => {
     dispatch({ type: "ADD_RECIPE", payload: recipe });
   }, []);
 

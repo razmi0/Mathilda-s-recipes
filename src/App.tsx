@@ -42,6 +42,8 @@ const App = () => {
   const [selectedMeal, setSelectedMeal] = useState<SelectedMeal[]>(initialiseSelectedMeal(recipes));
   const [APIkeyInput, setAPIkeyInput] = useState({ validity: false, typing: true, key: "" });
 
+  const [openAddRecipeModal, setOpenAddRecipeModal] = useState(false);
+
   const { copyToClipboard, isSuccess } = useClipboard({ delayBeforeUnSuccess: 2000 });
 
   const handleSelectedRecipe = (checked: boolean, id: number) => {
@@ -195,7 +197,7 @@ const App = () => {
               {/* // */}
               {/* // */}
               {/* // */}
-              <Dialog>
+              <Dialog open={openAddRecipeModal}>
                 <DropdownMenu>
                   <DropdownMenuTrigger role="button" tabIndex={0}>
                     <Icon
@@ -206,7 +208,7 @@ const App = () => {
                     />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent side="left" sideOffset={-10} className="bg-blueish-400 border-black/40">
-                    <DialogTrigger asChild>
+                    <DialogTrigger asChild onClick={() => setOpenAddRecipeModal(true)}>
                       <DropdownMenuItem className="hover:bg-blueish-300 cursor-pointer">
                         Add new recipe
                       </DropdownMenuItem>
@@ -217,7 +219,7 @@ const App = () => {
                   <DialogHeader>
                     <DialogTitle>Create a new recipe</DialogTitle>
                   </DialogHeader>
-                  <AddRecipeForm />
+                  <AddRecipeForm addRecipe={addRecipe} closeModal={() => setOpenAddRecipeModal(false)} />
                 </DialogContent>
               </Dialog>
               {/* // */}

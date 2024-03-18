@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { allIngredients } from "../data";
+import type { AddRecipePayload } from "../hooks/useRecipe";
 import Button from "./ui/Button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/Form";
 import MultipleSelector from "./ui/MultipleSelector";
@@ -27,7 +28,12 @@ const addRecipeFormSchema = z
     name: true,
   });
 
-function AddRecipeForm() {
+type AddRecipeFormProps = {
+  addRecipe: (recipe: AddRecipePayload) => void;
+  closeModal: () => void;
+};
+
+const AddRecipeForm = ({ addRecipe, closeModal }: AddRecipeFormProps) => {
   const form = useForm<z.infer<typeof addRecipeFormSchema>>({
     resolver: zodResolver(addRecipeFormSchema),
     defaultValues: {
@@ -39,10 +45,12 @@ function AddRecipeForm() {
   });
 
   const onSubmit = (values: z.infer<typeof addRecipeFormSchema>) => {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
-    console.log("dfsdfdsfs");
+    addRecipe({
+      name: values.name,
+      description: values.description,
+      ingredients: values.ingredients.map((ingredient) => ingredient.value),
+    });
+    closeModal();
   };
 
   return (
@@ -90,7 +98,7 @@ function AddRecipeForm() {
                   value={field.value}
                   onChange={field.onChange}
                   defaultOptions={allIngredients}
-                  placeholder="Find or add ingredients..."
+                  placeholder="Find or add ingredients.."
                   creatable
                   emptyIndicator={
                     <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">no results found.</p>
@@ -107,6 +115,6 @@ function AddRecipeForm() {
       </form>
     </Form>
   );
-}
+};
 
 export default AddRecipeForm;
