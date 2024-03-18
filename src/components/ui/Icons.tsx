@@ -1,6 +1,6 @@
 import { MouseEvent, SVGProps } from "react";
 
-type IconNames = "menu" | "check" | "chevron-right" | "dot-filled" | "setting" | "copy" | "cross2";
+type IconNames = "menu" | "check" | "chevron-right" | "dot-filled" | "setting" | "copy" | "cross2" | "search";
 
 type IconNamedProps = SVGProps<SVGSVGElement> & {
   width?: number;
@@ -220,6 +220,28 @@ const MenuIcon = ({ title, color = "inherit", height, width, className = "", ...
   );
 };
 
+const Search = ({ title, color = "inherit", height, width, className = "", ...rest }: IconNamedProps) => {
+  return (
+    <svg
+      width={width || defaultHeight}
+      height={height || width || defaultHeight}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      className={className}
+      {...rest}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      {title && <title>{title}</title>}
+      <circle cx="11" cy="11" r="8" />
+      <path d="m21 21-4.3-4.3" />
+    </svg>
+  );
+};
+
 type IconProps = { name: IconNames } & IconNamedProps &
   (IconNamedProps["name"] extends "copy" ? { check?: boolean } : {});
 
@@ -239,6 +261,8 @@ const Icon = ({ name, ...rest }: IconProps) => {
       return <Copy {...rest} />;
     case "cross2":
       return <Cross2Icon {...rest} />;
+    case "search":
+      return <Search {...rest} />;
     default:
       return <></>;
   }

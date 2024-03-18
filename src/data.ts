@@ -1,6 +1,7 @@
+import { Option } from "./components/ui/MultipleSelector";
 import type { RecipeType } from "./hooks/useRecipe";
 
-export const recipes: RecipeType[] = [
+const recipes: RecipeType[] = [
   {
     id: 1,
     name: "Simple orzoto",
@@ -73,6 +74,24 @@ export const recipes: RecipeType[] = [
   },
 ];
 
+type NoDups = Set<string>;
+const tempSet: NoDups = new Set();
+const allIngredients: Option[] = [];
+
 for (const recipe of recipes) {
   recipe.nbrOfIngredients = recipe.ingredients.length;
+  for (const ingredient of recipe.ingredients) {
+    const ing = {
+      label: ingredient.charAt(0).toUpperCase() + ingredient.slice(1),
+      value: ingredient.toLowerCase(),
+    };
+    if (!tempSet.has(ing.value)) {
+      allIngredients.push(ing);
+      tempSet.add(ing.value);
+    }
+  }
 }
+
+console.log(allIngredients);
+
+export { allIngredients, recipes };

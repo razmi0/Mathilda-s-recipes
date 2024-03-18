@@ -7,16 +7,9 @@ import {
   type MouseEvent,
   type ReactNode,
 } from "react";
+import AddRecipeForm from "./components/AddRecipe";
 import Button from "./components/ui/Button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "./components/ui/Dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./components/ui/Dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./components/ui/Dropdown";
 import Icon from "./components/ui/Icons";
 import Loader from "./components/ui/Loader";
@@ -47,12 +40,8 @@ const App = () => {
   const { recipes, totalIngredients, addRecipe, deleteRecipe, editRecipe, getRecipe } = useRecipe();
   const [paniers, setPaniers] = useState<Panier[]>([]);
   const [selectedMeal, setSelectedMeal] = useState<SelectedMeal[]>(initialiseSelectedMeal(recipes));
-  const [openAddRecipeModal, setOpenAddRecipeModal] = useState(false);
-  const [openDropdownRecipe, setOpenDropdownRecipe] = useState(false);
-
   const [APIkeyInput, setAPIkeyInput] = useState({ validity: false, typing: true, key: "" });
-  // const changeKey = (key: string) => setAPIkeyInput({ validity: isViableKey(key), typing: false, key });
-  // const copyToClipboard = () => navigator.clipboard.writeText(APIkeyInput.key);
+
   const { copyToClipboard, isSuccess } = useClipboard({ delayBeforeUnSuccess: 2000 });
 
   const handleSelectedRecipe = (checked: boolean, id: number) => {
@@ -224,19 +213,11 @@ const App = () => {
                     </DialogTrigger>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <DialogContent className="card translate-center z-[9999]">
+                <DialogContent className="card translate-center z-[9999] h-fit w-9/12 max-w-full">
                   <DialogHeader>
-                    <DialogTitle>Are you absolutely sure?</DialogTitle>
-                    <DialogDescription>
-                      This action cannot be undone. Are you sure you want to permanently delete this file from our
-                      servers?
-                    </DialogDescription>
+                    <DialogTitle>Create a new recipe</DialogTitle>
                   </DialogHeader>
-                  <DialogFooter>
-                    <Button onClick={() => {}} ariaLabel="Confirm" type="submit">
-                      Confirm
-                    </Button>
-                  </DialogFooter>
+                  <AddRecipeForm />
                 </DialogContent>
               </Dialog>
               {/* // */}

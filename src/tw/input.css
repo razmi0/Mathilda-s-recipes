@@ -44,6 +44,26 @@ div[data-state="open"][aria-hidden="true"][data-aria-hidden="true"] {
   @apply bg-def-500 opacity-70;
 }
 
+div[cmdk-list][role="listbox"] {
+  @apply bg-blueish-300 max-h-32 text-def-100 rounded-sm border-def-200;
+}
+
+div[cmdk-item][role="option"] {
+  @apply text-def-100 opacity-100 hover:bg-blueish-200 py-[3px] focus:bg-blueish-200 focus-visible:bg-blueish-200 pointer-events-auto focus-within:bg-blueish-200 ;
+}
+
+button[data-action="badge-button-remove"] {
+  @apply bg-transparent text-def-100;
+}
+input[cmdk-input][role="combobox"]{
+  @apply bg-blueish-300 text-def-100 min-w-[38rem];
+}
+
+div[data-badge="mounted"]{
+  @apply bg-def-500 select-none;
+
+}
+
 .translate-center  {
   transform: translate(-50%, -50%);
   top: 50%;
