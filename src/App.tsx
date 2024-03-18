@@ -7,7 +7,7 @@ import {
   type MouseEvent,
   type ReactNode,
 } from "react";
-import Button from "./components/Button";
+import Button from "./components/ui/Button";
 import {
   Dialog,
   DialogContent,
@@ -16,12 +16,12 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "./components/Dialog";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./components/Dropdown";
-import Icon from "./components/Icons";
-import Loader from "./components/Loader";
-import Noise from "./components/Noise";
-import { Popover, PopoverContent, PopoverTrigger } from "./components/Popover";
+} from "./components/ui/Dialog";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./components/ui/Dropdown";
+import Icon from "./components/ui/Icons";
+import Loader from "./components/ui/Loader";
+import Noise from "./components/ui/Noise";
+import { Popover, PopoverContent, PopoverTrigger } from "./components/ui/Popover";
 import useClipboard from "./hooks/useClipboard";
 import { useRecipe, type RecipeType } from "./hooks/useRecipe";
 import { isViableKey, processToGPT } from "./services/openAI";
