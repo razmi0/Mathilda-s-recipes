@@ -55,6 +55,11 @@ div[cmdk-item][role="option"] {
 button[data-action="badge-button-remove"] {
   @apply bg-transparent text-def-100;
 }
+
+button[data-action="generate-instructions"]{
+  @apply hover:no-underline no-underline;
+}
+
 input[cmdk-input][role="combobox"]{
   @apply bg-blueish-300 text-def-100 min-w-[38rem];
 }
@@ -78,13 +83,11 @@ div[data-badge="mounted"]{
 .horizontal {
   display: flex;
   flex-direction: row;
-  align-items: center;
 }
 
 .vertical {
   display: flex;
   flex-direction: column;
-  justify-content: center;
 }
 
 h1 {
@@ -138,11 +141,13 @@ button:focus-visible {
 } */
 
 #root {
-  max-width: 1280px;
+  @apply sm:p-4 md:p-8 p-1;
+  /* max-width: 1280px; */
   margin: 0 auto;
-  padding: 2rem;
   text-align: left;
 }
+
+
 
 table {
   width: 100%;
@@ -159,7 +164,7 @@ th {
   font-family: "Montserrat", sans-serif;
 }
 .card {
-  @apply rounded-lg border-[1px] bg-blueish-300/95  border-black/40 shadow-inner-shadow-dark-sm;
+  @apply rounded-lg border-[1px] border-black/40 shadow-inner-shadow-dark-sm;
 }
 /*  */
 
