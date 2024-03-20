@@ -1,23 +1,25 @@
-import { useCallback, useReducer } from "react";
+import { useCallback, useMemo, useReducer } from "react";
 import { recipes } from "../data";
-
-// Recipe type :
-export type RecipeType = {
-  id: number;
-  name: string;
-  date: Date;
-  citation?: string;
-  description: string;
-  ingredients: string[];
-  nbrOfIngredients?: number;
-};
+import type { Panier, RecipeType } from "../types";
+import { Prettify } from "../types/index";
 
 // Define the state and action types
 
+export type AddRecipePayload = {
+  name: string;
+  description: string;
+  ingredients: RecipeType["ingredients"];
+};
+
+export type EditRecipePayload = {
+  id: number & RecipeType["id"];
+} & Exclude<Partial<RecipeType>, "id">;
 type Actions =
-  | { type: "ADD_RECIPE"; payload: Exclude<RecipeType, ["id", "nbrOfIngredients", "date", "citation"]> }
+  | { type: "ADD_RECIPE"; payload: AddRecipePayload }
   | { type: "DELETE_RECIPE"; payload: number & RecipeType["id"] }
-  | { type: "EDIT_RECIPE"; payload: RecipeType };
+  | { type: "EDIT_RECIPE"; payload: EditRecipePayload }
+  | { type: "SELECT_RECIPE"; payload: { id: number & RecipeType["id"]; value: boolean & RecipeType["isSelected"] } }
+  | { type: "LOADING_RECIPE"; payload: { id: number & RecipeType["id"]; value: boolean & RecipeType["isLoading"] } };
 
 // Reducer
 const recipeReducer = (state: { recipes: RecipeType[] }, action: Actions) => {
@@ -31,13 +33,18 @@ const recipeReducer = (state: { recipes: RecipeType[] }, action: Actions) => {
         return newId;
       };
 
-      const newRecipe = {
-        ...action.payload,
-        citation: "",
-        date: new Date(),
+      const newRecipe: RecipeType = {
         id: buildId(),
+        ...action.payload,
+        date: new Date(),
+        citation: "",
         nbrOfIngredients: action.payload.ingredients.length,
+        steps: [],
+        isSelected: false,
+        isLoading: false,
       };
+
+      console.log(newRecipe);
       return {
         ...state,
         recipes: [...state.recipes, newRecipe],
@@ -48,10 +55,31 @@ const recipeReducer = (state: { recipes: RecipeType[] }, action: Actions) => {
         ...state,
         recipes: state.recipes.filter((recipe) => recipe.id !== action.payload),
       };
-    case "EDIT_RECIPE":
+    case "EDIT_RECIPE": {
+      const editedRecipeIndex = state.recipes.findIndex((recipe) => recipe.id === action.payload.id);
+      const editedRecipe = { ...state.recipes[editedRecipeIndex], ...action.payload };
       return {
         ...state,
-        recipes: state.recipes.map((recipe) => (recipe.id === action.payload.id ? action.payload : recipe)),
+        recipes: [
+          ...state.recipes.slice(0, editedRecipeIndex),
+          editedRecipe,
+          ...state.recipes.slice(editedRecipeIndex + 1),
+        ],
+      };
+    }
+    case "SELECT_RECIPE":
+      return {
+        ...state,
+        recipes: state.recipes.map((recipe) =>
+          recipe.id === action.payload.id ? { ...recipe, isSelected: action.payload.value } : recipe
+        ),
+      };
+    case "LOADING_RECIPE":
+      return {
+        ...state,
+        recipes: state.recipes.map((recipe) =>
+          recipe.id === action.payload.id ? { ...recipe, isLoading: action.payload.value } : recipe
+        ),
       };
     default:
       return state;
@@ -62,7 +90,7 @@ const recipeReducer = (state: { recipes: RecipeType[] }, action: Actions) => {
 export const useRecipe = () => {
   const [state, dispatch] = useReducer(recipeReducer, { recipes });
 
-  const addRecipe = useCallback((recipe: RecipeType) => {
+  const addRecipe = useCallback((recipe: Prettify<AddRecipePayload>) => {
     dispatch({ type: "ADD_RECIPE", payload: recipe });
   }, []);
 
@@ -70,8 +98,8 @@ export const useRecipe = () => {
     dispatch({ type: "DELETE_RECIPE", payload: id });
   }, []);
 
-  const editRecipe = useCallback((recipe: RecipeType) => {
-    dispatch({ type: "EDIT_RECIPE", payload: recipe });
+  const editRecipe = useCallback((modifs: Prettify<EditRecipePayload>) => {
+    dispatch({ type: "EDIT_RECIPE", payload: modifs });
   }, []);
 
   const getRecipe = useCallback(
@@ -81,13 +109,60 @@ export const useRecipe = () => {
     [state.recipes]
   );
 
-  const totalIngredients = useCallback(() => {
-    return state.recipes.reduce((acc, recipe) => acc + recipe.ingredients.length, 0);
+  const loadRecipe = useCallback(
+    ({ id, value }: { id: number & RecipeType["id"]; value: boolean & RecipeType["isLoading"] }) => {
+      dispatch({ type: "LOADING_RECIPE", payload: { id, value } });
+    },
+    []
+  );
+
+  const selectRecipe = useCallback(
+    ({ id, value }: { id: number & RecipeType["id"]; value: boolean & RecipeType["isSelected"] }) => {
+      dispatch({ type: "SELECT_RECIPE", payload: { id, value } });
+    },
+    []
+  );
+
+  const selectedRecipes = useMemo(() => {
+    return state.recipes.filter((recipe) => recipe.isSelected);
   }, [state.recipes]);
+
+  const loadingRecipes = useMemo(() => {
+    return state.recipes.filter((recipe) => recipe.isLoading);
+  }, [state.recipes]);
+
+  const buildPanier = (selectedRecipes: RecipeType[]): Panier[] => {
+    const noDuplicates = new Set<string>();
+    const panier: Panier[] = [];
+    for (const recipe of selectedRecipes) {
+      for (const ingredient of recipe.ingredients) {
+        if (!noDuplicates.has(ingredient.label)) {
+          panier.push(ingredient);
+          noDuplicates.add(ingredient.label);
+        } else {
+          const index = panier.findIndex((ing) => ing.label === ingredient.label);
+          panier[index].quantity += ingredient.quantity;
+        }
+      }
+    }
+    return panier;
+  };
+
+  const paniers: Panier[] = useMemo(() => {
+    return buildPanier(selectedRecipes);
+  }, [selectedRecipes]);
 
   return {
     recipes: state.recipes,
-    totalIngredients: totalIngredients(),
+    select: {
+      state: selectedRecipes,
+      action: selectRecipe,
+    },
+    loading: {
+      state: loadingRecipes,
+      action: loadRecipe,
+    },
+    paniers,
     addRecipe,
     deleteRecipe,
     editRecipe,

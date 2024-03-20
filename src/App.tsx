@@ -1,111 +1,51 @@
-import {
-  useCallback,
-  useRef,
-  useState,
-  type ChangeEvent,
-  type ElementType,
-  type MouseEvent,
-  type ReactNode,
-} from "react";
-import Button from "./components/Button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "./components/Dialog";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./components/Dropdown";
-import Icon from "./components/Icons";
-import Loader from "./components/Loader";
-import Noise from "./components/Noise";
-import { Popover, PopoverContent, PopoverTrigger } from "./components/Popover";
+import { useCallback, useRef, useState } from "react";
+import AddRecipeForm from "./components/AddRecipe";
+import Ingredients, { IngredientsWrapper } from "./components/Ingredients";
+import Instructions, { InstructionsWrapper } from "./components/Instructions";
+import Recipes, { RecipeTable, RecipeTableWrapper } from "./components/Recipes";
+import Button from "./components/ui/Button";
+import CardHeading from "./components/ui/CardHeading";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./components/ui/Dialog";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./components/ui/Dropdown";
+import Icon from "./components/ui/Icons";
+import Noise from "./components/ui/Noise";
+import { Popover, PopoverContent, PopoverTrigger } from "./components/ui/Popover";
+import Show from "./components/ui/Show";
 import useClipboard from "./hooks/useClipboard";
-import { useRecipe, type RecipeType } from "./hooks/useRecipe";
-import { isViableKey, processToGPT } from "./services/openAI";
-import type { Message, Panier, RecipesProps, SelectedMeal } from "./types";
+import useGPT, { OpenAiKey } from "./hooks/useGPT";
+import { useRecipe } from "./hooks/useRecipe";
 
-const initialiseSelectedMeal = (recipes: RecipeType[]): SelectedMeal[] => {
-  const selectedMeals: SelectedMeal[] = [];
-  for (let i = 0; i < recipes.length; i++) {
-    selectedMeals.push({
-      id: recipes[i].id,
-      name: recipes[i].name,
-      steps: [],
-      isLoading: false,
-      isSelected: false,
-      ingredients: recipes[i].ingredients,
-    });
-  }
-  return selectedMeals;
-};
+// sortHook : sortIcon, sortType, changeSortType
 
 const App = () => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const { recipes, totalIngredients, addRecipe, deleteRecipe, editRecipe, getRecipe } = useRecipe();
-  const [paniers, setPaniers] = useState<Panier[]>([]);
-  const [selectedMeal, setSelectedMeal] = useState<SelectedMeal[]>(initialiseSelectedMeal(recipes));
-  const [openAddRecipeModal, setOpenAddRecipeModal] = useState(false);
-  const [openDropdownRecipe, setOpenDropdownRecipe] = useState(false);
-
+  const { recipes, paniers, addRecipe, deleteRecipe, editRecipe, getRecipe, select, loading } = useRecipe();
   const [APIkeyInput, setAPIkeyInput] = useState({ validity: false, typing: true, key: "" });
-  // const changeKey = (key: string) => setAPIkeyInput({ validity: isViableKey(key), typing: false, key });
-  // const copyToClipboard = () => navigator.clipboard.writeText(APIkeyInput.key);
+  const [openAddRecipeModal, setOpenAddRecipeModal] = useState(false);
   const { copyToClipboard, isSuccess } = useClipboard({ delayBeforeUnSuccess: 2000 });
-
-  const handleSelectedRecipe = (checked: boolean, id: number) => {
-    const copySelectedMeal: SelectedMeal[] = [...selectedMeal];
-    const copyPanier: Panier[] = [...paniers];
-    const q = checked ? 1 : -1;
-    const selectedIndex = copySelectedMeal.findIndex((meal) => meal.id === id);
-    const ingredients = copySelectedMeal[selectedIndex].ingredients;
-
-    copySelectedMeal[selectedIndex].isSelected = checked;
-
-    for (let i = 0; i < ingredients.length; i++) {
-      const index = copyPanier.findIndex((panier) => panier.ingredient === ingredients[i]);
-      if (index == -1) {
-        copyPanier.push({ ingredient: ingredients[i], quantity: 1 });
-      } else {
-        copyPanier[index].quantity += q;
-        if (copyPanier[index].quantity == 0) {
-          copyPanier.splice(index, 1);
-        }
-      }
-    }
-
-    setSelectedMeal(copySelectedMeal);
-    setPaniers(copyPanier);
-  };
+  const { isError, isLoading, processToGPT, setAPIkey, setUserMessages, testKey } = useGPT();
 
   const handleInstructions = useCallback(
-    async (name: string) => {
-      const index = selectedMeal.findIndex((meal) => meal.name === name);
-      const ingredients = selectedMeal[index].ingredients;
+    async (id: number) => {
+      // Get the recipe name and ingredients
+      const index = select.state.findIndex((recipe) => recipe.id === id);
+      if (index === -1) return;
+      const recipeIngredients = select.state[index].ingredients.map((ing) => ing.label);
+      const recipeName = select.state[index].name;
 
-      const userMsg: Message = {
-        role: "user",
-        content: `Recette: ${name}\n Ingredients: ${ingredients?.join(", ")}\n Instructions: `,
-      };
+      // Set the user messages
+      setUserMessages({ name: recipeName, ingredients: recipeIngredients });
 
-      setSelectedMeal((prev) => {
-        const hashMapSelectedMeal = [...prev];
-        hashMapSelectedMeal[index].isLoading = true;
-        return hashMapSelectedMeal;
-      });
+      // Get the steps from GPT
+      loading.action({ id, value: true });
+      const steps: string[] | undefined = await processToGPT();
+      loading.action({ id, value: false });
+      if (!steps) return;
 
-      const steps: string[] = await processToGPT([userMsg], APIkeyInput.key);
-
-      setSelectedMeal((prev) => {
-        const hashMapSelectedMeal = [...prev];
-        hashMapSelectedMeal[index].isLoading = false;
-        hashMapSelectedMeal[index].steps = steps;
-        return hashMapSelectedMeal;
-      });
+      // Edit the recipe with the new steps
+      editRecipe({ id, steps });
     },
-    [APIkeyInput.key, selectedMeal]
+    [editRecipe, loading, processToGPT, select.state, setUserMessages]
   );
 
   const inputColor = (validity: boolean, typing: boolean) => {
@@ -146,7 +86,7 @@ const App = () => {
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       setAPIkeyInput({
-                        validity: isViableKey(APIkeyInput.key),
+                        validity: testKey(APIkeyInput.key),
                         typing: false,
                         key: APIkeyInput.key,
                       });
@@ -183,11 +123,13 @@ const App = () => {
               <Button
                 ariaLabel="Confirm API key"
                 onClick={() => {
+                  const valid = testKey(APIkeyInput.key);
                   setAPIkeyInput({
-                    validity: isViableKey(APIkeyInput.key),
+                    validity: valid,
                     typing: false,
                     key: APIkeyInput.key,
                   });
+                  if (valid) setAPIkey(APIkeyInput.key as OpenAiKey);
                 }}
               >
                 Confirm
@@ -197,7 +139,7 @@ const App = () => {
         </header>
         <section className="flex flex-col justify-between items-start">
           {/* RECETTES */}
-          <div className="flex flex-col card z-20">
+          <RecipeTableWrapper>
             <CardHeading as="h3" classNames="flex items-center justify-between">
               <span>
                 Recettes <small>( {recipes.length} )</small>
@@ -206,7 +148,7 @@ const App = () => {
               {/* // */}
               {/* // */}
               {/* // */}
-              <Dialog>
+              <Dialog open={openAddRecipeModal}>
                 <DropdownMenu>
                   <DropdownMenuTrigger role="button" tabIndex={0}>
                     <Icon
@@ -217,26 +159,18 @@ const App = () => {
                     />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent side="left" sideOffset={-10} className="bg-blueish-400 border-black/40">
-                    <DialogTrigger asChild>
+                    <DialogTrigger asChild onClick={() => setOpenAddRecipeModal(true)}>
                       <DropdownMenuItem className="hover:bg-blueish-300 cursor-pointer">
                         Add new recipe
                       </DropdownMenuItem>
                     </DialogTrigger>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <DialogContent className="card translate-center z-[9999]">
+                <DialogContent className="card bg-card-500 translate-center z-[9999] h-fit w-9/12 max-w-full">
                   <DialogHeader>
-                    <DialogTitle>Are you absolutely sure?</DialogTitle>
-                    <DialogDescription>
-                      This action cannot be undone. Are you sure you want to permanently delete this file from our
-                      servers?
-                    </DialogDescription>
+                    <DialogTitle>Create a new recipe</DialogTitle>
                   </DialogHeader>
-                  <DialogFooter>
-                    <Button onClick={() => {}} ariaLabel="Confirm" type="submit">
-                      Confirm
-                    </Button>
-                  </DialogFooter>
+                  <AddRecipeForm addRecipe={addRecipe} closeModal={() => setOpenAddRecipeModal(false)} />
                 </DialogContent>
               </Dialog>
               {/* // */}
@@ -245,159 +179,30 @@ const App = () => {
               {/* // */}
               {/* // */}
             </CardHeading>
-            <div className="flex justify-start items-center text-left px-2">
-              <table className="first:mt-3 last:mb-3">
-                <Recipes selectRecipe={handleSelectedRecipe} recipes={recipes} />
-              </table>
-            </div>
-          </div>
-          <section className="flex justify-evenly w-full">
-            {/* PANIER */}
-            {paniers.length > 0 && (
-              <div className="flex flex-col my-8 card min-w-80 z-20">
-                <CardHeading as={"h3"}>
-                  Liste de courses <small>( {paniers.length} )</small>
-                </CardHeading>
-                <div className="flex justify-center items-center">
-                  <Ingredients paniers={paniers} />
-                </div>
-              </div>
-            )}
-            {/* INSTRUCTION */}
-            {paniers.length > 0 && (
-              <div className="w-fit mt-8 flex flex-col justify-start items-center card z-20 h-fit min-w-80">
+            <RecipeTable>
+              <Recipes recipes={recipes} select={select.action} />
+            </RecipeTable>
+          </RecipeTableWrapper>
+          <section className="flex justify-evenly w-full md:flex-row flex-col md:gap-3">
+            <Show when={paniers.length > 0}>
+              <IngredientsWrapper>
+                <Ingredients paniers={paniers} />
+              </IngredientsWrapper>
+            </Show>
+            <Show when={paniers.length > 0}>
+              <InstructionsWrapper>
                 <CardHeading as={"h3"} classNames="w-full">
                   Instructions
                 </CardHeading>
-                {selectedMeal.map((meal, i) => {
-                  if (meal.isSelected) {
-                    return <Instructions key={i} meal={meal} handler={handleInstructions} />;
-                  }
-                })}
-              </div>
-            )}
+                <Instructions generateInstructions={handleInstructions} selected={select.state} />
+              </InstructionsWrapper>
+            </Show>
           </section>
         </section>
         <footer className="w-full h-8"></footer>
       </div>
       <Noise />
     </>
-  );
-};
-
-type CardHeadingProps = {
-  as: ("h1" | "h2" | "h3" | "h4" | "h5" | "h6") & ElementType;
-  classNames?: string;
-  children: ReactNode;
-};
-const CardHeading = ({ as: As, classNames, children }: CardHeadingProps) => {
-  return (
-    <As className={`text-2xl py-6 px-4 bg-blueish-400 rounded-tl-lg rounded-tr-lg ${classNames || ""}`}>{children}</As>
-  );
-};
-
-const Recipes = ({ selectRecipe, recipes }: RecipesProps) => {
-  const [checked, setChecked] = useState<boolean[]>(new Array(recipes.length).fill(false));
-
-  const toggleCheckedRecipe = (i: number, id: number) => {
-    const newChecked = [...checked];
-    newChecked[i] = !newChecked[i];
-    setChecked(newChecked);
-    selectRecipe(newChecked[i], id);
-  };
-
-  if (recipes.length !== checked.length) {
-    const resizedChecked = new Array(recipes.length).fill(false);
-    for (let i = 0; i < checked.length; i++) {
-      resizedChecked[i] = checked[i];
-    }
-    setChecked(resizedChecked);
-  }
-
-  return (
-    <tbody>
-      {recipes.map((recipe, i) => {
-        const localToggle = (e: MouseEvent | ChangeEvent) => {
-          e.preventDefault();
-          toggleCheckedRecipe(i, recipe.id);
-        };
-
-        const htmlId = `checkbox-${i}_${recipe.id}`;
-        return (
-          <tr
-            key={recipe.name}
-            className="hover:bg-blueish-200 transition-colors cursor-pointer rounded-sm"
-            onClick={(e) => {
-              localToggle(e);
-            }}
-          >
-            <td>
-              <div className="checkbox-ctn">
-                <label className="checkbox-container" htmlFor={htmlId}>
-                  <span className="sr-only">check {recipe.name}</span>
-                  <input
-                    type="checkbox"
-                    onChange={(e) => {
-                      localToggle(e);
-                    }}
-                    checked={checked[i]}
-                    id={htmlId}
-                  />
-                  <div className="checkmark"></div>
-                </label>
-              </div>
-            </td>
-            <td>{recipe.name}</td>
-            <td>{recipe.description}</td>
-          </tr>
-        );
-      })}
-    </tbody>
-  );
-};
-
-const Ingredients = ({ paniers }: { paniers: Panier[] }) => {
-  const pluriel = (word: string, quantity: number) => (quantity > 1 ? word + "s" : word);
-  const capitalize = (word: string) => word.charAt(0).toUpperCase() + word.slice(1);
-  return (
-    <>
-      <ul className="w-full text-center px-2 py-1">
-        {paniers.map((ing, i) => (
-          <li
-            key={i}
-            className="flex justify-between items-center py-2 px-2 hover:bg-blueish-200 transition-colors rounded-sm"
-          >
-            <div>{capitalize(ing.ingredient)}</div>
-            <div>
-              {ing.quantity} {pluriel(" ration", ing.quantity)}
-            </div>
-          </li>
-        ))}
-      </ul>
-    </>
-  );
-};
-
-const Instructions = ({ handler, meal }: { handler: (name: string) => void; meal: SelectedMeal }) => {
-  const { name, steps, isLoading } = meal;
-  return (
-    <div className="w-full text-left mx-4">
-      <div className="flex justify-between items-center py-2 px-2">
-        <span>{name}</span>
-        <Button ariaLabel="Generate instructions" onClick={() => handler(name)} loading={isLoading} loader={<Loader />}>
-          Generate
-        </Button>
-      </div>
-      {steps.length > 0 && (
-        <div className="w-3/4 flex flex-col">
-          <ul className="w-full flex flex-col justify-start items-start p-0 list-none">
-            {steps.map((step, i) => (
-              <li key={i}>{step}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </div>
   );
 };
 

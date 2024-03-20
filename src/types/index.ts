@@ -1,11 +1,26 @@
-import { RecipeType } from "../hooks/useRecipe";
+type SortFunction<T> = (a: T, b: T) => number;
 
-export interface RecipesProps {
-  selectRecipe: (checked: boolean, id: number) => void;
-  recipes: RecipeType[];
+interface ExtendedArray<T> {
+  toSorted(fn?: SortFunction<T>): T[];
+  toReversed(): T[];
 }
+
+// Type polyfill for Array.prototype.toSorted method & Array.prototype.toReversed method
+declare global {
+  interface Array<T> extends ExtendedArray<T> {
+    toSorted(fn?: SortFunction<T>): T[];
+    toReversed(): T[];
+  }
+}
+
+export type RecipesTableProps = {
+  recipes: RecipeType[];
+  select: ({ id, value }: { id: number; value: boolean }) => void;
+};
+
+// { state: RecipeType[]; action: ({ id, value }: { id: number; value: boolean; }) => void; }
 export type Panier = {
-  ingredient: string;
+  label: string;
   quantity: number;
 };
 export type Instructions = {
@@ -16,13 +31,19 @@ export type Message = {
   role: string;
   content: string;
 };
-export type SelectedMeal = {
+
+// Recipe type :
+export type RecipeType = {
   id: number;
   name: string;
+  date: Date;
+  citation?: string;
+  description: string;
+  ingredients: Array<{ label: string; quantity: number }>;
+  nbrOfIngredients?: number;
   steps: string[];
-  isLoading: boolean;
   isSelected: boolean;
-  ingredients: string[];
+  isLoading: boolean;
 };
 
 export type Prettify<T> = {

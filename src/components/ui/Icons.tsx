@@ -1,6 +1,19 @@
 import { MouseEvent, SVGProps } from "react";
 
-type IconNames = "menu" | "check" | "chevron-right" | "dot-filled" | "setting" | "copy" | "cross2";
+type IconNames =
+  | "menu"
+  | "check"
+  | "chevron-right"
+  | "dot-filled"
+  | "setting"
+  | "copy"
+  | "cross2"
+  | "search"
+  | "minus"
+  | "alphab-up"
+  | "alphab-down"
+  | "num-up"
+  | "num-down";
 
 type IconNamedProps = SVGProps<SVGSVGElement> & {
   width?: number;
@@ -15,15 +28,165 @@ type IconNamedProps = SVGProps<SVGSVGElement> & {
 
 const defaultHeight = 24;
 
+const MinusIcon = ({ color = "inherit", height, width, className = "", title, ...rest }: IconNamedProps) => {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      width={width}
+      height={height || width || defaultHeight}
+      className={className}
+      {...rest}
+    >
+      {title && <title>{title}</title>}
+      <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+      <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
+      <g id="SVGRepo_iconCarrier">
+        <path d="M6 12L18 12" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+      </g>
+    </svg>
+  );
+};
+
+const SortAscendingAlphabIcon = ({
+  color = "inherit",
+  height,
+  width,
+  className = "",
+  title,
+  ...rest
+}: IconNamedProps) => {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      width={width}
+      height={height || width || defaultHeight}
+      className={className}
+      {...rest}
+    >
+      {title && <title>{title}</title>}
+      <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+      <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
+      <g id="SVGRepo_iconCarrier">
+        <path
+          d="M7 3V21M7 3L11 7M7 3L3 7M15.5 3H20.5L15.5 10H20.5M16 20H20M15 21L18 14L21 21"
+          stroke={color}
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        ></path>
+      </g>
+    </svg>
+  );
+};
+
+const SortDescendingAlphabIcon = ({
+  color = "inherit",
+  height,
+  width,
+  className = "",
+  title,
+  ...rest
+}: IconNamedProps) => {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      width={width}
+      height={height || width || defaultHeight}
+      className={className}
+      {...rest}
+    >
+      {title && <title>{title}</title>}
+      <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+      <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
+      <g id="SVGRepo_iconCarrier">
+        <path
+          d="M7 3V21M7 3L11 7M7 3L3 7M15.5 14H20.5L15.5 21H20.5M16 9H20M15 10L18 3L21 10"
+          stroke={color}
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        ></path>
+      </g>
+    </svg>
+  );
+};
+
+const SortAscendingNumIcon = ({ color = "inherit", height, width, className = "", title, ...rest }: IconNamedProps) => {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      width={width}
+      height={height || width || defaultHeight}
+      className={className}
+      {...rest}
+    >
+      {title && <title>{title}</title>}
+      <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+      <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
+      <g id="SVGRepo_iconCarrier">
+        <path
+          d="M16.5 16L18.5 14V21M16.5 21H20.5M20.5 7L18 10M7 21V3M7 3L3 7M7 3L11 7M21 5.5C21 6.88071 19.8807 8 18.5 8C17.1193 8 16 6.88071 16 5.5C16 4.11929 17.1193 3 18.5 3C19.8807 3 21 4.11929 21 5.5Z"
+          stroke={color}
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        ></path>
+      </g>
+    </svg>
+  );
+};
+
+const SortDescendingNumIcon = ({
+  color = "currentColor",
+  height,
+  width,
+  className = "",
+  title,
+  ...rest
+}: IconNamedProps) => {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      width={width}
+      height={height || width || defaultHeight}
+      className={className}
+      {...rest}
+    >
+      {title && <title>{title}</title>}
+      <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+      <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
+      <g id="SVGRepo_iconCarrier">
+        <path
+          d="M16.5 5L18.5 3V10M16.5 10H20.5M20.5 18L18 21M7 3V21M7 3L11 7M7 3L3 7M21 16.5C21 17.8807 19.8807 19 18.5 19C17.1193 19 16 17.8807 16 16.5C16 15.1193 17.1193 14 18.5 14C19.8807 14 21 15.1193 21 16.5Z"
+          stroke={color}
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        ></path>
+      </g>
+    </svg>
+  );
+};
+
 const Cross2Icon = ({ color = "inherit", height, width, className = "", title, ...rest }: IconNamedProps) => {
   return (
     <svg
       width={width}
       height={height || width || defaultHeight}
-      viewBox="0 0 15 15"
-      fill="none"
       className={className}
       {...rest}
+      viewBox="0 0 15 15"
+      fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
       {title && <title>{title}</title>}
@@ -220,7 +383,29 @@ const MenuIcon = ({ title, color = "inherit", height, width, className = "", ...
   );
 };
 
-type IconProps = { name: IconNames } & IconNamedProps &
+const Search = ({ title, color = "inherit", height, width, className = "", ...rest }: IconNamedProps) => {
+  return (
+    <svg
+      width={width || defaultHeight}
+      height={height || width || defaultHeight}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      className={className}
+      {...rest}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      {title && <title>{title}</title>}
+      <circle cx="11" cy="11" r="8" />
+      <path d="m21 21-4.3-4.3" />
+    </svg>
+  );
+};
+
+export type IconProps = { name: IconNames } & IconNamedProps &
   (IconNamedProps["name"] extends "copy" ? { check?: boolean } : {});
 
 const Icon = ({ name, ...rest }: IconProps) => {
@@ -239,6 +424,18 @@ const Icon = ({ name, ...rest }: IconProps) => {
       return <Copy {...rest} />;
     case "cross2":
       return <Cross2Icon {...rest} />;
+    case "search":
+      return <Search {...rest} />;
+    case "minus":
+      return <MinusIcon {...rest} />;
+    case "alphab-up":
+      return <SortAscendingAlphabIcon {...rest} />;
+    case "alphab-down":
+      return <SortDescendingAlphabIcon {...rest} />;
+    case "num-up":
+      return <SortAscendingNumIcon {...rest} />;
+    case "num-down":
+      return <SortDescendingNumIcon {...rest} />;
     default:
       return <></>;
   }

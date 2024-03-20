@@ -3,7 +3,7 @@ import { ReactNode, useRef, useState } from "react";
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   children: ReactNode;
-  onClick: () => void;
+  onClick?: () => void;
   ariaLabel: string;
   loading?: boolean;
   loader?: ReactNode;
@@ -29,13 +29,14 @@ const Button = ({
   disabledIfLoading = true,
   ariaLabel,
   variant = "primary",
+  type = "button",
   ...rest
 }: ButtonProps) => {
   const [waves, setWaves] = useState<ReactNode[]>([]);
   const btnRef = useRef<HTMLButtonElement>(null);
 
   const clickHandler = () => {
-    onClick();
+    onClick && onClick();
     if (!btnRef.current) return;
     setWaves((waves) => [...waves, <Wave width={btnRef.current?.offsetWidth} height={btnRef.current?.offsetHeight} />]);
     setTimeout(() => {
@@ -54,10 +55,10 @@ const Button = ({
     <button
       {...rest}
       onClick={clickHandler}
+      type={type}
       aria-label={ariaLabel}
       disabled={disabled}
       aria-disabled={disabled}
-      type="button"
       className={`${disabledClasses} ${variantClasses[variant]} ${classNames}`}
       ref={btnRef}
     >
