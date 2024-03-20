@@ -22,10 +22,28 @@ export default {
           100: "#54669DFF",
           50: "#7A85BBFF",
         },
+
+        card: {
+          500: "rgb(58 66 84 / 0.95)",
+        },
       },
 
       fontSize: {
         "2xl": "1.5rem",
+      },
+      keyframes: {
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.1s ease-out",
+        "accordion-up": "accordion-up 0.1s ease-out",
       },
     },
   },
