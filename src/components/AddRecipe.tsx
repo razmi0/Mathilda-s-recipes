@@ -1,33 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import z from "zod";
-import { allIngredients } from "../data";
+import { completeIngredients, multiSelectorIngredientsBadges } from "../data";
 import type { AddRecipePayload } from "../hooks/useRecipe";
+import addRecipeFormSchema from "../schema/addRecipe.schema";
 import { RecipeType } from "../types";
 import Button from "./ui/Button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/Form";
 import MultipleSelector from "./ui/MultipleSelector";
-
-const addRecipeFormSchema = z
-  .object({
-    name: z
-      .string({
-        required_error: "Name is required",
-      })
-      .min(2, {
-        message: "Name must be at least 2 characters long",
-      }),
-    description: z.string(),
-    ingredients: z.array(
-      z.object({
-        value: z.string(),
-        label: z.string(),
-      })
-    ),
-  })
-  .required({
-    name: true,
-  });
 
 type AddRecipeFormProps = {
   addRecipe: (recipe: AddRecipePayload) => void;
@@ -45,16 +25,21 @@ const AddRecipeForm = ({ addRecipe, closeModal }: AddRecipeFormProps) => {
     shouldFocusError: true,
   });
 
+  // TODO : add ingredient type in the form
   const onSubmit = (values: z.infer<typeof addRecipeFormSchema>) => {
     const { name, description, ingredients } = values;
-    const quantifiedIngredients: RecipeType["ingredients"] = ingredients.map((ingredient) => ({
-      label: ingredient.label,
-      quantity: 1,
-    }));
+    const formatedIngredients: RecipeType["ingredients"] = ingredients.map((ingredient) => {
+      const ingType = completeIngredients.find((ing) => ing.label === ingredient.label)?.type || "other";
+      return {
+        label: ingredient.label,
+        quantity: 1,
+        type: ingType,
+      };
+    });
     addRecipe({
       name: name,
       description: description,
-      ingredients: quantifiedIngredients,
+      ingredients: formatedIngredients,
     });
     closeModal();
   };
@@ -100,10 +85,11 @@ const AddRecipeForm = ({ addRecipe, closeModal }: AddRecipeFormProps) => {
               <FormLabel>Ingredients</FormLabel>
               <FormControl>
                 <MultipleSelector
+                  inputProps={{ className: "focus:outline-none" }}
                   triggerSearchOnFocus={true}
                   value={field.value}
                   onChange={field.onChange}
-                  defaultOptions={allIngredients}
+                  options={multiSelectorIngredientsBadges}
                   placeholder="Find or add ingredients.."
                   creatable
                   emptyIndicator={

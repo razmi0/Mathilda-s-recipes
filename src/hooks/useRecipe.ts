@@ -36,7 +36,7 @@ const recipeReducer = (state: { recipes: RecipeType[] }, action: Actions) => {
       const newRecipe: RecipeType = {
         id: buildId(),
         ...action.payload,
-        date: new Date(),
+        date: new Date().toString(),
         citation: "",
         nbrOfIngredients: action.payload.ingredients.length,
         steps: [],

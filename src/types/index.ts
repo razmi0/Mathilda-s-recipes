@@ -36,14 +36,43 @@ export type Message = {
 export type RecipeType = {
   id: number;
   name: string;
-  date: Date;
+  date: string;
   citation?: string;
   description: string;
-  ingredients: Array<{ label: string; quantity: number }>;
+  ingredients: Array<IngredientType>;
   nbrOfIngredients?: number;
   steps: string[];
   isSelected: boolean;
   isLoading: boolean;
+};
+
+export type FoodType =
+  | "meat"
+  | "fish"
+  | "vegetable"
+  | "fruit"
+  | "dairy"
+  | "fat"
+  | "starchy"
+  | "sweet"
+  | "drink"
+  | "other";
+export type FoodColors =
+  | "#ee5c5b"
+  | "#337f95"
+  | "#449c75"
+  | "#f39c40"
+  | "#3390d1"
+  | "#fbd94f"
+  | "#a96133"
+  | "#ed5aa5"
+  | "#FFFFFF"
+  | "#90cbef";
+
+export type IngredientType = {
+  label: string;
+  quantity: number;
+  type: FoodType;
 };
 
 export type Prettify<T> = {

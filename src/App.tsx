@@ -15,8 +15,6 @@ import useClipboard from "./hooks/useClipboard";
 import useGPT, { OpenAiKey } from "./hooks/useGPT";
 import { useRecipe } from "./hooks/useRecipe";
 
-// sortHook : sortIcon, sortType, changeSortType
-
 const App = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const { recipes, paniers, addRecipe, deleteRecipe, editRecipe, getRecipe, select, loading } = useRecipe();
@@ -148,7 +146,7 @@ const App = () => {
               {/* // */}
               {/* // */}
               {/* // */}
-              <Dialog open={openAddRecipeModal}>
+              <Dialog open={openAddRecipeModal} onOpenChange={(b) => setOpenAddRecipeModal(b)}>
                 <DropdownMenu>
                   <DropdownMenuTrigger role="button" tabIndex={0}>
                     <Icon
@@ -166,7 +164,7 @@ const App = () => {
                     </DialogTrigger>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <DialogContent className="card bg-card-500 translate-center z-[9999] h-fit w-9/12 max-w-full">
+                <DialogContent className="card bg-card-500 translate-center-t40 z-[9999] h-fit w-9/12 max-w-full">
                   <DialogHeader>
                     <DialogTitle>Create a new recipe</DialogTitle>
                   </DialogHeader>
