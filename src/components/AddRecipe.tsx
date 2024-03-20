@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 import { allIngredients } from "../data";
 import type { AddRecipePayload } from "../hooks/useRecipe";
+import { RecipeType } from "../types";
 import Button from "./ui/Button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/Form";
 import MultipleSelector from "./ui/MultipleSelector";
@@ -45,10 +46,15 @@ const AddRecipeForm = ({ addRecipe, closeModal }: AddRecipeFormProps) => {
   });
 
   const onSubmit = (values: z.infer<typeof addRecipeFormSchema>) => {
+    const { name, description, ingredients } = values;
+    const quantifiedIngredients: RecipeType["ingredients"] = ingredients.map((ingredient) => ({
+      label: ingredient.label,
+      quantity: 1,
+    }));
     addRecipe({
-      name: values.name,
-      description: values.description,
-      ingredients: values.ingredients.map((ingredient) => ingredient.value),
+      name: name,
+      description: description,
+      ingredients: quantifiedIngredients,
     });
     closeModal();
   };
