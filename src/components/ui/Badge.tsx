@@ -1,7 +1,7 @@
 import * as React from "react";
 
 const classes =
-  "inline-flex items-center rounded-lg card ps-2.5 pe-0 bg-def-500 py-0 h-8 text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2";
+  "inline-flex items-center rounded-lg card bg-card-500 ps-2.5 pe-0 bg-def-500 py-0 h-8 text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2";
 
 const badgeVariants = {
   variant: {
