@@ -830,6 +830,14 @@ video {
   width: 100%;
 }
 
+.w-52{
+  width: 13rem;
+}
+
+.w-48{
+  width: 12rem;
+}
+
 .min-w-72{
   min-width: 18rem;
 }
@@ -1235,6 +1243,11 @@ video {
   padding-bottom: 1.5rem;
 }
 
+.px-1{
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+
 .pe-0{
   padding-inline-end: 0px;
 }
@@ -1472,6 +1485,8 @@ video {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
   -webkit-tap-highlight-color: transparent;
+  --body-radial-color-1: #181c22;
+  --body-radial-color-2: #050e29;
 }
 
 *{
@@ -1496,7 +1511,7 @@ a:hover {
 }
 
 body {
-  background: radial-gradient(circle at center, #282c34 0%, #1c1e24 100%);
+  background: radial-gradient(circle at center, var(--body-radial-color-1) 0%, var(--body-radial-color-2) 100%);
   min-height : 100vh;
 }
 
@@ -1688,7 +1703,7 @@ table {
 }
 
 td {
-  padding: 3px 7px;
+  padding: 1px 3px;
 }
 
 th{

@@ -19,12 +19,11 @@ import type { RecipeType } from "./types";
 
 const App = () => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const subMenuRef = useRef<HTMLDivElement>(null);
   const { recipes, paniers, addRecipe, deleteRecipe, editRecipe, getRecipe, select, loading } = useRecipe();
   const [APIkeyInput, setAPIkeyInput] = useState({ validity: false, typing: true, key: "" });
   const [openAddRecipeModal, setOpenAddRecipeModal] = useState(false);
   const [formMode, setFormMode] = useState<"add" | "edit">("add");
-  const [editedRecipe, setEditedRecipe] = useState<RecipeType | null>(null);
+  const [defaultEditedId, setDefaultEditedId] = useState<RecipeType["id"]>(0);
   const { copyToClipboard, isSuccess } = useClipboard({ delayBeforeUnSuccess: 2000 });
   const { processToGPT, setAPIkey, setUserMessages, testKey } = useGPT();
 
@@ -152,7 +151,7 @@ const App = () => {
               {/* // */}
               {/* // */}
               <Dialog open={openAddRecipeModal} onOpenChange={(b) => setOpenAddRecipeModal(b)}>
-                <DropdownMenu>
+                <DropdownMenu dir="rtl">
                   <DropdownMenuTrigger role="button" tabIndex={0}>
                     <Icon
                       name="menu"
@@ -165,21 +164,22 @@ const App = () => {
                     avoidCollisions={false}
                     side="left"
                     sideOffset={-10}
-                    className="bg-blueish-400 border-black/40 w-44"
+                    className="bg-blueish-400 border-black/40"
                   >
-                    <DialogTrigger onClick={() => setOpenAddRecipeModal(true)}>
+                    <DialogTrigger onClick={() => setOpenAddRecipeModal(true)} className="py-1 px-2">
                       <DropdownMenuItem
-                        className="hover:bg-blueish-300 cursor-pointer justify-between"
+                        className="hover:bg-blueish-300 cursor-pointer justify-between w-44"
                         onClick={() => setFormMode("add")}
                       >
-                        <Icon name="plus" title="Add new recipe" width={13} color="#AEAEAEFF" />
                         <span>Add new recipe</span>
+                        <Icon name="plus" title="Add new recipe" width={13} color="#AEAEAEFF" />
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        className="hover:bg-blueish-300 cursor-pointer w-full"
+                        className="hover:bg-blueish-300 cursor-pointer justify-between w-44"
                         onClick={() => setFormMode("edit")}
                       >
                         <span>Edit a recipe</span>
+                        <Icon name="modify" title="Edit a recipe" width={13} color="#AEAEAEFF" />
                       </DropdownMenuItem>
                     </DialogTrigger>
 
@@ -203,7 +203,7 @@ const App = () => {
                     <RecipeForm mode="add" onSubmit={addRecipe} closeModal={() => setOpenAddRecipeModal(false)} />
                   </Show>
                   <Show when={formMode === "edit"}>
-                    <Tabs defaultValue={recipes[0].id.toString()}>
+                    <Tabs defaultValue={recipes[defaultEditedId].id.toString()}>
                       <TabsList className="bg-def-300 w-full grid grid-cols-4 h-fit gap-1 mb-5">
                         {recipes.map((recipe) => {
                           return (
@@ -245,7 +245,16 @@ const App = () => {
               {/* // */}
             </CardHeading>
             <RecipeTable>
-              <Recipes recipes={recipes} select={select.action} deleteRecipe={deleteRecipe} />
+              <Recipes
+                recipes={recipes}
+                select={select.action}
+                deleteRecipe={deleteRecipe}
+                selectDefaultRecipe={setDefaultEditedId}
+                openEditModal={() => {
+                  setFormMode("edit");
+                  setOpenAddRecipeModal(true);
+                }}
+              />
             </RecipeTable>
           </RecipeTableWrapper>
           <section className="flex justify-evenly w-full md:flex-row flex-col md:gap-3">

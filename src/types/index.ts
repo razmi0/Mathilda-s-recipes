@@ -17,6 +17,8 @@ export type RecipesTableProps = {
   recipes: RecipeType[];
   select: ({ id, value }: { id: number; value: boolean }) => void;
   deleteRecipe: (id: number) => void;
+  selectDefaultRecipe: (id: number) => void;
+  openEditModal: () => void;
 };
 
 export type Instructions = {

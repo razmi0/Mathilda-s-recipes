@@ -16,6 +16,7 @@ type IconNames =
   | "num-up"
   | "delete"
   | "ingredients"
+  | "modify"
   | "num-down";
 
 export type IconProps = { name: IconNames } & IconNamedProps &
@@ -55,6 +56,8 @@ const Icon = ({ name, ...rest }: IconProps) => {
       return <Ingredients {...rest} />;
     case "plus":
       return <Plus {...rest} />;
+    case "modify":
+      return <Modify {...rest} />;
 
     default:
       return <></>;
@@ -68,7 +71,7 @@ type IconNamedProps = SVGProps<SVGSVGElement> & {
   className?: string;
   style?: React.CSSProperties;
   onClick?: (e: MouseEvent) => void;
-  title?: string;
+  title: string;
   check?: boolean;
   mirror?: boolean;
 };
@@ -129,6 +132,41 @@ const Ingredients = ({
         </g>
       </svg>
     </>
+  );
+};
+
+const Modify = ({ color = "currentColor", height, width, className = "", title, ...rest }: IconNamedProps) => {
+  return (
+    <svg
+      viewBox="0 0 48 48"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      width={width}
+      height={height || width || defaultHeight}
+      className={className}
+      {...rest}
+    >
+      {title && <title>{title}</title>}
+
+      <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+      <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
+      <g id="SVGRepo_iconCarrier">
+        <path
+          d="M42 26V40C42 41.1046 41.1046 42 40 42H8C6.89543 42 6 41.1046 6 40V8C6 6.89543 6.89543 6 8 6L22 6"
+          stroke={color}
+          strokeWidth="4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        ></path>
+        <path
+          d="M14 26.7199V34H21.3172L42 13.3081L34.6951 6L14 26.7199Z"
+          fill="transparent"
+          stroke={color}
+          strokeWidth="4"
+          strokeLinejoin="round"
+        ></path>
+      </g>
+    </svg>
   );
 };
 

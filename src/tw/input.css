@@ -20,6 +20,9 @@
   scroll-behavior: smooth;
 
   -webkit-tap-highlight-color: transparent;
+
+  --body-radial-color-1: #181c22;
+  --body-radial-color-2: #050e29;
 }
 
 *{
@@ -36,7 +39,7 @@ a:hover {
 }
 
 body {
-  background: radial-gradient(circle at center, #282c34 0%, #1c1e24 100%);
+  background: radial-gradient(circle at center, var(--body-radial-color-1) 0%, var(--body-radial-color-2) 100%);
   min-height : 100vh;
 }
 
@@ -175,7 +178,7 @@ table {
   width: 100%;
 }
 td {
-  padding: 3px 7px;
+  padding: 1px 3px;
 }
 th {
   @apply border-b-2 border-blueish-100;
