@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from "react";
-import AddRecipeForm from "./components/RecipeForm";
 import Ingredients, { IngredientsWrapper } from "./components/Ingredients";
 import Instructions, { InstructionsWrapper } from "./components/Instructions";
+import RecipeForm from "./components/RecipeForm";
 import Recipes, { RecipeTable, RecipeTableWrapper } from "./components/Recipes";
 import Button from "./components/ui/Button";
 import CardHeading from "./components/ui/CardHeading";
@@ -234,7 +234,7 @@ const App = () => {
                   <DialogHeader>
                     <DialogTitle>Create a new recipe</DialogTitle>
                   </DialogHeader>
-                  <AddRecipeForm addRecipe={addRecipe} closeModal={() => setOpenAddRecipeModal(false)} />
+                  <RecipeForm addRecipe={addRecipe} closeModal={() => setOpenAddRecipeModal(false)} />
                   {/* <EditRecipeForm
                     editRecipe={editRecipe}
                     closeModal={() => setOpenEditRecipeModal(false)}
