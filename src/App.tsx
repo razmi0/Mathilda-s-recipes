@@ -1,12 +1,21 @@
 import { useCallback, useRef, useState } from "react";
-import AddRecipeForm from "./components/AddRecipe";
+import AddRecipeForm from "./components/RecipeForm";
 import Ingredients, { IngredientsWrapper } from "./components/Ingredients";
 import Instructions, { InstructionsWrapper } from "./components/Instructions";
 import Recipes, { RecipeTable, RecipeTableWrapper } from "./components/Recipes";
 import Button from "./components/ui/Button";
 import CardHeading from "./components/ui/CardHeading";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./components/ui/Dialog";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./components/ui/Dropdown";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuPortal,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "./components/ui/Dropdown";
 import Icon from "./components/ui/Icons";
 import Noise from "./components/ui/Noise";
 import { Popover, PopoverContent, PopoverTrigger } from "./components/ui/Popover";
@@ -14,14 +23,18 @@ import Show from "./components/ui/Show";
 import useClipboard from "./hooks/useClipboard";
 import useGPT, { OpenAiKey } from "./hooks/useGPT";
 import { useRecipe } from "./hooks/useRecipe";
+import type { RecipeType } from "./types";
 
 const App = () => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const subMenuRef = useRef<HTMLDivElement>(null);
   const { recipes, paniers, addRecipe, deleteRecipe, editRecipe, getRecipe, select, loading } = useRecipe();
   const [APIkeyInput, setAPIkeyInput] = useState({ validity: false, typing: true, key: "" });
   const [openAddRecipeModal, setOpenAddRecipeModal] = useState(false);
+  const [openEditRecipeModal, setOpenEditRecipeModal] = useState(false);
+  const [editedRecipe, setEditedRecipe] = useState<RecipeType | null>(null);
   const { copyToClipboard, isSuccess } = useClipboard({ delayBeforeUnSuccess: 2000 });
-  const { isError, isLoading, processToGPT, setAPIkey, setUserMessages, testKey } = useGPT();
+  const { processToGPT, setAPIkey, setUserMessages, testKey } = useGPT();
 
   const handleInstructions = useCallback(
     async (id: number) => {
@@ -106,7 +119,7 @@ const App = () => {
                     copyToClipboard(APIkeyInput.key);
                   }}
                   variant="invisible"
-                  classNames={`border ${isSuccess === true ? "border-green-500" : "border-blueish-400"}`}
+                  className={`border ${isSuccess === true ? "border-green-500" : "border-blueish-400"}`}
                 >
                   <Icon
                     check={isSuccess === true}
@@ -156,19 +169,77 @@ const App = () => {
                       className="stroke-def-200 hover:stroke-def-100 hover:bg-blueish-450 rounded-lg transition-colors p-1"
                     />
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent side="left" sideOffset={-10} className="bg-blueish-400 border-black/40">
+                  <DropdownMenuContent
+                    avoidCollisions={false}
+                    side="left"
+                    sideOffset={-10}
+                    className="bg-blueish-400 border-black/40 w-44"
+                  >
                     <DialogTrigger asChild onClick={() => setOpenAddRecipeModal(true)}>
-                      <DropdownMenuItem className="hover:bg-blueish-300 cursor-pointer">
-                        Add new recipe
+                      <DropdownMenuItem className="hover:bg-blueish-300 cursor-pointer justify-between">
+                        <Icon name="plus" title="Add new recipe" width={13} color="#AEAEAEFF" />
+                        <span>Add new recipe</span>
                       </DropdownMenuItem>
                     </DialogTrigger>
+                    {/*  */}
+                    {/*  */}
+                    {/*  */}
+                    {/*  */}
+                    <DropdownMenuSub>
+                      <DropdownMenuSubTrigger
+                        id="DropdownMenuSubTrigger"
+                        className="hover:bg-blueish-300 cursor-pointer"
+                      >
+                        <span>Edit a recipe</span>
+                      </DropdownMenuSubTrigger>
+                      <DropdownMenuPortal>
+                        <DropdownMenuSubContent
+                          ref={subMenuRef}
+                          id="DropdownMenuSubContent"
+                          className="bg-blueish-400 border-black/40 min-w-24"
+                        >
+                          {recipes.map((recipe) => {
+                            return (
+                              <DropdownMenuItem
+                                key={recipe.id}
+                                className="hover:bg-blueish-300 cursor-pointer"
+                                onClick={() => {
+                                  const choosen = getRecipe(recipe.id);
+                                  if (!choosen) {
+                                    console.warn("Recipe not found");
+                                    return;
+                                  }
+                                  setEditedRecipe(choosen);
+                                  setOpenEditRecipeModal(true);
+                                }}
+                              >
+                                <span>{recipe.name}</span>
+                              </DropdownMenuItem>
+                            );
+                          })}
+                        </DropdownMenuSubContent>
+                      </DropdownMenuPortal>
+                    </DropdownMenuSub>
+                    {/*  */}
+                    {/*  */}
+                    {/*  */}
+                    {/*  */}
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <DialogContent className="card bg-card-500 translate-center-t40 z-[9999] h-fit w-9/12 max-w-full">
+                <DialogContent
+                  id="add-recipe-dialog"
+                  className="card bg-blueish-300 translate-center-t40 z-[9999] h-fit w-9/12 max-w-full"
+                  overlayClass="bg-black opacity-70"
+                >
                   <DialogHeader>
                     <DialogTitle>Create a new recipe</DialogTitle>
                   </DialogHeader>
                   <AddRecipeForm addRecipe={addRecipe} closeModal={() => setOpenAddRecipeModal(false)} />
+                  {/* <EditRecipeForm
+                    editRecipe={editRecipe}
+                    closeModal={() => setOpenEditRecipeModal(false)}
+                    editedRecipes={editedRecipe}
+                  /> */}
                 </DialogContent>
               </Dialog>
               {/* // */}
@@ -178,7 +249,7 @@ const App = () => {
               {/* // */}
             </CardHeading>
             <RecipeTable>
-              <Recipes recipes={recipes} select={select.action} />
+              <Recipes recipes={recipes} select={select.action} deleteRecipe={deleteRecipe} />
             </RecipeTable>
           </RecipeTableWrapper>
           <section className="flex justify-evenly w-full md:flex-row flex-col md:gap-3">
