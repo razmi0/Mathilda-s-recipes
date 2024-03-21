@@ -424,4 +424,4 @@ for (const recipe of recipes) {
   }
 }
 
-export { completeIngredients, multiSelectorIngredientsBadges, recipes };
+export { completeIngredients, multiSelectorIngredientsBadges, recipes, food };
