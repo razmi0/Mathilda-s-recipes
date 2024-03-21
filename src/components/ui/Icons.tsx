@@ -10,10 +10,56 @@ type IconNames =
   | "cross2"
   | "search"
   | "minus"
+  | "plus"
   | "alphab-up"
   | "alphab-down"
   | "num-up"
+  | "delete"
+  | "ingredients"
   | "num-down";
+
+export type IconProps = { name: IconNames } & IconNamedProps &
+  (IconNamedProps["name"] extends "copy" ? { check?: boolean } : {});
+
+const Icon = ({ name, ...rest }: IconProps) => {
+  switch (name) {
+    case "menu":
+      return <MenuIcon {...rest} />;
+    case "check":
+      return <CheckIcon {...rest} />;
+    case "chevron-right":
+      return <ChevronRightIcon {...rest} />;
+    case "dot-filled":
+      return <DotFilledIcon {...rest} />;
+    case "setting":
+      return <SettingIcon {...rest} />;
+    case "copy":
+      return <Copy {...rest} />;
+    case "cross2":
+      return <Cross2Icon {...rest} />;
+    case "search":
+      return <Search {...rest} />;
+    case "minus":
+      return <MinusIcon {...rest} />;
+    case "alphab-up":
+      return <SortAscendingAlphabIcon {...rest} />;
+    case "alphab-down":
+      return <SortDescendingAlphabIcon {...rest} />;
+    case "num-up":
+      return <SortAscendingNumIcon {...rest} />;
+    case "num-down":
+      return <SortDescendingNumIcon {...rest} />;
+    case "delete":
+      return <Delete {...rest} />;
+    case "ingredients":
+      return <Ingredients {...rest} />;
+    case "plus":
+      return <Plus {...rest} />;
+
+    default:
+      return <></>;
+  }
+};
 
 type IconNamedProps = SVGProps<SVGSVGElement> & {
   width?: number;
@@ -24,9 +70,102 @@ type IconNamedProps = SVGProps<SVGSVGElement> & {
   onClick?: (e: MouseEvent) => void;
   title?: string;
   check?: boolean;
+  mirror?: boolean;
 };
 
 const defaultHeight = 24;
+
+const Plus = ({ color = "currentColor", height, width, className = "", title, ...rest }: IconNamedProps) => {
+  return (
+    <svg
+      width={width}
+      height={height || width || defaultHeight}
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...rest}
+    >
+      {title && <title>{title}</title>}
+      <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+      <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
+      <g id="SVGRepo_iconCarrier">
+        <path d="M4 12H20M12 4V20" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+      </g>
+    </svg>
+  );
+};
+
+const Ingredients = ({
+  color = "currentColor",
+  height,
+  width,
+  className = "",
+  title,
+  mirror = false,
+  ...rest
+}: IconNamedProps) => {
+  return (
+    <>
+      <svg
+        fill={color}
+        width={width}
+        height={height || width || defaultHeight}
+        className={className}
+        version="1.2"
+        baseProfile="tiny"
+        id="Layer_1"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="-63 65 128 128"
+        xmlSpace="preserve"
+        {...rest}
+        {...(mirror && { transform: "matrix(-1, 0, 0, 1, 0, 0)" })}
+      >
+        {title && <title>{title}</title>}
+        <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+        <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
+        <g id="SVGRepo_iconCarrier">
+          <path d="M49.6,115.7c0,0-1.2,24.4-22.6,22.4C26.9,138.1,24.5,117.7,49.6,115.7 M32.5,147.5c2.9-2.7,6.6-4.4,10.9-4.4 c8.6,0,15.6,6.9,15.6,15.5c0,0.3,0,0.5,0,0.9l0,0c-0.2,3.4-1.3,7.6-3.8,12.7c0,0-4.4,8.3-7.8,12.2l-0.3,0.3 c-1.6,1.6-4.1,2.7-6.6,2.7c-3.2,0-5.9-1.5-7.7-4l0,0c-1.8,2.4-4.5,4-7.7,4c-2.6,0-4.9-1.1-6.7-2.7l-0.3-0.3 c-3.5-3.8-7.8-12.2-7.8-12.2c-2.5-5.2-3.6-9.3-3.8-12.7H6.3c0-0.3,0-0.5,0-0.9c0-8.6,6.9-15.5,15.6-15.5 C25.8,143,29.7,144.7,32.5,147.5 M-37.4,73.3h18.9v7h-18.9V73.3z M-50.9,123.9c0,2.3,3.2,4.8,5.7,1.9l6.9-9.1 c0.3-0.4,0.8-1.3,0.8-2.2V92.7c0-6-5.7-1.1-7.8,1.1l-4.8,6.1c-0.8,1-0.8,1.4-0.8,2V123.9z M-55.3,101.6c0-1.3,0.4-2.5,1.1-3.5 l8.5-10.7c2.4-3,5.1-2.6,5.1-2.6h21.8C-5.3,86-5.3,99-5.3,99v83.6c0,2.2-1.8,4-4,4h-41.9c-2.2,0-4-1.8-4-4L-55.3,101.6z"></path>
+        </g>
+      </svg>
+    </>
+  );
+};
+
+const Delete = ({ color = "currentColor", height, width, className = "", title, ...rest }: IconNamedProps) => {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      width={width}
+      height={height || width || defaultHeight}
+      className={className}
+      {...rest}
+    >
+      {title && <title>{title}</title>}
+      <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+      <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
+      <g id="SVGRepo_iconCarrier">
+        <path d="M4 7H20" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+        <path
+          d="M6 10L7.70141 19.3578C7.87432 20.3088 8.70258 21 9.66915 21H14.3308C15.2974 21 16.1257 20.3087 16.2986 19.3578L18 10"
+          stroke={color}
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        ></path>
+        <path
+          d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z"
+          stroke={color}
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        ></path>
+      </g>
+    </svg>
+  );
+};
 
 const MinusIcon = ({ color = "inherit", height, width, className = "", title, ...rest }: IconNamedProps) => {
   return (
@@ -405,40 +544,17 @@ const Search = ({ title, color = "inherit", height, width, className = "", ...re
   );
 };
 
-export type IconProps = { name: IconNames } & IconNamedProps &
-  (IconNamedProps["name"] extends "copy" ? { check?: boolean } : {});
+type CircleIconProps = {
+  width?: number;
+  color?: string;
+};
 
-const Icon = ({ name, ...rest }: IconProps) => {
-  switch (name) {
-    case "menu":
-      return <MenuIcon {...rest} />;
-    case "check":
-      return <CheckIcon {...rest} />;
-    case "chevron-right":
-      return <ChevronRightIcon {...rest} />;
-    case "dot-filled":
-      return <DotFilledIcon {...rest} />;
-    case "setting":
-      return <SettingIcon {...rest} />;
-    case "copy":
-      return <Copy {...rest} />;
-    case "cross2":
-      return <Cross2Icon {...rest} />;
-    case "search":
-      return <Search {...rest} />;
-    case "minus":
-      return <MinusIcon {...rest} />;
-    case "alphab-up":
-      return <SortAscendingAlphabIcon {...rest} />;
-    case "alphab-down":
-      return <SortDescendingAlphabIcon {...rest} />;
-    case "num-up":
-      return <SortAscendingNumIcon {...rest} />;
-    case "num-down":
-      return <SortDescendingNumIcon {...rest} />;
-    default:
-      return <></>;
-  }
+export const CircleIcon = ({ width = 20, color = "#FFF" }: CircleIconProps) => {
+  return (
+    <svg width={width} height={width} className="rounded-full mr-1 border border-black/40 shadow-2xl">
+      <circle cx="50%" cy="50%" r={width / 2} fill={color} />
+    </svg>
+  );
 };
 
 export default Icon;
