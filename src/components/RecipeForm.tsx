@@ -4,7 +4,7 @@ import z from "zod";
 import { completeIngredients, multiSelectorIngredientsBadges } from "../data";
 import type { AddRecipePayload } from "../hooks/useRecipe";
 import addRecipeFormSchema from "../schema/addRecipe.schema";
-import { RecipeType } from "../types";
+import type { RecipeType } from "../types";
 import Button from "./ui/Button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/Form";
 import MultipleSelector from "./ui/MultipleSelector";
@@ -14,7 +14,7 @@ type AddRecipeFormProps = {
   closeModal: () => void;
 };
 
-const AddRecipeForm = ({ addRecipe, closeModal }: AddRecipeFormProps) => {
+const RecipeForm = ({ addRecipe, closeModal }: AddRecipeFormProps) => {
   const form = useForm<z.infer<typeof addRecipeFormSchema>>({
     resolver: zodResolver(addRecipeFormSchema),
     defaultValues: {
@@ -109,4 +109,4 @@ const AddRecipeForm = ({ addRecipe, closeModal }: AddRecipeFormProps) => {
   );
 };
 
-export default AddRecipeForm;
+export default RecipeForm;
