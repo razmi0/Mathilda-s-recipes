@@ -1,5 +1,5 @@
 import * as React from "react";
-import Icon from "./Icons";
+import Icon, { CircleIcon } from "./Icons";
 
 import { Command as CommandPrimitive, useCommandState } from "cmdk";
 import { forwardRef, useEffect } from "react";
@@ -12,13 +12,13 @@ export interface Option {
   patch?: {
     enabled?: boolean;
     color?: string;
-    radius?: number;
+    width?: number;
   };
   disable?: boolean;
   /** fixed option that can't be removed. */
   fixed?: boolean;
   /** Group the options by providing key. */
-  [key: string]: string | boolean | undefined | { enabled?: boolean; color?: string; radius?: number };
+  [key: string]: string | boolean | undefined | { enabled?: boolean; color?: string; width?: number };
 }
 interface GroupOption {
   [key: string]: Option[];
@@ -360,13 +360,7 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
                   {/*  */}
                   {/*  */}
                   {(option.patch?.enabled || true) && (
-                    <svg
-                      width={(option.patch?.radius || 10) * 2}
-                      height={(option.patch?.radius || 10) * 2}
-                      className="rounded-full mr-1 border border-black/40 shadow-2xl"
-                    >
-                      <circle cx="50%" cy="50%" r={option.patch?.radius || 10} fill={option.patch?.color || "#FFF"} />
-                    </svg>
+                    <CircleIcon width={option.patch?.width} color={option.patch?.color} />
                   )}
                   {/*  */}
                   {/*  */}
