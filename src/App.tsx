@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Ingredients, { IngredientsWrapper } from "./components/Ingredients";
 import Instructions, { InstructionsWrapper } from "./components/Instructions";
 import RecipeForm from "./components/RecipeForm";
@@ -31,7 +31,7 @@ const App = () => {
   const { recipes, paniers, addRecipe, deleteRecipe, editRecipe, getRecipe, select, loading } = useRecipe();
   const [APIkeyInput, setAPIkeyInput] = useState({ validity: false, typing: true, key: "" });
   const [openAddRecipeModal, setOpenAddRecipeModal] = useState(false);
-  const [openEditRecipeModal, setOpenEditRecipeModal] = useState(false);
+  const [formMode, setFormMode] = useState<"add" | "edit">("add");
   const [editedRecipe, setEditedRecipe] = useState<RecipeType | null>(null);
   const { copyToClipboard, isSuccess } = useClipboard({ delayBeforeUnSuccess: 2000 });
   const { processToGPT, setAPIkey, setUserMessages, testKey } = useGPT();
@@ -65,6 +65,10 @@ const App = () => {
     }
     return "border-black/40";
   };
+
+  useEffect(() => {
+    console.log(formMode);
+  });
 
   return (
     <>
@@ -176,22 +180,26 @@ const App = () => {
                     className="bg-blueish-400 border-black/40 w-44"
                   >
                     <DialogTrigger asChild onClick={() => setOpenAddRecipeModal(true)}>
-                      <DropdownMenuItem className="hover:bg-blueish-300 cursor-pointer justify-between">
+                      <DropdownMenuItem
+                        className="hover:bg-blueish-300 cursor-pointer justify-between"
+                        onMouseEnter={() => setFormMode("add")}
+                      >
                         <Icon name="plus" title="Add new recipe" width={13} color="#AEAEAEFF" />
                         <span>Add new recipe</span>
                       </DropdownMenuItem>
                     </DialogTrigger>
-                    {/*  */}
-                    {/*  */}
-                    {/*  */}
-                    {/*  */}
                     <DropdownMenuSub>
                       <DropdownMenuSubTrigger
                         id="DropdownMenuSubTrigger"
                         className="hover:bg-blueish-300 cursor-pointer"
+                        onMouseEnter={() => setFormMode("edit")}
                       >
                         <span>Edit a recipe</span>
                       </DropdownMenuSubTrigger>
+                      {/*  */}
+                      {/*  */}
+                      {/*  */}
+                      {/*  */}
                       <DropdownMenuPortal>
                         <DropdownMenuSubContent
                           ref={subMenuRef}
@@ -206,11 +214,11 @@ const App = () => {
                                 onClick={() => {
                                   const choosen = getRecipe(recipe.id);
                                   if (!choosen) {
-                                    console.warn("Recipe not found");
+                                    console.log("Recipe not found");
                                     return;
                                   }
                                   setEditedRecipe(choosen);
-                                  setOpenEditRecipeModal(true);
+                                  setOpenAddRecipeModal(true);
                                 }}
                               >
                                 <span>{recipe.name}</span>
@@ -234,7 +242,17 @@ const App = () => {
                   <DialogHeader>
                     <DialogTitle>Create a new recipe</DialogTitle>
                   </DialogHeader>
-                  <RecipeForm addRecipe={addRecipe} closeModal={() => setOpenAddRecipeModal(false)} />
+                  <Show when={formMode === "add"}>
+                    <RecipeForm mode="add" onSubmit={addRecipe} closeModal={() => setOpenAddRecipeModal(false)} />
+                  </Show>
+                  <Show when={formMode === "edit"}>
+                    <RecipeForm
+                      mode="edit"
+                      editedRecipe={editedRecipe}
+                      onSubmit={editRecipe}
+                      closeModal={() => setOpenAddRecipeModal(false)}
+                    />
+                  </Show>
                   {/* <EditRecipeForm
                     editRecipe={editRecipe}
                     closeModal={() => setOpenEditRecipeModal(false)}
