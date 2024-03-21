@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useReducer } from "react";
 import { recipes } from "../data";
-import type { Panier, RecipeType } from "../types";
+import type { IngredientType, RecipeType } from "../types";
 import { Prettify } from "../types/index";
 
 // Define the state and action types
@@ -131,9 +131,9 @@ export const useRecipe = () => {
     return state.recipes.filter((recipe) => recipe.isLoading);
   }, [state.recipes]);
 
-  const buildPanier = (selectedRecipes: RecipeType[]): Panier[] => {
+  const buildPanier = (selectedRecipes: RecipeType[]): IngredientType[] => {
     const noDuplicates = new Set<string>();
-    const panier: Panier[] = [];
+    const panier: IngredientType[] = [];
     for (const recipe of selectedRecipes) {
       for (const ingredient of recipe.ingredients) {
         if (!noDuplicates.has(ingredient.label)) {
@@ -148,7 +148,7 @@ export const useRecipe = () => {
     return panier;
   };
 
-  const paniers: Panier[] = useMemo(() => {
+  const paniers: IngredientType[] = useMemo(() => {
     return buildPanier(selectedRecipes);
   }, [selectedRecipes]);
 
