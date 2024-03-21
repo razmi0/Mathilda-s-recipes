@@ -13,7 +13,7 @@ export type AddRecipePayload = {
 
 export type EditRecipePayload = {
   id: number & RecipeType["id"];
-} & Exclude<Partial<RecipeType>, "id">;
+} & Omit<Partial<RecipeType>, "id">;
 type Actions =
   | { type: "ADD_RECIPE"; payload: AddRecipePayload }
   | { type: "DELETE_RECIPE"; payload: number & RecipeType["id"] }
