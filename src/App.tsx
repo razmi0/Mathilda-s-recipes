@@ -203,7 +203,7 @@ const App = () => {
                     <RecipeForm mode="add" onSubmit={addRecipe} closeModal={() => setOpenAddRecipeModal(false)} />
                   </Show>
                   <Show when={formMode === "edit"}>
-                    <Tabs defaultValue={recipes[defaultEditedId].id.toString()}>
+                    <Tabs defaultValue={getRecipe?.(defaultEditedId)?.id.toString() ?? recipes[0]?.id.toString()}>
                       <TabsList className="bg-def-300 w-full grid grid-cols-4 h-fit gap-1 mb-5">
                         {recipes.map((recipe) => {
                           return (

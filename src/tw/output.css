@@ -830,14 +830,6 @@ video {
   width: 100%;
 }
 
-.w-52{
-  width: 13rem;
-}
-
-.w-48{
-  width: 12rem;
-}
-
 .min-w-72{
   min-width: 18rem;
 }
@@ -1241,11 +1233,6 @@ video {
 .py-6{
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
-}
-
-.px-1{
-  padding-left: 0.25rem;
-  padding-right: 0.25rem;
 }
 
 .pe-0{

@@ -48,6 +48,7 @@ const Recipes = ({ recipes, select, deleteRecipe, selectDefaultRecipe, openEditM
           e.stopPropagation();
           selectDefaultRecipe(recipe.id);
           openEditModal();
+          console.log(recipe.id);
         };
 
         const htmlId = `checkbox-${i}_${recipe.id}`;
