@@ -33,7 +33,6 @@ const Recipes = ({ recipes, select, deleteRecipe }: RecipesTableProps) => {
     e.preventDefault();
     e.stopPropagation();
     setOpenWarningDeleteModal(true);
-    console.log("delete");
   };
 
   return (
@@ -74,7 +73,7 @@ const Recipes = ({ recipes, select, deleteRecipe }: RecipesTableProps) => {
             <td>{recipe.name}</td>
             <td>{recipe.description}</td>
             <td
-              data-action="delete"
+              data-action="delete&edit-recipe"
               className={`opacity-0  ${
                 recipe.isSelected ? "opacity-100" : "group-hover:opacity-100"
               } transition-opacity`}
@@ -115,6 +114,15 @@ const Recipes = ({ recipes, select, deleteRecipe }: RecipesTableProps) => {
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
+              <Button ariaLabel="Edit this recipe" variant="invisible" onClick={() => console.log("sqjdhqsjkdh")}>
+                <Icon
+                  name="modify"
+                  title="edit this recipe"
+                  width={30}
+                  color="#AEAEAEFF"
+                  className="stroke-def-200 hover:stroke-def-100 hover:bg-blueish-300 rounded-lg transition-colors p-1"
+                />
+              </Button>
             </td>
           </tr>
         );

@@ -119,7 +119,6 @@ function transToGroupOption(options: Option[], groupBy?: string) {
 
 function removePickedOption(groupOption: GroupOption, picked: Option[]) {
   const cloneOption = JSON.parse(JSON.stringify(groupOption)) as GroupOption;
-  console.log(groupOption);
 
   for (const [key, value] of Object.entries(cloneOption)) {
     cloneOption[key] = value.filter((val) => !picked.find((p) => p.value === val.value));
@@ -350,7 +349,6 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
         >
           <div className="flex flex-wrap gap-1">
             {selected.map((option) => {
-              console.log(option);
               return (
                 <Badge
                   key={option.value}

@@ -44,7 +44,6 @@ const recipeReducer = (state: { recipes: RecipeType[] }, action: Actions) => {
         isLoading: false,
       };
 
-      console.log(newRecipe);
       return {
         ...state,
         recipes: [...state.recipes, newRecipe],

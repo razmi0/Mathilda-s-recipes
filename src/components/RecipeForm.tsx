@@ -142,8 +142,7 @@ export default function RecipeForm<T extends "add" | "edit">({
         <FormField
           control={form.control}
           name="ingredients"
-          render={({ field, fieldState, formState }) => {
-            console.log(formState);
+          render={({ field }) => {
             return (
               <FormItem className="vertical gap-3 w-full">
                 <FormLabel>Ingredients</FormLabel>
