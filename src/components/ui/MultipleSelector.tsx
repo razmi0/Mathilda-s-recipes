@@ -1,5 +1,5 @@
 import * as React from "react";
-import Icon from "./Icons";
+import Icon, { CircleIcon } from "./Icons";
 
 import { Command as CommandPrimitive, useCommandState } from "cmdk";
 import { forwardRef, useEffect } from "react";
@@ -9,11 +9,20 @@ import { Command, CommandGroup, CommandItem, CommandList } from "./Command";
 export interface Option {
   value: string;
   label: string;
+  color?: string;
+  type?: string;
+  quantity?: number;
+  patch?: {
+    enabled?: boolean;
+    color?: string;
+    width?: number;
+  };
+
   disable?: boolean;
   /** fixed option that can't be removed. */
   fixed?: boolean;
   /** Group the options by providing key. */
-  [key: string]: string | boolean | undefined;
+  [key: string]: number | string | boolean | undefined | { enabled?: boolean; color?: string; width?: number };
 }
 interface GroupOption {
   [key: string]: Option[];
@@ -173,7 +182,6 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
     const inputRef = React.useRef<HTMLInputElement>(null);
     const [open, setOpen] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(false);
-
     const [selected, setSelected] = React.useState<Option[]>(value || []);
     const [options, setOptions] = React.useState<GroupOption>(transToGroupOption(arrayDefaultOptions, groupBy));
     const [inputValue, setInputValue] = React.useState("");
@@ -335,7 +343,10 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
         shouldFilter={commandProps?.shouldFilter !== undefined ? commandProps.shouldFilter : !onSearch} // When onSearch is provided, we don't want to filter the options. You can still override it.
         filter={commandFilter()}
       >
-        <div className={`group rounded-md border border-input border-def-200 px-3 py-2 text-sm ${className || ""}`}>
+        <div
+          data-border={open}
+          className={`group rounded-md border border-input border-def-200 px-3 py-2 text-sm ${className || ""}`}
+        >
           <div className="flex flex-wrap gap-1">
             {selected.map((option) => {
               return (
@@ -347,6 +358,16 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
                   data-fixed={option.fixed}
                   data-disabled={disabled}
                 >
+                  {/*  */}
+                  {/*  */}
+                  {/*  */}
+                  {/*  */}
+                  {(option.patch?.enabled || true) && (
+                    <CircleIcon width={option.patch?.width} color={option.patch?.color || option.color} />
+                  )}
+                  {/*  */}
+                  {/*  */}
+                  {/*  */}
                   {option.label}
                   <button
                     data-action="badge-button-remove"
@@ -365,6 +386,7 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
                     onClick={() => handleUnselect(option)}
                   >
                     <Icon
+                      title="Remove item"
                       name="cross2"
                       className="text-muted-foreground hover:text-foreground h-3 w-3 "
                       color="currentColor"

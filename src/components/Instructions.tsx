@@ -84,7 +84,7 @@ const Instructions = ({ generateInstructions, selected }: InstructionsProps) => 
                     onClick={() => generateInstructions(recipe.id)}
                     loading={recipe.isLoading}
                     loader={<Loader />}
-                    classNames="w-fit"
+                    className="w-fit"
                     data-action="generate-instructions"
                   >
                     Generate

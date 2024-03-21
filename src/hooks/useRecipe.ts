@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useReducer } from "react";
 import { recipes } from "../data";
-import type { Panier, RecipeType } from "../types";
+import type { IngredientType, RecipeType } from "../types";
 import { Prettify } from "../types/index";
 
 // Define the state and action types
@@ -13,7 +13,7 @@ export type AddRecipePayload = {
 
 export type EditRecipePayload = {
   id: number & RecipeType["id"];
-} & Exclude<Partial<RecipeType>, "id">;
+} & Omit<Partial<RecipeType>, "id">;
 type Actions =
   | { type: "ADD_RECIPE"; payload: AddRecipePayload }
   | { type: "DELETE_RECIPE"; payload: number & RecipeType["id"] }
@@ -36,7 +36,7 @@ const recipeReducer = (state: { recipes: RecipeType[] }, action: Actions) => {
       const newRecipe: RecipeType = {
         id: buildId(),
         ...action.payload,
-        date: new Date(),
+        date: new Date().toString(),
         citation: "",
         nbrOfIngredients: action.payload.ingredients.length,
         steps: [],
@@ -44,7 +44,6 @@ const recipeReducer = (state: { recipes: RecipeType[] }, action: Actions) => {
         isLoading: false,
       };
 
-      console.log(newRecipe);
       return {
         ...state,
         recipes: [...state.recipes, newRecipe],
@@ -131,9 +130,9 @@ export const useRecipe = () => {
     return state.recipes.filter((recipe) => recipe.isLoading);
   }, [state.recipes]);
 
-  const buildPanier = (selectedRecipes: RecipeType[]): Panier[] => {
+  const buildPanier = (selectedRecipes: RecipeType[]): IngredientType[] => {
     const noDuplicates = new Set<string>();
-    const panier: Panier[] = [];
+    const panier: IngredientType[] = [];
     for (const recipe of selectedRecipes) {
       for (const ingredient of recipe.ingredients) {
         if (!noDuplicates.has(ingredient.label)) {
@@ -148,7 +147,7 @@ export const useRecipe = () => {
     return panier;
   };
 
-  const paniers: Panier[] = useMemo(() => {
+  const paniers: IngredientType[] = useMemo(() => {
     return buildPanier(selectedRecipes);
   }, [selectedRecipes]);
 

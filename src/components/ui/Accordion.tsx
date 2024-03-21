@@ -24,6 +24,7 @@ const AccordionTrigger = React.forwardRef<
     >
       {children}
       <Icon
+        title="reveal those instructions"
         name="chevron-right"
         color="#EBEBEBFF"
         className="h-4 w-4 shrink-0 transition-transform duration-200 rotate-90"

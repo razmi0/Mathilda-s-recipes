@@ -1,14 +1,14 @@
-import type { ButtonHTMLAttributes } from "react";
-import { ReactNode, useRef, useState } from "react";
+import type { ButtonHTMLAttributes, MouseEvent, ReactNode } from "react";
+import { useRef, useState } from "react";
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   children: ReactNode;
-  onClick?: () => void;
+  onClick?: () => void | ((e: MouseEvent<HTMLButtonElement>) => void) | ((e: MouseEvent) => void);
   ariaLabel: string;
   loading?: boolean;
   loader?: ReactNode;
-  classNames?: string;
   disabled?: boolean;
+  className?: string;
   disabledIfLoading?: boolean;
   variant?: "primary" | "invisible";
 };
@@ -24,10 +24,10 @@ const Button = ({
   onClick,
   loader = <></>,
   loading = false,
-  classNames = "",
   disabled = false,
   disabledIfLoading = true,
   ariaLabel,
+  className = "",
   variant = "primary",
   type = "button",
   ...rest
@@ -35,8 +35,8 @@ const Button = ({
   const [waves, setWaves] = useState<ReactNode[]>([]);
   const btnRef = useRef<HTMLButtonElement>(null);
 
-  const clickHandler = () => {
-    onClick && onClick();
+  const clickHandler = (e: MouseEvent<HTMLButtonElement>) => {
+    onClick && onClick(e);
     if (!btnRef.current) return;
     setWaves((waves) => [...waves, <Wave width={btnRef.current?.offsetWidth} height={btnRef.current?.offsetHeight} />]);
     setTimeout(() => {
@@ -59,7 +59,7 @@ const Button = ({
       aria-label={ariaLabel}
       disabled={disabled}
       aria-disabled={disabled}
-      className={`${disabledClasses} ${variantClasses[variant]} ${classNames}`}
+      className={`${disabledClasses} ${variantClasses[variant]} ${className}`}
       ref={btnRef}
     >
       {children}
