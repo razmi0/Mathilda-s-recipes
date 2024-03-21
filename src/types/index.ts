@@ -16,13 +16,9 @@ declare global {
 export type RecipesTableProps = {
   recipes: RecipeType[];
   select: ({ id, value }: { id: number; value: boolean }) => void;
+  deleteRecipe: (id: number) => void;
 };
 
-// { state: RecipeType[]; action: ({ id, value }: { id: number; value: boolean; }) => void; }
-export type Panier = {
-  label: string;
-  quantity: number;
-};
 export type Instructions = {
   name: string;
   steps: string[];
