@@ -30,25 +30,37 @@ const Recipes = ({ recipes, select, deleteRecipe, selectDefaultRecipe, openEditM
   const [openWarningDeleteModal, setOpenWarningDeleteModal] = useState(false);
 
   const toggleModalWarningDelete = (e: MouseEvent) => {
-    e.preventDefault();
     e.stopPropagation();
     setOpenWarningDeleteModal(true);
+  };
+
+  const cancelDelete = (e: MouseEvent) => {
+    e.stopPropagation();
+    setOpenWarningDeleteModal(false);
+  };
+
+  const deleteAndClose = (e: MouseEvent, id: number) => {
+    e.stopPropagation();
+    deleteRecipe(id);
+    setOpenWarningDeleteModal(false);
   };
 
   return (
     <>
       {recipes.map((recipe, i) => {
         const selectRecipe = (e: MouseEvent | ChangeEvent) => {
-          e.preventDefault();
           select({ id: recipe.id, value: !recipe.isSelected });
         };
 
         const editAndDefault = (e: MouseEvent) => {
-          e.preventDefault();
           e.stopPropagation();
           selectDefaultRecipe(recipe.id);
           openEditModal();
-          console.log(recipe.id);
+        };
+
+        const deleteAndCloseId = (e: MouseEvent) => {
+          e.stopPropagation();
+          deleteAndClose(e, recipe.id);
         };
 
         const htmlId = `checkbox-${i}_${recipe.id}`;
@@ -107,18 +119,12 @@ const Recipes = ({ recipes, select, deleteRecipe, selectDefaultRecipe, openEditM
                     </DialogHeader>
                     <DialogDescription>Are you sure you want to delete this recipe?</DialogDescription>
                     <DialogFooter>
-                      <Button
-                        ariaLabel="cancel action and close panel"
-                        onClick={() => setOpenWarningDeleteModal(false)}
-                      >
+                      <Button ariaLabel="cancel action and close panel" onClick={cancelDelete as () => void}>
                         Cancel
                       </Button>
                       <Button
                         ariaLabel="delete this recipe and close panel"
-                        onClick={() => {
-                          setOpenWarningDeleteModal(false);
-                          deleteRecipe(recipe.id);
-                        }}
+                        onClick={deleteAndCloseId as () => void}
                         className="hover:bg-red-600"
                       >
                         Delete

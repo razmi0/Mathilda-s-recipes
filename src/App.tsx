@@ -12,6 +12,7 @@ import Noise from "./components/ui/Noise";
 import { Popover, PopoverContent, PopoverTrigger } from "./components/ui/Popover";
 import Show from "./components/ui/Show";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/Tabs";
+import { Toaster } from "./components/ui/Toast";
 import useClipboard from "./hooks/useClipboard";
 import useGPT, { OpenAiKey } from "./hooks/useGPT";
 import { useRecipe } from "./hooks/useRecipe";
@@ -276,6 +277,7 @@ const App = () => {
         <footer className="w-full h-8"></footer>
       </div>
       <Noise />
+      <Toaster />
     </>
   );
 };

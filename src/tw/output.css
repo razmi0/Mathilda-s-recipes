@@ -785,6 +785,22 @@ video {
   height: 1px;
 }
 
+.h-2{
+  height: 0.5rem;
+}
+
+.h-2\.5{
+  height: 0.625rem;
+}
+
+.h-96{
+  height: 24rem;
+}
+
+.h-9{
+  height: 2.25rem;
+}
+
 .max-h-\[300px\]{
   max-height: 300px;
 }
@@ -828,6 +844,14 @@ video {
 
 .w-full{
   width: 100%;
+}
+
+.w-2{
+  width: 0.5rem;
+}
+
+.w-2\.5{
+  width: 0.625rem;
 }
 
 .min-w-72{
@@ -900,6 +924,10 @@ video {
 
 .cursor-wait{
   cursor: wait;
+}
+
+.touch-none{
+  touch-action: none;
 }
 
 .select-none{
@@ -1044,6 +1072,10 @@ video {
   border-radius: 0.125rem;
 }
 
+.rounded-\[inherit\]{
+  border-radius: inherit;
+}
+
 .rounded-br-lg{
   border-bottom-right-radius: 0.5rem;
 }
@@ -1076,6 +1108,14 @@ video {
   border-bottom-width: 1px;
 }
 
+.border-l{
+  border-left-width: 1px;
+}
+
+.border-t{
+  border-top-width: 1px;
+}
+
 .border-black\/30{
   border-color: rgb(0 0 0 / 0.3);
 }
@@ -1104,6 +1144,14 @@ video {
 
 .border-transparent{
   border-color: transparent;
+}
+
+.border-l-transparent{
+  border-left-color: transparent;
+}
+
+.border-t-transparent{
+  border-top-color: transparent;
 }
 
 .bg-black{
@@ -1152,6 +1200,15 @@ video {
   background-color: rgb(255 255 255 / 0.1);
 }
 
+.bg-blueish-50{
+  --tw-bg-opacity: 1;
+  background-color: rgb(122 133 187 / var(--tw-bg-opacity));
+}
+
+.bg-def-400{
+  background-color: #343434FF;
+}
+
 .fill-current{
   fill: currentColor;
 }
@@ -1178,6 +1235,10 @@ video {
 
 .p-6{
   padding: 1.5rem;
+}
+
+.p-\[1px\]{
+  padding: 1px;
 }
 
 .px-2{
@@ -1483,8 +1544,9 @@ video {
 }
 
 *:focus-visible{
-  outline-color: #54669DFF;
-  --tw-ring-color: #54669DFF;
+  outline-color: #54669D;
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(84 102 157 / var(--tw-ring-opacity));
 }
 
 a {
@@ -1553,7 +1615,7 @@ div[cmdk-item][role="option"]:focus-visible{
 }
 
 div[data-border="true"]{
-  outline-color: #54669DFF;
+  outline-color: #54669D;
 }
 
 button[data-action="badge-button-remove"]{
@@ -1629,7 +1691,8 @@ h3,
 h4,
 h5,
 h6{
-  color: #54669DFF;
+  --tw-text-opacity: 1;
+  color: rgb(84 102 157 / var(--tw-text-opacity));
 }
 
 button {
@@ -1695,7 +1758,8 @@ td {
 
 th{
   border-bottom-width: 2px;
-  border-color: #54669DFF;
+  --tw-border-opacity: 1;
+  border-color: rgb(84 102 157 / var(--tw-border-opacity));
   padding: 15px 7px;
 }
 
@@ -1729,7 +1793,8 @@ th{
   background: 0 0;
   pointer-events: none;
   box-sizing: border-box;
-  color: #7A85BBFF;
+  --tw-text-opacity: 1;
+  color: rgb(122 133 187 / var(--tw-text-opacity));
   box-shadow: 0 0 0 0 currentColor;
   opacity: 0.2;
 }
@@ -1931,6 +1996,12 @@ th{
 
 .group:hover .group-hover\:opacity-100{
   opacity: 1;
+}
+
+.group.toaster .group-\[\.toaster\]\:shadow-lg{
+  --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
 .peer:disabled ~ .peer-disabled\:cursor-not-allowed{

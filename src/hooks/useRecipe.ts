@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useReducer } from "react";
+import { toast } from "sonner";
 import { recipes } from "../data";
 import type { IngredientType, RecipeType } from "../types";
 import { Prettify } from "../types/index";
@@ -20,6 +21,12 @@ type Actions =
   | { type: "EDIT_RECIPE"; payload: EditRecipePayload }
   | { type: "SELECT_RECIPE"; payload: { id: number & RecipeType["id"]; value: boolean & RecipeType["isSelected"] } }
   | { type: "LOADING_RECIPE"; payload: { id: number & RecipeType["id"]; value: boolean & RecipeType["isLoading"] } };
+
+type Diffs = {
+  name: boolean;
+  description: boolean;
+  ingredients: { quantity: (number | string)[]; label: string[]; isDifferent: boolean };
+};
 
 // Reducer
 const recipeReducer = (state: { recipes: RecipeType[] }, action: Actions) => {
@@ -44,24 +51,118 @@ const recipeReducer = (state: { recipes: RecipeType[] }, action: Actions) => {
         isLoading: false,
       };
 
+      toast.info(`Recipe added successfully`, {
+        className: "bg-blueish-100 text-def-100",
+      });
+
       return {
         ...state,
         recipes: [...state.recipes, newRecipe],
       };
     }
     case "DELETE_RECIPE":
+      toast.info(`Recipe deleted`);
       return {
         ...state,
         recipes: state.recipes.filter((recipe) => recipe.id !== action.payload),
       };
     case "EDIT_RECIPE": {
+      const findDifference = (oldRecipe: RecipeType, newRecipe: EditRecipePayload): Diffs => {
+        const name = oldRecipe.name !== newRecipe.name;
+        const description = oldRecipe.description !== newRecipe.description;
+        const ingredients: Diffs["ingredients"] = (() => {
+          const diffs: Diffs["ingredients"] = {
+            quantity: [],
+            label: [],
+            isDifferent: false,
+          };
+
+          if (!newRecipe.ingredients) return diffs;
+
+          const delta = oldRecipe.ingredients.length - (newRecipe.ingredients?.length || 0);
+          const deltaQ =
+            oldRecipe.ingredients.reduce((acc, cur) => acc + cur.quantity, 0) -
+            (newRecipe.ingredients?.reduce((acc, cur) => acc + cur.quantity, 0) || 0);
+
+          const oldIsDifferent = oldRecipe.ingredients.some((ing) => {
+            if (!newRecipe.ingredients) return true;
+            return !newRecipe.ingredients.find((newIng) => newIng.label === ing.label);
+          });
+
+          const newIsDifferent = newRecipe.ingredients.some((ing) => {
+            return !oldRecipe.ingredients.find((oldIng) => oldIng.label === ing.label);
+          });
+
+          // ingredient has been removed or added || quantity of ingredient has been modified
+          if (delta !== 0 || deltaQ !== 0 || oldIsDifferent || newIsDifferent) diffs.isDifferent = true;
+
+          if (diffs.isDifferent) {
+            // ingredient has been removed
+            if (delta > 0 || oldIsDifferent) {
+              for (const ing of oldRecipe.ingredients) {
+                if (!newRecipe.ingredients.find((newIng) => newIng.label === ing.label)) {
+                  diffs.label.push(ing.label);
+                  diffs.quantity.push(ing.quantity * -1);
+                }
+              }
+            }
+            // ingredient has been added
+            if (delta < 0 || newIsDifferent) {
+              for (const ing of newRecipe.ingredients) {
+                if (!oldRecipe.ingredients.find((oldIng) => oldIng.label === ing.label)) {
+                  diffs.label.push(ing.label);
+                  diffs.quantity.push("+" + ing.quantity);
+                }
+              }
+            }
+          }
+          return diffs;
+        })();
+        return { name, description, ingredients };
+      };
+
       const editedRecipeIndex = state.recipes.findIndex((recipe) => recipe.id === action.payload.id);
-      const editedRecipe = { ...state.recipes[editedRecipeIndex], ...action.payload };
+      const oldRecipe = state.recipes[editedRecipeIndex];
+      const differences = findDifference(oldRecipe, action.payload);
+
+      const newRecipe = { ...state.recipes[editedRecipeIndex], ...action.payload };
+
+      const description = [
+        differences.name && "Name",
+        differences.description && "description",
+        differences.ingredients.isDifferent &&
+          "ingredients : \n" +
+            [
+              ...differences.ingredients.label.map(
+                (label, i) => `\n ${label} (${differences.ingredients.quantity[i]})`
+              ),
+            ],
+      ].filter(Boolean) as string[];
+
+      const formated =
+        description.length === 1
+          ? description[0].charAt(0).toUpperCase() + description[0].slice(1)
+          : description.length === 2
+          ? `${description[0].charAt(0).toUpperCase() + description[0].slice(1)} and ${description[1]}`
+          : description.length === 3
+          ? (() => {
+              const last = description.pop();
+              const first = description[0].charAt(0).toUpperCase() + description[0].slice(1);
+              return `${first}, ${description.slice(1).join(", ")} and ${last}`;
+            })()
+          : "";
+
+      toast.info("Modified fields succesfully: ", {
+        className: "text-def-100 bg-blueish-400",
+        description: description.length ? formated : "No changes",
+        duration: description.length > 2 ? 5000 : undefined,
+      });
+
       return {
         ...state,
         recipes: [
           ...state.recipes.slice(0, editedRecipeIndex),
-          editedRecipe,
+          newRecipe,
           ...state.recipes.slice(editedRecipeIndex + 1),
         ],
       };
