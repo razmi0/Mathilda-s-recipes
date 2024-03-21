@@ -94,8 +94,6 @@ export default function RecipeForm<T extends "add" | "edit">({
     closeModal();
   };
 
-  console.log(mode);
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(localOnSubmitHandler)} className="space-y-8">

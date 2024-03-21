@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import Ingredients, { IngredientsWrapper } from "./components/Ingredients";
 import Instructions, { InstructionsWrapper } from "./components/Instructions";
 import RecipeForm from "./components/RecipeForm";
@@ -6,20 +6,12 @@ import Recipes, { RecipeTable, RecipeTableWrapper } from "./components/Recipes";
 import Button from "./components/ui/Button";
 import CardHeading from "./components/ui/CardHeading";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./components/ui/Dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuPortal,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from "./components/ui/Dropdown";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./components/ui/Dropdown";
 import Icon from "./components/ui/Icons";
 import Noise from "./components/ui/Noise";
 import { Popover, PopoverContent, PopoverTrigger } from "./components/ui/Popover";
 import Show from "./components/ui/Show";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/Tabs";
 import useClipboard from "./hooks/useClipboard";
 import useGPT, { OpenAiKey } from "./hooks/useGPT";
 import { useRecipe } from "./hooks/useRecipe";
@@ -65,10 +57,6 @@ const App = () => {
     }
     return "border-black/40";
   };
-
-  useEffect(() => {
-    console.log(formMode);
-  });
 
   return (
     <>
@@ -179,55 +167,22 @@ const App = () => {
                     sideOffset={-10}
                     className="bg-blueish-400 border-black/40 w-44"
                   >
-                    <DialogTrigger asChild onClick={() => setOpenAddRecipeModal(true)}>
+                    <DialogTrigger onClick={() => setOpenAddRecipeModal(true)}>
                       <DropdownMenuItem
                         className="hover:bg-blueish-300 cursor-pointer justify-between"
-                        onMouseEnter={() => setFormMode("add")}
+                        onClick={() => setFormMode("add")}
                       >
                         <Icon name="plus" title="Add new recipe" width={13} color="#AEAEAEFF" />
                         <span>Add new recipe</span>
                       </DropdownMenuItem>
-                    </DialogTrigger>
-                    <DropdownMenuSub>
-                      <DropdownMenuSubTrigger
-                        id="DropdownMenuSubTrigger"
-                        className="hover:bg-blueish-300 cursor-pointer"
-                        onMouseEnter={() => setFormMode("edit")}
+                      <DropdownMenuItem
+                        className="hover:bg-blueish-300 cursor-pointer w-full"
+                        onClick={() => setFormMode("edit")}
                       >
                         <span>Edit a recipe</span>
-                      </DropdownMenuSubTrigger>
-                      {/*  */}
-                      {/*  */}
-                      {/*  */}
-                      {/*  */}
-                      <DropdownMenuPortal>
-                        <DropdownMenuSubContent
-                          ref={subMenuRef}
-                          id="DropdownMenuSubContent"
-                          className="bg-blueish-400 border-black/40 min-w-24"
-                        >
-                          {recipes.map((recipe) => {
-                            return (
-                              <DropdownMenuItem
-                                key={recipe.id}
-                                className="hover:bg-blueish-300 cursor-pointer"
-                                onClick={() => {
-                                  const choosen = getRecipe(recipe.id);
-                                  if (!choosen) {
-                                    console.log("Recipe not found");
-                                    return;
-                                  }
-                                  setEditedRecipe(choosen);
-                                  setOpenAddRecipeModal(true);
-                                }}
-                              >
-                                <span>{recipe.name}</span>
-                              </DropdownMenuItem>
-                            );
-                          })}
-                        </DropdownMenuSubContent>
-                      </DropdownMenuPortal>
-                    </DropdownMenuSub>
+                      </DropdownMenuItem>
+                    </DialogTrigger>
+
                     {/*  */}
                     {/*  */}
                     {/*  */}
@@ -236,28 +191,51 @@ const App = () => {
                 </DropdownMenu>
                 <DialogContent
                   id="add-recipe-dialog"
-                  className="card bg-blueish-300 translate-center-t40 z-[9999] h-fit w-9/12 max-w-full"
+                  className={`card bg-blueish-300 ${
+                    formMode === "add" ? "translate-center w-9/12" : "translate-center-t40"
+                  } z-[9999] h-fit`}
                   overlayClass="bg-black opacity-70"
                 >
                   <DialogHeader>
-                    <DialogTitle>Create a new recipe</DialogTitle>
+                    <DialogTitle>{formMode === "add" ? "Create new recipe" : "Edit a recipe"}</DialogTitle>
                   </DialogHeader>
                   <Show when={formMode === "add"}>
                     <RecipeForm mode="add" onSubmit={addRecipe} closeModal={() => setOpenAddRecipeModal(false)} />
                   </Show>
                   <Show when={formMode === "edit"}>
-                    <RecipeForm
-                      mode="edit"
-                      editedRecipe={editedRecipe}
-                      onSubmit={editRecipe}
-                      closeModal={() => setOpenAddRecipeModal(false)}
-                    />
+                    <Tabs defaultValue={recipes[0].id.toString()}>
+                      <TabsList className="bg-def-300 w-full">
+                        {recipes.map((recipe) => {
+                          return (
+                            <TabsTrigger
+                              className={`bg-def-300 data-[state="active"]:bg-def-500 px-16`}
+                              key={recipe.id}
+                              value={recipe.id.toString()}
+                            >
+                              <span
+                                id="tabs-trigger-active"
+                                className="text-def-200 overflow-ellipsis overflow-hidden max-w-28"
+                              >
+                                {recipe.name}
+                              </span>
+                            </TabsTrigger>
+                          );
+                        })}
+                      </TabsList>
+                      {recipes.map((recipe) => {
+                        return (
+                          <TabsContent key={recipe.id} value={recipe.id.toString()}>
+                            <RecipeForm
+                              mode="edit"
+                              editedRecipe={recipe}
+                              onSubmit={editRecipe}
+                              closeModal={() => setOpenAddRecipeModal(false)}
+                            />
+                          </TabsContent>
+                        );
+                      })}
+                    </Tabs>
                   </Show>
-                  {/* <EditRecipeForm
-                    editRecipe={editRecipe}
-                    closeModal={() => setOpenEditRecipeModal(false)}
-                    editedRecipes={editedRecipe}
-                  /> */}
                 </DialogContent>
               </Dialog>
               {/* // */}

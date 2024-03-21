@@ -52,6 +52,10 @@ body {
   @apply bg-card-500;
 } */
 
+button[data-state="active"]>span#tabs-trigger-active {
+  @apply text-def-100;
+}
+
 div[cmdk-list][role="listbox"] {
   @apply bg-blueish-300 max-h-52 text-def-100 rounded-sm border-def-200;
 }
