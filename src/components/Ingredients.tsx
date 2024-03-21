@@ -5,6 +5,7 @@ import type { IngredientType } from "../types";
 import Button from "./ui/Button";
 import CardHeading from "./ui/CardHeading";
 import Icon, { CircleIcon } from "./ui/Icons";
+import { ScrollArea } from "./ui/ScrollArea";
 
 type Sort = "asc" | "desc";
 type SortQuality = "Quantity" | "Alphab" | "FoodType";
@@ -102,24 +103,26 @@ const Ingredients = ({ paniers }: IngredientsProps) => {
   return (
     <>
       <IngredientHeading sortType={sortType} changeSortType={changeSortType} panierSize={paniers.length} />
-      <div className="flex justify-center items-center" id="wheeere">
-        <ul className="w-full text-center px-2 py-1 text-sm">
-          {lists[sortType].map((ing, i) => (
-            <li
-              key={i}
-              className="flex justify-between items-center py-1 px-2 hover:bg-blueish-200 transition-colors rounded-sm"
-            >
-              <span className="horizontal">
-                <CircleIcon color={food[ing.type]} />
-                {capitalize(ing.label)}
-              </span>
-              <span>
-                {ing.quantity} {pluriel(" ration", ing.quantity)}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <ScrollArea className="w-full h-96">
+        <div className="flex justify-center items-center">
+          <ul className="w-full text-center px-2 py-1 text-sm">
+            {lists[sortType].map((ing, i) => (
+              <li
+                key={i}
+                className="flex justify-between items-center py-1 px-2 hover:bg-blueish-200 transition-colors rounded-sm"
+              >
+                <span className="horizontal">
+                  <CircleIcon color={food[ing.type]} />
+                  {capitalize(ing.label)}
+                </span>
+                <span>
+                  {ing.quantity} {pluriel(" ration", ing.quantity)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </ScrollArea>
     </>
   );
 };
