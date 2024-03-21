@@ -25,7 +25,7 @@ const RecipeForm = ({ addRecipe, closeModal }: AddRecipeFormProps) => {
     shouldFocusError: true,
   });
 
-  // TODO : add ingredient type in the form
+  // TODO : add ingredient type in the form for created ingredient
   const onSubmit = (values: z.infer<typeof addRecipeFormSchema>) => {
     const { name, description, ingredients } = values;
     const formatedIngredients: RecipeType["ingredients"] = ingredients.map((ingredient) => {
