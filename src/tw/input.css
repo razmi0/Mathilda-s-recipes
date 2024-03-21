@@ -40,9 +40,17 @@ body {
   min-height : 100vh;
 }
 
-div[data-state="open"][aria-hidden="true"][data-aria-hidden="true"] {
-  @apply bg-def-500 opacity-70;
+/* div[data-state="open"][aria-hidden="true"][data-aria-hidden="true"] {
+  @apply opacity-50;
 }
+
+#add-recipe-dialog{
+  @apply bg-card-500;
+}
+
+#warning-dialog{
+  @apply bg-card-500;
+} */
 
 div[cmdk-list][role="listbox"] {
   @apply bg-blueish-300 max-h-52 text-def-100 rounded-sm border-def-200;
