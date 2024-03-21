@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import z from "zod";
-import { completeIngredients, multiSelectorIngredientsBadges } from "../data";
+import { completeIngredients, food, multiSelectorIngredientsBadges } from "../data";
 import type { AddRecipePayload, EditRecipePayload } from "../hooks/useRecipe";
 import recipeFormSchema from "../schema/recipe.schema";
 import type { RecipeType } from "../types";
@@ -63,16 +63,28 @@ export default function RecipeForm<T extends "add" | "edit">({
     shouldFocusError: true,
   });
 
+  const multiIngredientValues =
+    mode === "add"
+      ? multiSelectorIngredientsBadges
+      : multiSelectorIngredientsBadges.filter((badge) => {
+          return (
+            !editedRecipe?.ingredients.find((ing) => ing.label.toLowerCase() === badge.value.toLowerCase()) &&
+            !form.getValues("ingredients").find((ing) => ing.label.toLowerCase() === badge.value.toLowerCase())
+          );
+        });
+
   // TODO : add ingredient type input in the form for created ingredient
   const localOnSubmitHandler = (values: z.infer<typeof recipeFormSchema>) => {
     const { name, description, ingredients } = values;
 
     const formatedIngredients: RecipeType["ingredients"] = ingredients.map((ingredient) => {
-      const ingType = completeIngredients.find((ing) => ing.label === ingredient.label)?.type || "other";
+      const ingType = completeIngredients.find((ing) => ing.value === ingredient.value)?.type || "other";
       return {
         label: ingredient.label,
+        value: ingredient.value,
         quantity: 1,
         type: ingType,
+        color: food[ingType],
       };
     });
 
@@ -130,26 +142,32 @@ export default function RecipeForm<T extends "add" | "edit">({
         <FormField
           control={form.control}
           name="ingredients"
-          render={({ field }) => (
-            <FormItem className="vertical gap-3 w-full">
-              <FormLabel>Ingredients</FormLabel>
-              <FormControl>
-                <MultipleSelector
-                  inputProps={{ className: "focus:outline-none" }}
-                  triggerSearchOnFocus={true}
-                  value={field.value}
-                  onChange={field.onChange}
-                  options={multiSelectorIngredientsBadges}
-                  placeholder="Find or add ingredients.."
-                  creatable
-                  emptyIndicator={
-                    <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">no results found.</p>
-                  }
-                />
-              </FormControl>
-              <FormMessage className="text-sm text-red-500" />
-            </FormItem>
-          )}
+          render={({ field, fieldState, formState }) => {
+            console.log(formState);
+            return (
+              <FormItem className="vertical gap-3 w-full">
+                <FormLabel>Ingredients</FormLabel>
+                <FormControl>
+                  <MultipleSelector
+                    inputProps={{ className: "focus:outline-none" }}
+                    triggerSearchOnFocus={true}
+                    value={field.value}
+                    onChange={field.onChange}
+                    options={multiIngredientValues}
+                    placeholder="Find or add ingredients.."
+                    creatable
+                    emptyIndicator={
+                      <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
+                        no results found.
+                      </p>
+                    }
+                  />
+                </FormControl>
+                {/* {JSON.stringify(formState.errors.ingredients)} */}
+                <FormMessage className="text-sm text-red-500" />
+              </FormItem>
+            );
+          }}
         />
         <Button ariaLabel="submit new recipe" type="submit">
           Submit

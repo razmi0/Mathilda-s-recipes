@@ -35,7 +35,7 @@ export type RecipeType = {
   date: string;
   citation?: string;
   description: string;
-  ingredients: Array<IngredientType>;
+  ingredients: IngredientType[];
   nbrOfIngredients?: number;
   steps: string[];
   isSelected: boolean;
@@ -69,6 +69,8 @@ export type IngredientType = {
   label: string;
   quantity: number;
   type: FoodType;
+  color: FoodColors;
+  value: string;
 };
 
 export type Prettify<T> = {

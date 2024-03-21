@@ -14,7 +14,11 @@ const recipeFormSchema = z
       z.object({
         value: z.string(),
         label: z.string(),
-      })
+      }),
+      {
+        required_error: "Ingredients are required",
+        invalid_type_error: "Invalid ingredient",
+      }
     ),
   })
   .required({

@@ -192,8 +192,8 @@ const App = () => {
                 <DialogContent
                   id="add-recipe-dialog"
                   className={`card bg-blueish-300 ${
-                    formMode === "add" ? "translate-center w-9/12" : "translate-center-t40"
-                  } z-[9999] h-fit`}
+                    formMode === "edit" ? "translate-center w-9/12" : "translate-center-t40"
+                  } z-[9999] h-fit `}
                   overlayClass="bg-black opacity-70"
                 >
                   <DialogHeader>
@@ -204,11 +204,11 @@ const App = () => {
                   </Show>
                   <Show when={formMode === "edit"}>
                     <Tabs defaultValue={recipes[0].id.toString()}>
-                      <TabsList className="bg-def-300 w-full">
+                      <TabsList className="bg-def-300 w-full grid grid-cols-4 h-fit gap-1 mb-5">
                         {recipes.map((recipe) => {
                           return (
                             <TabsTrigger
-                              className={`bg-def-300 data-[state="active"]:bg-def-500 px-16`}
+                              className={`bg-def-300 data-[state="active"]:bg-def-500 px-8`}
                               key={recipe.id}
                               value={recipe.id.toString()}
                             >

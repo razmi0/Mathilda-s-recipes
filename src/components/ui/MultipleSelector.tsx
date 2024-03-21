@@ -9,16 +9,20 @@ import { Command, CommandGroup, CommandItem, CommandList } from "./Command";
 export interface Option {
   value: string;
   label: string;
+  color?: string;
+  type?: string;
+  quantity?: number;
   patch?: {
     enabled?: boolean;
     color?: string;
     width?: number;
   };
+
   disable?: boolean;
   /** fixed option that can't be removed. */
   fixed?: boolean;
   /** Group the options by providing key. */
-  [key: string]: string | boolean | undefined | { enabled?: boolean; color?: string; width?: number };
+  [key: string]: number | string | boolean | undefined | { enabled?: boolean; color?: string; width?: number };
 }
 interface GroupOption {
   [key: string]: Option[];
@@ -115,6 +119,7 @@ function transToGroupOption(options: Option[], groupBy?: string) {
 
 function removePickedOption(groupOption: GroupOption, picked: Option[]) {
   const cloneOption = JSON.parse(JSON.stringify(groupOption)) as GroupOption;
+  console.log(groupOption);
 
   for (const [key, value] of Object.entries(cloneOption)) {
     cloneOption[key] = value.filter((val) => !picked.find((p) => p.value === val.value));
@@ -178,7 +183,6 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
     const inputRef = React.useRef<HTMLInputElement>(null);
     const [open, setOpen] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(false);
-
     const [selected, setSelected] = React.useState<Option[]>(value || []);
     const [options, setOptions] = React.useState<GroupOption>(transToGroupOption(arrayDefaultOptions, groupBy));
     const [inputValue, setInputValue] = React.useState("");
@@ -346,6 +350,7 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
         >
           <div className="flex flex-wrap gap-1">
             {selected.map((option) => {
+              console.log(option);
               return (
                 <Badge
                   key={option.value}
@@ -360,7 +365,7 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
                   {/*  */}
                   {/*  */}
                   {(option.patch?.enabled || true) && (
-                    <CircleIcon width={option.patch?.width} color={option.patch?.color} />
+                    <CircleIcon width={option.patch?.width} color={option.patch?.color || option.color} />
                   )}
                   {/*  */}
                   {/*  */}
