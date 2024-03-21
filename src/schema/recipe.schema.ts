@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const addRecipeFormSchema = z
+const recipeFormSchema = z
   .object({
     name: z
       .string({
@@ -21,4 +21,4 @@ const addRecipeFormSchema = z
     name: true,
   });
 
-export default addRecipeFormSchema;
+export default recipeFormSchema;

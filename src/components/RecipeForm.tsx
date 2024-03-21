@@ -3,18 +3,18 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 import { completeIngredients, multiSelectorIngredientsBadges } from "../data";
 import type { AddRecipePayload } from "../hooks/useRecipe";
-import addRecipeFormSchema from "../schema/addRecipe.schema";
+import addRecipeFormSchema from "../schema/recipe.schema";
 import type { RecipeType } from "../types";
 import Button from "./ui/Button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/Form";
 import MultipleSelector from "./ui/MultipleSelector";
 
-type AddRecipeFormProps = {
+type RecipeFormProps = {
   addRecipe: (recipe: AddRecipePayload) => void;
   closeModal: () => void;
 };
 
-const RecipeForm = ({ addRecipe, closeModal }: AddRecipeFormProps) => {
+const RecipeForm = ({ addRecipe, closeModal }: RecipeFormProps) => {
   const form = useForm<z.infer<typeof addRecipeFormSchema>>({
     resolver: zodResolver(addRecipeFormSchema),
     defaultValues: {
