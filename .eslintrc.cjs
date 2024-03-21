@@ -7,9 +7,10 @@ module.exports = {
     "plugin:react-hooks/recommended",
     "plugin:jsx-a11y/strict",
   ],
+
   ignorePatterns: ["dist", ".eslintrc.cjs"],
   parser: "@typescript-eslint/parser",
-  plugins: ["react-refresh", "jsx-a11y"],
+  plugins: ["react-refresh", "jsx-a11y", "@typescript-eslint"],
   rules: {
     "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
     "@typescript-eslint/ban-types": ["error", { types: { "{}": false } }],

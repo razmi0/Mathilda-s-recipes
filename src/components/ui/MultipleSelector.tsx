@@ -386,6 +386,7 @@ const MultipleSelector = React.forwardRef<MultipleSelectorRef, MultipleSelectorP
                     onClick={() => handleUnselect(option)}
                   >
                     <Icon
+                      title="Remove item"
                       name="cross2"
                       className="text-muted-foreground hover:text-foreground h-3 w-3 "
                       color="currentColor"

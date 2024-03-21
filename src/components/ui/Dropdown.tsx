@@ -27,7 +27,7 @@ const DropdownMenuSubTrigger = React.forwardRef<
     } ${className}`}
     {...props}
   >
-    <Icon name="chevron-right" className="h-4 w-4 rotate-180" color="#AEAEAEFF" />
+    <Icon title="expand menu" name="chevron-right" className="h-4 w-4 rotate-180" color="#AEAEAEFF" />
     {children}
   </DropdownMenuPrimitive.SubTrigger>
 ));
@@ -88,7 +88,7 @@ const DropdownMenuCheckboxItem = React.forwardRef<
   >
     <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
       <DropdownMenuPrimitive.ItemIndicator>
-        <Icon name="check" className="h-4 w-4" />
+        <Icon title="" name="check" className="h-4 w-4" />
       </DropdownMenuPrimitive.ItemIndicator>
     </span>
     {children}
@@ -107,7 +107,7 @@ const DropdownMenuRadioItem = React.forwardRef<
   >
     <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
       <DropdownMenuPrimitive.ItemIndicator>
-        <Icon name="dot-filled" className="h-4 w-4 fill-current" />
+        <Icon title="" name="dot-filled" className="h-4 w-4 fill-current" />
       </DropdownMenuPrimitive.ItemIndicator>
     </span>
     {children}
