@@ -53,19 +53,29 @@ const Ingredients = ({ paniers }: IngredientsProps) => {
   const capitalize = (word: string) => word.charAt(0).toUpperCase() + word.slice(1);
 
   const changeSortType = () => {
-    sortType === "inherit"
-      ? setSortType("ascAlphab")
-      : sortType === "ascAlphab"
-      ? setSortType("descAlphab")
-      : sortType === "descAlphab"
-      ? setSortType("ascQuantity")
-      : sortType === "ascQuantity"
-      ? setSortType("descQuantity")
-      : sortType === "descQuantity"
-      ? setSortType("ascFoodType")
-      : sortType === "ascFoodType"
-      ? setSortType("descFoodType")
-      : setSortType("inherit");
+    switch (sortType) {
+      case "inherit":
+        setSortType("ascAlphab");
+        break;
+      case "ascAlphab":
+        setSortType("descAlphab");
+        break;
+      case "descAlphab":
+        setSortType("ascQuantity");
+        break;
+      case "ascQuantity":
+        setSortType("descQuantity");
+        break;
+      case "descQuantity":
+        setSortType("ascFoodType");
+        break;
+      case "ascFoodType":
+        setSortType("descFoodType");
+        break;
+      default:
+        setSortType("inherit");
+        break;
+    }
   };
 
   const sortedPaniers = (): SortList => {
@@ -103,13 +113,13 @@ const Ingredients = ({ paniers }: IngredientsProps) => {
   return (
     <>
       <IngredientHeading sortType={sortType} changeSortType={changeSortType} panierSize={paniers.length} />
-      <ScrollArea className="w-full h-96">
+      <ScrollArea className="w-full h-fit max-h-96">
         <div className="flex justify-center items-center">
           <ul className="w-full text-center px-2 py-1 text-sm">
             {lists[sortType].map((ing, i) => (
               <li
                 key={i}
-                className="flex justify-between items-center py-1 px-2 hover:bg-blueish-200 transition-colors rounded-sm"
+                className="flex justify-between items-center py-1 px-2 hover:bg-darkblue-200 transition-colors rounded-sm"
               >
                 <span className="horizontal">
                   <CircleIcon color={food[ing.type]} />
