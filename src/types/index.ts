@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 type SortFunction<T> = (a: T, b: T) => number;
 
 interface ExtendedArray<T> {
@@ -19,6 +21,8 @@ export type RecipesTableProps = {
   deleteRecipe: (id: number) => void;
   selectDefaultRecipe: (id: number) => void;
   openEditModal: () => void;
+  ingredients: ReactNode;
+  instructions: ReactNode;
 };
 
 export type Instructions = {

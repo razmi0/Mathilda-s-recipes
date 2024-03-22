@@ -255,11 +255,28 @@ const App = () => {
                   setFormMode("edit");
                   setOpenAddRecipeModal(true);
                 }}
+                ingredients={
+                  <Show when={paniers.length > 0}>
+                    <IngredientsWrapper>
+                      <Ingredients paniers={paniers} />
+                    </IngredientsWrapper>
+                  </Show>
+                }
+                instructions={
+                  <Show when={paniers.length > 0}>
+                    <InstructionsWrapper>
+                      <CardHeading as={"h3"} classNames="w-full">
+                        Instructions
+                      </CardHeading>
+                      <Instructions generateInstructions={handleInstructions} selected={select.state} />
+                    </InstructionsWrapper>
+                  </Show>
+                }
               />
             </RecipeTable>
           </RecipeTableWrapper>
           <section className="flex justify-evenly w-full md:flex-row flex-col md:gap-3">
-            <Show when={paniers.length > 0}>
+            {/* <Show when={paniers.length > 0}>
               <IngredientsWrapper>
                 <Ingredients paniers={paniers} />
               </IngredientsWrapper>
@@ -271,7 +288,7 @@ const App = () => {
                 </CardHeading>
                 <Instructions generateInstructions={handleInstructions} selected={select.state} />
               </InstructionsWrapper>
-            </Show>
+            </Show> */}
           </section>
         </section>
         <footer className="w-full h-8"></footer>

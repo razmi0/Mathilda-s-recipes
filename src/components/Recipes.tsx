@@ -19,9 +19,9 @@ export const RecipeTableWrapper = ({ children }: { children: ReactNode }) => {
 export const RecipeTable = ({ children }: { children: ReactNode }) => {
   return (
     <div className="flex justify-start items-center text-left ps-2">
-      <table className="first:mt-3 last:mb-3">
-        <tbody>{children}</tbody>
-      </table>
+      <div className="first:mt-3 last:mb-3" role="table">
+        <div role="rowgroup">{children}</div>
+      </div>
     </div>
   );
 };
@@ -71,9 +71,12 @@ const Recipes = ({ recipes, select, deleteRecipe, selectDefaultRecipe, openEditM
               recipe.isSelected ? "bg-darkblue-200" : "hover:bg-darkblue-200"
             } transition-colors cursor-pointer rounded-sm group`}
             onClick={(e) => {
+              // openAccordion(e);
+              // todo : add chevron and rotation + open accordion
               selectRecipe(e);
             }}
           >
+            {/* CHECKBOX */}
             <td>
               <div className="checkbox-ctn">
                 <label className="checkbox-container" htmlFor={htmlId}>
@@ -90,14 +93,18 @@ const Recipes = ({ recipes, select, deleteRecipe, selectDefaultRecipe, openEditM
                 </label>
               </div>
             </td>
-            <td>{recipe.name}</td>
-            <td>{recipe.description}</td>
+            {/*  */}
+            <td data-row="name">{recipe.name}</td>
+            <td data-row="description">{recipe.description}</td>
             <td
-              data-action="delete&edit-recipe"
+              data-row="delete&edit"
               className={`opacity-0  ${
                 recipe.isSelected ? "opacity-100" : "group-hover:opacity-100"
               } transition-opacity items-center flex justify-center`}
             >
+              {/*  */}
+              {/* DIALOG delete&edit */}
+              {/*  */}
               <div className="flex items-center h-full">
                 <Dialog open={openWarningDeleteModal} onOpenChange={(b) => setOpenWarningDeleteModal(b)}>
                   <DialogTrigger onClick={toggleModalWarningDelete} data-action="open-delete-modal">
