@@ -7,7 +7,7 @@ type CardHeadingProps = {
 };
 const CardHeading = ({ as: As, classNames, children }: CardHeadingProps) => {
   return (
-    <As className={`text-2xl py-6 px-4 bg-blueish-400 rounded-tl-lg rounded-tr-lg ${classNames || ""}`}>{children}</As>
+    <As className={`text-2xl py-6 px-4 bg-darkblue-400 rounded-tl-lg rounded-tr-lg ${classNames || ""}`}>{children}</As>
   );
 };
 

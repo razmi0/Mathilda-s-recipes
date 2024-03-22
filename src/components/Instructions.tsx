@@ -61,7 +61,7 @@ const Instructions = ({ generateInstructions, selected }: InstructionsProps) => 
             className="w-full text-left last:rounded-md border-black/40"
             key={recipe.name}
           >
-            <AccordionTrigger className="flex justify-between items-center py-2 px-2 gap-2 hover:bg-blueish-200 rounded-sm">
+            <AccordionTrigger className="flex justify-between items-center py-2 px-2 gap-2 hover:bg-darkblue-200 rounded-sm">
               <span className="text-left">{recipe.name}</span>
               <div className="flex-grow" />
             </AccordionTrigger>
@@ -78,7 +78,7 @@ const Instructions = ({ generateInstructions, selected }: InstructionsProps) => 
                 </ol>
               )}
               <div className="w-full horizontal items-center justify-center my-2">
-                <div className="flex flex-row-reverse w-fit p-2 items-center gap-4 card bg-blueish-400 ">
+                <div className="flex flex-row-reverse w-fit p-2 items-center gap-4 card bg-darkblue-400 ">
                   <Button
                     ariaLabel="Generate instructions"
                     onClick={() => generateInstructions(recipe.id)}

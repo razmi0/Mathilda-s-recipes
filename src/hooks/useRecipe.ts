@@ -52,7 +52,7 @@ const recipeReducer = (state: { recipes: RecipeType[] }, action: Actions) => {
       };
 
       toast.info(`Recipe added successfully`, {
-        className: "bg-blueish-100 text-def-100",
+        className: "bg-darkblue-100 text-def-100",
       });
 
       return {
@@ -153,7 +153,7 @@ const recipeReducer = (state: { recipes: RecipeType[] }, action: Actions) => {
           : "";
 
       toast.info("Modified fields succesfully: ", {
-        className: "text-def-100 bg-blueish-400",
+        className: "text-def-100 bg-darkblue-400",
         description: description.length ? formated : "No changes",
         duration: description.length > 2 ? 5000 : undefined,
       });

@@ -68,7 +68,7 @@ const Recipes = ({ recipes, select, deleteRecipe, selectDefaultRecipe, openEditM
           <tr
             key={recipe.name}
             className={`${
-              recipe.isSelected ? "bg-blueish-200" : "hover:bg-blueish-200"
+              recipe.isSelected ? "bg-darkblue-200" : "hover:bg-darkblue-200"
             } transition-colors cursor-pointer rounded-sm group`}
             onClick={(e) => {
               selectRecipe(e);
@@ -106,12 +106,12 @@ const Recipes = ({ recipes, select, deleteRecipe, selectDefaultRecipe, openEditM
                       name="delete"
                       width={40}
                       color="#AEAEAEFF"
-                      className={`stroke-def-200 hover:stroke-def-100 hover:bg-blueish-300 rounded-lg transition-colors p-2`}
+                      className={`stroke-def-200 hover:stroke-def-100 hover:bg-darkblue-300 rounded-lg transition-colors p-2`}
                     />
                   </DialogTrigger>
                   <DialogContent
                     id="warning-delete-recipe-dialog"
-                    className="card translate-center z-[9999] h-fit w-4/12 bg-blueish-300"
+                    className="card translate-center z-[9999] h-fit w-4/12 bg-darkblue-300"
                     overlayClass="bg-black opacity-40"
                   >
                     <DialogHeader>
@@ -138,7 +138,7 @@ const Recipes = ({ recipes, select, deleteRecipe, selectDefaultRecipe, openEditM
                     title="edit this recipe"
                     width={40}
                     color="#AEAEAEFF"
-                    className="stroke-def-200 hover:stroke-def-100 hover:bg-blueish-300 rounded-lg transition-colors p-2"
+                    className="stroke-def-200 hover:stroke-def-100 hover:bg-darkblue-300 rounded-lg transition-colors p-2"
                   />
                 </Button>
               </div>

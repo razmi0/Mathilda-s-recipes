@@ -69,10 +69,10 @@ const App = () => {
                 title="Open settings"
                 name="setting"
                 width={40}
-                className="stroke-def-200 hover:stroke-def-100 hover:bg-blueish-450 rounded-lg transition-colors p-1"
+                className="stroke-def-200 hover:stroke-def-100 hover:bg-darkblue-450 rounded-lg transition-colors p-1"
               />
             </PopoverTrigger>
-            <PopoverContent side="left" sideOffset={-10} className="bg-blueish-400 border-black/40">
+            <PopoverContent side="left" sideOffset={-10} className="bg-darkblue-400 border-black/40">
               <a className="text-sm underline text-def-200" href="https://platform.openai.com/api-keys" target="_blank">
                 Get your API key from OpenAI
               </a>
@@ -99,7 +99,7 @@ const App = () => {
                     setAPIkeyInput({ validity: false, typing: true, key: e.target.value });
                   }}
                   placeholder="Enter your API key here"
-                  className={`w-full px-2 py-1 my-2 rounded-md border-2 bg-blueish-200 ${inputColor(
+                  className={`w-full px-2 py-1 my-2 rounded-md border-2 bg-darkblue-200 ${inputColor(
                     APIkeyInput.validity,
                     APIkeyInput.typing
                   )}`}
@@ -111,7 +111,7 @@ const App = () => {
                     copyToClipboard(APIkeyInput.key);
                   }}
                   variant="invisible"
-                  className={`border ${isSuccess === true ? "border-green-500" : "border-blueish-400"}`}
+                  className={`border ${isSuccess === true ? "border-green-500" : "border-darkblue-400"}`}
                 >
                   <Icon
                     check={isSuccess === true}
@@ -119,7 +119,7 @@ const App = () => {
                     name="copy"
                     title="Copy to clipboard"
                     width={37}
-                    className={`stroke-def-200 hover:bg-blueish-450 rounded-lg transition-colors p-1 `}
+                    className={`stroke-def-200 hover:bg-darkblue-450 rounded-lg transition-colors p-1 `}
                   />
                 </Button>
               </div>
@@ -158,25 +158,25 @@ const App = () => {
                       name="menu"
                       title="Open recipes menu"
                       width={30}
-                      className="stroke-def-200 hover:stroke-def-100 hover:bg-blueish-450 rounded-lg transition-colors p-1"
+                      className="stroke-def-200 hover:stroke-def-100 hover:bg-darkblue-450 rounded-lg transition-colors p-1"
                     />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
                     avoidCollisions={false}
                     side="left"
                     sideOffset={-10}
-                    className="bg-blueish-400 border-black/40"
+                    className="bg-darkblue-400 border-black/40"
                   >
                     <DialogTrigger onClick={() => setOpenAddRecipeModal(true)} className="py-1 px-2">
                       <DropdownMenuItem
-                        className="hover:bg-blueish-300 cursor-pointer justify-between w-44"
+                        className="hover:bg-darkblue-300 cursor-pointer justify-between w-44"
                         onClick={() => setFormMode("add")}
                       >
                         <span>Add new recipe</span>
                         <Icon name="plus" title="Add new recipe" width={13} color="#AEAEAEFF" />
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        className="hover:bg-blueish-300 cursor-pointer justify-between w-44"
+                        className="hover:bg-darkblue-300 cursor-pointer justify-between w-44"
                         onClick={() => setFormMode("edit")}
                       >
                         <span>Edit a recipe</span>
@@ -192,7 +192,7 @@ const App = () => {
                 </DropdownMenu>
                 <DialogContent
                   id="add-recipe-dialog"
-                  className={`card bg-blueish-300 ${
+                  className={`card bg-darkblue-300 ${
                     formMode === "edit" ? "translate-center w-9/12" : "translate-center-t40"
                   } z-[9999] h-fit `}
                   overlayClass="bg-black opacity-70"
