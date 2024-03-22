@@ -43,17 +43,54 @@ body {
   min-height : 100vh;
 }
 
-/* div[data-state="open"][aria-hidden="true"][data-aria-hidden="true"] {
-  @apply opacity-50;
+#root {
+  @apply sm:p-4 md:p-8 p-1;
+  /* max-width: 1280px; */
+  margin: 0 auto;
+  text-align: left;
 }
 
-#add-recipe-dialog{
-  @apply bg-card-500;
+/* */
+/* TABLE */
+/* */
+
+
+div[data-is="table"] {
+  @apply border border-transparent min-w-full;
 }
 
-#warning-dialog{
-  @apply bg-card-500;
-} */
+div[data-is="thead"] {
+  @apply border border-transparent min-w-full;
+}
+
+div[data-is="th"] {
+  @apply border flex flex-auto;
+}
+
+div[data-action="trigger-row"] {
+  @apply border bg-orange-300 w-8 flex min-w-8 max-w-8;
+  
+}
+
+div[data-action="select-row"]{
+  @apply border bg-blue-300 w-11 flex min-w-11 max-w-11;
+}
+
+div[data-is="tbody"] {
+  @apply border border-transparent;
+}
+
+div[data-is="tr"] {
+  @apply border border-transparent flex min-w-full flex-auto;
+}
+
+div[data-is="td"] {
+  @apply border;
+}
+
+/* */
+/* */
+
 
 button[data-state="active"]>span#tabs-trigger-active {
   @apply text-def-100;
@@ -88,32 +125,6 @@ div[data-badge="outline"]{
 
 }
 
-
-.translate-center  {
-  transform: translate(-50%, -50%);
-  top: 50%;
-  left: 50%;
-}
-
-.translate-center-t40 {
-  transform: translate(-50%, -50%);
-  top: 40%;
-  left: 50%;
-}
-
-.first-layer {
-  z-index : 9999;
-}
-
-.horizontal {
-  display: flex;
-  flex-direction: row;
-}
-
-.vertical {
-  display: flex;
-  flex-direction: column;
-}
 
 h1 {
   font-size: 3.2em;
@@ -160,38 +171,46 @@ button.menu {
   transition: border-color 0.25s;
   color: #e8e8e8;
 }
-/* button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-} */
-
-#root {
-  @apply sm:p-4 md:p-8 p-1;
-  /* max-width: 1280px; */
-  margin: 0 auto;
-  text-align: left;
-}
-
-
-
-table {
-  width: 100%;
-}
-td {
-  padding: 1px 3px;
-}
-th {
-  @apply border-b-2 border-darkblue-100;
-  padding: 15px 7px;
-}
 
 .font-montserrat {
   font-family: "Montserrat", sans-serif;
 }
+
+.translate-center  {
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+}
+
+.translate-center-t40 {
+  transform: translate(-50%, -50%);
+  top: 40%;
+  left: 50%;
+}
+
+.first-layer {
+  z-index : 9999;
+}
+
+.horizontal {
+  display: flex;
+  flex-direction: row;
+}
+
+.vertical {
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+/*  */
+/* CARD THEME */
+/*  */
+
 .card {
   @apply rounded-lg border-[1px] border-black/40 shadow-inner-shadow-dark-sm;
 }
-/*  */
 
 .shadow-inner-shadow-dark-sm {
   --tw-shadow: 0px 1px 0px 0px hsla(0, 0%, 100%, 0.02) inset, 0px 0px 0px 1px hsla(0, 0%, 100%, 0.02) inset,
@@ -225,7 +244,9 @@ th {
   transition: box-shadow 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86), opacity 0.35s cubic-bezier(0.78, 0.14, 0.15, 0.86);
 }
 
+/* */
 /* CHECKBOX */
+/* */
 
 .checkbox-ctn {
   @apply px-3;
@@ -295,7 +316,9 @@ th {
   transform: rotate(45deg);
 }
 
+/* */
 /* LOADER */
+/* */
 
 .loader {
   --color: #a5a5b0;

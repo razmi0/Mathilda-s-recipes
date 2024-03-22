@@ -2,7 +2,7 @@ import { useCallback, useRef, useState } from "react";
 import Ingredients, { IngredientsWrapper } from "./components/Ingredients";
 import Instructions, { InstructionsWrapper } from "./components/Instructions";
 import RecipeForm from "./components/RecipeForm";
-import Recipes, { RecipeTable, RecipeTableWrapper } from "./components/Recipes";
+import Recipes, { RecipeBody, RecipeHeader, RecipeTable, RecipeTableWrapper } from "./components/Recipes";
 import Button from "./components/ui/Button";
 import CardHeading from "./components/ui/CardHeading";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./components/ui/Dialog";
@@ -246,33 +246,44 @@ const App = () => {
               {/* // */}
             </CardHeading>
             <RecipeTable>
-              <Recipes
-                recipes={recipes}
-                select={select.action}
-                deleteRecipe={deleteRecipe}
-                selectDefaultRecipe={setDefaultEditedId}
-                openEditModal={() => {
-                  setFormMode("edit");
-                  setOpenAddRecipeModal(true);
-                }}
-                ingredients={
-                  <Show when={paniers.length > 0}>
-                    <IngredientsWrapper>
-                      <Ingredients paniers={paniers} />
-                    </IngredientsWrapper>
-                  </Show>
-                }
-                instructions={
-                  <Show when={paniers.length > 0}>
-                    <InstructionsWrapper>
-                      <CardHeading as={"h3"} classNames="w-full">
-                        Instructions
-                      </CardHeading>
-                      <Instructions generateInstructions={handleInstructions} selected={select.state} />
-                    </InstructionsWrapper>
-                  </Show>
-                }
+              <RecipeHeader
+                labels={[
+                  { value: "Name" },
+                  { value: "Updated" },
+                  { value: "Ingredients" },
+                  { value: "Quantity" },
+                  { value: "Actions" },
+                ]}
               />
+              <RecipeBody>
+                <Recipes
+                  recipes={recipes}
+                  select={select.action}
+                  deleteRecipe={deleteRecipe}
+                  selectDefaultRecipe={setDefaultEditedId}
+                  openEditModal={() => {
+                    setFormMode("edit");
+                    setOpenAddRecipeModal(true);
+                  }}
+                  ingredients={
+                    <Show when={paniers.length > 0}>
+                      <IngredientsWrapper>
+                        <Ingredients paniers={paniers} />
+                      </IngredientsWrapper>
+                    </Show>
+                  }
+                  instructions={
+                    <Show when={paniers.length > 0}>
+                      <InstructionsWrapper>
+                        <CardHeading as={"h3"} classNames="w-full">
+                          Instructions
+                        </CardHeading>
+                        <Instructions generateInstructions={handleInstructions} selected={select.state} />
+                      </InstructionsWrapper>
+                    </Show>
+                  }
+                />
+              </RecipeBody>
             </RecipeTable>
           </RecipeTableWrapper>
           <section className="flex justify-evenly w-full md:flex-row flex-col md:gap-3">
