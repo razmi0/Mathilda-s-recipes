@@ -26,7 +26,7 @@
 }
 
 *{
-  @apply outline-none focus-visible:outline-blueish-100 focus-visible:ring-blueish-100 rounded-sm;
+  @apply outline-none focus-visible:outline-darkblue-100 focus-visible:ring-darkblue-100 rounded-sm;
 }
 
 a {
@@ -60,15 +60,15 @@ button[data-state="active"]>span#tabs-trigger-active {
 }
 
 div[cmdk-list][role="listbox"] {
-  @apply bg-blueish-300 max-h-52 text-def-100 rounded-sm border-def-200;
+  @apply bg-darkblue-300 max-h-52 text-def-100 rounded-sm border-def-200;
 }
 
 div[cmdk-item][role="option"] {
-  @apply text-def-100 opacity-100 hover:bg-blueish-200 py-[3px] focus:bg-blueish-200 focus-visible:bg-blueish-200 pointer-events-auto focus-within:bg-blueish-200 ;
+  @apply text-def-100 opacity-100 hover:bg-darkblue-200 py-[3px] focus:bg-darkblue-200 focus-visible:bg-darkblue-200 pointer-events-auto focus-within:bg-darkblue-200 ;
 }
 
 div[data-border="true"] {
-  @apply outline-blueish-100;
+  @apply outline-darkblue-100;
 }
 
 button[data-action="badge-button-remove"] {
@@ -80,7 +80,7 @@ button[data-action="generate-instructions"]{
 }
 
 input[cmdk-input][role="combobox"]{
-  @apply bg-blueish-300 text-def-100 min-w-[38rem];
+  @apply bg-darkblue-300 text-def-100 min-w-[38rem];
 }
 
 div[data-badge="outline"]{
@@ -132,7 +132,7 @@ h3,
 h4,
 h5,
 h6 {
-  @apply text-blueish-100;
+  @apply text-darkblue-100;
 }
 
 button {
@@ -181,7 +181,7 @@ td {
   padding: 1px 3px;
 }
 th {
-  @apply border-b-2 border-blueish-100;
+  @apply border-b-2 border-darkblue-100;
   padding: 15px 7px;
 }
 
@@ -205,7 +205,7 @@ th {
   background: 0 0;
   pointer-events: none;
   box-sizing: border-box;
-  @apply text-blueish-50;
+  @apply text-darkblue-50;
   box-shadow: 0 0 0 0 currentColor;
   opacity: 0.2;
 }

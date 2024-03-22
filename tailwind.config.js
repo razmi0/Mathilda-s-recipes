@@ -13,7 +13,7 @@ export default {
           200: "#AEAEAEFF",
           100: "#EBEBEBFF",
         },
-        blueish: {
+        darkblue: {
           500: "#1C1E24FF",
           450: "#2B2F38FF",
           400: "#282C34FF",
@@ -60,6 +60,24 @@ export default {
         hoverRule.walkRules((rule) => {
           rule.selector = `.${e(`hover${separator}${rule.selector.slice(1)}`)}:hover`;
         });
+      });
+    },
+    ({ addBase, theme }) => {
+      function extractColorVars(colorObj, colorGroup = "") {
+        return Object.keys(colorObj).reduce((vars, colorKey) => {
+          const value = colorObj[colorKey];
+
+          const newVars =
+            typeof value === "string"
+              ? { [`--color${colorGroup}-${colorKey}`]: value }
+              : extractColorVars(value, `-${colorKey}`);
+
+          return { ...vars, ...newVars };
+        }, {});
+      }
+
+      addBase({
+        ":root": extractColorVars(theme("colors")),
       });
     },
   ],
